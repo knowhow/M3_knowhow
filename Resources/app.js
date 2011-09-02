@@ -1,12 +1,7 @@
 Titanium.UI.setBackgroundColor('#000');
 
 // include lib 
-Ti.include("lib.js");
-
-var main_window = Titanium.UI.createWindow({
-		backgroundColor:"green",
-		title:"main window"
-	});
+Ti.include("lib.js","UI/main_window.js","UI/codes.js","UI/codes_matrix.js");
 
 // open login form
 boMobileAppLib.Login.LoginForm();
@@ -20,5 +15,5 @@ Ti.App.addEventListener('loggedout',function(){
 // listen to login events
 Ti.App.addEventListener('loggedin',function(){
     // go to main form
-    main_window.open();
+    boPurchase.mainWindow();
 });

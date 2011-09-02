@@ -57,13 +57,27 @@
 		
 		login_window.add(loginBtn);  
 		login_window.open();
+		
+		// username text blur and focus to password
+		username.addEventListener('return', function()
+		{
+  			username.blur();
+  			password.focus();
+		});
+		
+		// password text blur and focus on button
+		password.addEventListener('return', function()
+		{
+  			password.blur();
+  			loginBtn.focus();
+		});
+		
 				
 		loginBtn.addEventListener('click',function(e){  
     		
     		if (username.value != '' && password.value != ''){  
         		
-        		var login_json_str = boMobileAppLib.db.getLoginData();
-        		var loginJSON = JSON.parse( login_json_str );
+        		var loginJSON = boMobileAppLib.db.getLoginData();
         
         		for(var i=0; i < loginJSON.length; i++){
     	    

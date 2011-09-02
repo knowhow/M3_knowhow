@@ -1,8 +1,7 @@
 Titanium.UI.setBackgroundColor('#000');
 
-var boMobileAppLib = {};
-
-Ti.include("UI/login.js","db/dbmain.js");
+// include lib 
+Ti.include("lib.js");
 
 var main_window = Titanium.UI.createWindow({
 		backgroundColor:"green",

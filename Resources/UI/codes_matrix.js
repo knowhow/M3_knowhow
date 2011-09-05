@@ -225,7 +225,7 @@
     		Ti.App.fireEvent('purchaseAccept');
     		// set global variable purchased data...
     		Ti.App.purchased_data = purchase_data;
-    		//m_win.close();
+    		m_win.close();
     		return m_win;
 		});
 		
@@ -255,7 +255,7 @@
 		m_win.add(tableview);
 		m_win.add(desc_view);
 		m_win.add(controls_view);
-		//m_win.open();
+		m_win.open();
 		
 		return m_win;
 		

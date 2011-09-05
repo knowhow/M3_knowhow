@@ -99,20 +99,19 @@ var newRow = "\n";
 		controls_view.add(ctrl_ok_button);
 		ordWin.add(controls_view);
 		ordWin.add(ordLabel);
-		//ordWin.open();
+		ordWin.open();
 	
 		// control accept button event
  		ctrl_ok_button.addEventListener('click',function(e){  
-    		Ti.App.fireEvent('purchaseAccepted');
-    		//ordWin.close();
-    		//ordWin = null;
+    		ordWin.close();
+    		ordWin.accepted = 1;
     		return ordWin;
 		});
 		
 		// control accept button event
  		ctrl_cancel_button.addEventListener('click',function(e){  
-    		//ordWin.close();	
-    		//ordWin = null;
+    		ordWin.close();	
+    		ordWin.accepted = 0;
     		return ordWin;
 		});		
 		

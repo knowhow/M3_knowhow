@@ -78,23 +78,27 @@ var activity = Ti.Android.currentActivity;
 		
 		// get articles from JSON
 		var a_data = boCodes.Articles.getArticles();
-		var matrix_win = boCodes.Articles.getArticleMatrix( a_data );
 		// send JSON to matrix and return data 
-		matrix_win.open();
+		var matrix_win = boCodes.Articles.getArticleMatrix( a_data );
 				
-		// listen to fire event
-		Ti.App.addEventListener('purchaseAccept',function(){
+		// listen to event close and continue
+		matrix_win.addEventListener('close',function(e){
+   			
    			// go to purchace accepting form...		
    			// read global variable...
     		var p_data = Ti.App.purchased_data;
+   			
    			var detail_win = boOrder.items.getOrderItems( p_data );
-    		detail_win.open();
-    		matrix_win.close();		
-		
-		    Ti.App.addEventListener('purchaseAccepted',function(){
+    		
+		    detail_win.addEventListener('close',function(e){
    				// store to db...
-   				detail_win.close();
-   				alert("Narudzba prihvacena, saljemo podatke u db!");
+   				if(e.source.accepted == 1){
+   					alert("Narudzba prihvacena, saljemo podatke u db!");
+   				} 
+   				else
+   				{
+   					alert("Narudzba odbijena !!!");
+   				};
    					
 			});
 		});

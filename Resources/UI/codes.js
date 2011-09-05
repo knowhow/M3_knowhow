@@ -14,7 +14,7 @@ var boCodes = {};
 	
 	// get article matrix based on article JSON data
 	boCodes.Articles.getArticleMatrix = function( article_data ) {
-		boCodes.Matrix.getMatrix( article_data, "artikli" );
+		return boCodes.Matrix.getMatrix( article_data, "artikli" );
 	};
 	// get customers
 	boCodes.Customers.getCustomers = function() {

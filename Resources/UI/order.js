@@ -12,9 +12,10 @@ var newRow = "\n";
 		// create window
 		var ordWin = Ti.UI.createWindow({
 			backgroundColor:"white",
+			//modal:true,
 			title:"trenutna narudzba"
 		});		
-	
+		
 		// show items on orders window
 		
 		// data: items_data
@@ -98,20 +99,24 @@ var newRow = "\n";
 		controls_view.add(ctrl_ok_button);
 		ordWin.add(controls_view);
 		ordWin.add(ordLabel);
-		ordWin.open();
+		//ordWin.open();
 	
 		// control accept button event
  		ctrl_ok_button.addEventListener('click',function(e){  
     		Ti.App.fireEvent('purchaseAccepted');
-    		ordWin.close();
+    		//ordWin.close();
+    		//ordWin = null;
+    		return ordWin;
 		});
 		
 		// control accept button event
  		ctrl_cancel_button.addEventListener('click',function(e){  
-    		ordWin.close();	
+    		//ordWin.close();	
+    		//ordWin = null;
+    		return ordWin;
 		});		
 		
-	
+		return ordWin;
 	};
 		
 })();

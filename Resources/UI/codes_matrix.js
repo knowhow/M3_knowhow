@@ -6,6 +6,7 @@
 		
 		var m_win = Ti.UI.createWindow({
 			backgroundColor:"white",
+			//modal:true,
 			title:m_title
 		});
 		
@@ -222,14 +223,15 @@
  		// control accept button event
  		control_button.addEventListener('click',function(e){  
     		Ti.App.fireEvent('purchaseAccept');
-    		m_win.close();
     		// set global variable purchased data...
     		Ti.App.purchased_data = purchase_data;
+    		//m_win.close();
+    		return m_win;
 		});
 		
 		// minus items events
 		control_minus_button.addEventListener('click',function(e){ 
-			if(parseInt(labels[currentItem].text) > 0 ){ 
+			if(parseInt(purchase_data[currentItem].text) > 0 ){ 
     			purchase_data[currentItem].text = (parseInt(purchase_data[currentItem].text) - 1).toString();
     			purchase_data[currentItem].article_quantity = parseInt(purchase_data[currentItem].text);
     		}
@@ -253,8 +255,9 @@
 		m_win.add(tableview);
 		m_win.add(desc_view);
 		m_win.add(controls_view);
-		m_win.open();
+		//m_win.open();
 		
+		return m_win;
 		
 		};
 	

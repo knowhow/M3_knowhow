@@ -2,7 +2,7 @@ var boPurchase = {};
 var activity = Ti.Android.currentActivity;
 
 (function() {
-	
+		
 	boPurchase.mainWindow = function() {
 		
 		var win_main = Ti.UI.createWindow({
@@ -73,35 +73,35 @@ var activity = Ti.Android.currentActivity;
 	// new purchase method
 	boPurchase.addPurchase = function() {
 		
+		// reset data
+		Ti.App.purchased_data = [];
+		
 		// get articles from JSON
 		var a_data = boCodes.Articles.getArticles();
-		
+		var matrix_win = boCodes.Articles.getArticleMatrix( a_data );
 		// send JSON to matrix and return data 
-		boCodes.Articles.getArticleMatrix( a_data );
-		
+		matrix_win.open();
+				
 		// listen to fire event
 		Ti.App.addEventListener('purchaseAccept',function(){
    			// go to purchace accepting form...		
    			// read global variable...
     		var p_data = Ti.App.purchased_data;
-   			// open form
-    		boOrder.items.getOrderItems( p_data );
-    		//Ti.App.fireEvent('purchaseAccept',{id:'0'});
-    		Ti.App.removeEventListener('purchaseAccept',function(){});
-    		
+   			var detail_win = boOrder.items.getOrderItems( p_data );
+    		detail_win.open();
+    		matrix_win.close();		
+		
+		    Ti.App.addEventListener('purchaseAccepted',function(){
+   				// store to db...
+   				detail_win.close();
+   				alert("Narudzba prihvacena, saljemo podatke u db!");
+   					
+			});
 		});
 		
-		// listen to fire event
-		Ti.App.addEventListener('purchaseAccepted',function(){
-   			// store to db...
-   			alert("Narudzba prihvacena, saljemo podatke u db!");
-   			Ti.App.removeEventListener('purchaseAccepted',function(){});
-    		return;
-   			
-		});
 		
 		// empty purchased data for security reasons
-		Ti.App.purchased_data = [];
+		//Ti.App.purchased_data = [];
 	};
 
 	// list purchase method

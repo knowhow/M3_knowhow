@@ -1,7 +1,7 @@
 Titanium.UI.setBackgroundColor('#000');
 
 // include lib 
-Ti.include("lib.js","UI/main_window.js","UI/codes.js","UI/codes_matrix.js");
+Ti.include("lib.js");
 
 // open login form
 boMobileAppLib.Login.LoginForm();

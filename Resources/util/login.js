@@ -79,9 +79,9 @@
         		
         		var loginJSON = boMobileAppLib.db.getLoginData();
         
-        		for(var i=0; i < loginJSON.length; i++){
+        		for(var i=0; i < loginJSON.userdata.length; i++){
     	    
-    	   			if ( loginJSON[i].name == username.value && loginJSON[i].pwd == password.value) { 
+    	   			if ( loginJSON.userdata[i].name == username.value && loginJSON.userdata[i].pwd == password.value) { 
     	   				Ti.App.fireEvent('loggedin');
     	   				return;	  	
     	   			};

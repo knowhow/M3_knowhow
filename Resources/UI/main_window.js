@@ -72,8 +72,36 @@ var activity = Ti.Android.currentActivity;
 	
 	// new purchase method
 	boPurchase.addPurchase = function() {
+		
+		// get articles from JSON
 		var a_data = boCodes.Articles.getArticles();
-		var p_data = boCodes.Articles.getArticleMatrix( a_data );
+		
+		// send JSON to matrix and return data 
+		boCodes.Articles.getArticleMatrix( a_data );
+		
+		// listen to fire event
+		Ti.App.addEventListener('purchaseAccept',function(){
+   			// go to purchace accepting form...		
+   			// read global variable...
+    		var p_data = Ti.App.purchased_data;
+   			// open form
+    		boOrder.items.getOrderItems( p_data );
+    		//Ti.App.fireEvent('purchaseAccept',{id:'0'});
+    		Ti.App.removeEventListener('purchaseAccept',function(){});
+    		
+		});
+		
+		// listen to fire event
+		Ti.App.addEventListener('purchaseAccepted',function(){
+   			// store to db...
+   			alert("Narudzba prihvacena, saljemo podatke u db!");
+   			Ti.App.removeEventListener('purchaseAccepted',function(){});
+    		return;
+   			
+		});
+		
+		// empty purchased data for security reasons
+		Ti.App.purchased_data = [];
 	};
 
 	// list purchase method

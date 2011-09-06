@@ -21,4 +21,9 @@ var boCodes = {};
 		
 	};
 	
+	// get customer form...
+	boCodes.Customers.getCustomerForm = function() {
+		return boCodes.Customers.customerForm();
+	};
+	
 })();

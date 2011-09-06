@@ -7,7 +7,7 @@ var newRow = "\n";
 	
 	boOrder.items.getOrderItems = function(items_data) {
 		
-		var line = "---------------------------------------------------------------------";
+		var line = "----------------------------------------------";
 		
 		// create window
 		var ordWin = Ti.UI.createWindow({
@@ -46,7 +46,7 @@ var newRow = "\n";
     	    
     	    // show only ones with qt > 0
     	    if(parseInt(item_qt) > 0) {
-    			orderItemsList += countItems.toString() + ") " + item_id + " - " + boUtil.str.rPad(item_desc,20,'.') + " kolicina: " + item_qt + newRow; 	
+    			orderItemsList += countItems.toString() + ") " + item_id + " - " + boUtil.str.rPad(item_desc,30,'.') + " " + item_qt + newRow; 	
     	    	countItems++ ;
     	    };
     	    
@@ -64,7 +64,7 @@ var newRow = "\n";
 			top:5,
 			left:5,
 			color:"black",
-			font:{fontSize:20,fontWeight:'normal'},
+			font:{fontSize:16,fontWeight:'normal',fontFamily:'monospace'},
 			wordWrap:"true"
 		});
 		

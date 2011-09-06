@@ -110,7 +110,8 @@ var activity = Ti.Android.currentActivity;
 
 	// list purchase method
 	boPurchase.listPurchase = function() {
-		alert("list documents");
+		//alert("list documents");
+		boCodes.Customers.getCustomerForm();
 	};
 	
 	boPurchase.savePurchase = function( purchase_data ) {

@@ -33,140 +33,6 @@
 	}
 }
 
-var currentHeadingLabel = Titanium.UI.createLabel({
-	text:'Current Heading (One Shot)',
-	font:{fontSize:12, fontWeight:'bold'},
-	color:'#111',
-	top:10,
-	left:10,
-	height:15,
-	width:300
-});
-win.add(currentHeadingLabel);
-
-var currentHeading = Titanium.UI.createLabel({
-	text:'Updated Heading not fired',
-	font:{fontSize:12},
-	color:'#444',
-	top:30,
-	left:10,
-	height:15,
-	width:300
-});
-win.add(currentHeading);
-
-var updatedHeadingLabel = Titanium.UI.createLabel({
-	text:'Updated Heading',
-	font:{fontSize:12, fontWeight:'bold'},
-	color:'#111',
-	top:50,
-	left:10,
-	height:15,
-	width:300
-});
-win.add(updatedHeadingLabel);
-
-var updatedHeading = Titanium.UI.createLabel({
-	text:'Updated Heading not fired',
-	font:{fontSize:12},
-	color:'#444',
-	top:70,
-	left:10,
-	height:15,
-	width:300
-});
-win.add(updatedHeading);
-
-var updatedHeadingTime = Titanium.UI.createLabel({
-	text:'',
-	font:{fontSize:11},
-	color:'#444',
-	top:90,
-	left:10,
-	height:15,
-	width:300
-});
-win.add(updatedHeadingTime);
-
-var currentLocationLabel = Titanium.UI.createLabel({
-	text:'Current Location (One Shot)',
-	font:{fontSize:12, fontWeight:'bold'},
-	color:'#111',
-	top:110,
-	left:10,
-	height:15,
-	width:300
-});
-win.add(currentLocationLabel);
-
-var currentLocation = Titanium.UI.createLabel({
-	text:'Current Location not fired',
-	font:{fontSize:11},
-	color:'#444',
-	top:130,
-	left:10,
-	height:15,
-	width:300
-});
-win.add(currentLocation);
-
-var updatedLocationLabel = Titanium.UI.createLabel({
-	text:'Updated Location',
-	font:{fontSize:12, fontWeight:'bold'},
-	color:'#111',
-	top:150,
-	left:10,
-	height:15,
-	width:300
-});
-win.add(updatedLocationLabel);
-
-var updatedLocation = Titanium.UI.createLabel({
-	text:'Updated Location not fired',
-	font:{fontSize:11},
-	color:'#444',
-	top:170,
-	left:10,
-	height:15,
-	width:300
-});
-win.add(updatedLocation);
-
-var updatedLatitude = Titanium.UI.createLabel({
-	text:'',
-	font:{fontSize:11},
-	color:'#444',
-	top:190,
-	left:10,
-	height:15,
-	width:300
-});
-win.add(updatedLatitude);
-
-var updatedLocationAccuracy = Titanium.UI.createLabel({
-	text:'',
-	font:{fontSize:11},
-	color:'#444',
-	top:210,
-	left:10,
-	height:15,
-	width:300
-});
-win.add(updatedLocationAccuracy);
-
-var updatedLocationTime = Titanium.UI.createLabel({
-	text:'',
-	font:{fontSize:11},
-	color:'#444',
-	top:230,
-	left:10,
-	height:15,
-	width:300
-});
-win.add(updatedLocationTime);
-
-
-
 var forwardGeoLabel = Titanium.UI.createLabel({
 	text:'Forward Geo (Addr->Coords)',
 	font:{fontSize:12, fontWeight:'bold'},
@@ -189,28 +55,6 @@ var forwardGeo = Titanium.UI.createLabel({
 });
 win.add(forwardGeo);
 
-var reverseGeoLabel = Titanium.UI.createLabel({
-	text:'Reverse Geo (Coords->Addr)',
-	font:{fontSize:12, fontWeight:'bold'},
-	color:'#111',
-	top:290,
-	left:10,
-	height:15,
-	width:300
-});
-win.add(reverseGeoLabel);
-
-var reverseGeo = Titanium.UI.createLabel({
-	text:'',
-	font:{fontSize:11},
-	color:'#444',
-	top:310,
-	left:10,
-	height:15,
-	width:300
-});
-win.add(reverseGeo);
-
 // state vars used by resume/pause
 var headingAdded = false;
 var locationAdded = false;
@@ -224,86 +68,6 @@ if (Titanium.Geolocation.locationServicesEnabled === false)
 }
 else
 {
-	//
-	// IF WE HAVE COMPASS GET THE HEADING
-	//
-	if (Titanium.Geolocation.hasCompass)
-	{
-		//
-		//  TURN OFF ANNOYING COMPASS INTERFERENCE MESSAGE
-		//
-		Titanium.Geolocation.showCalibration = false;
-
-		//
-		// SET THE HEADING FILTER (THIS IS IN DEGREES OF ANGLE CHANGE)
-		// EVENT WON'T FIRE UNLESS ANGLE CHANGE EXCEEDS THIS VALUE
-		Titanium.Geolocation.headingFilter = 90;
-
-		//
-		//  GET CURRENT HEADING - THIS FIRES ONCE
-		//
-		Ti.Geolocation.getCurrentHeading(function(e)
-		{
-			if (e.error)
-			{
-				currentHeading.text = 'error: ' + e.error;
-				Ti.API.info("Code translation: "+translateErrorCode(e.code));
-				return;
-			}
-			var x = e.heading.x;
-			var y = e.heading.y;
-			var z = e.heading.z;
-			var magneticHeading = e.heading.magneticHeading;
-			var accuracy = e.heading.accuracy;
-			var trueHeading = e.heading.trueHeading;
-			var timestamp = e.heading.timestamp;
-
-			currentHeading.text = 'x:' + x + ' y: ' + y + ' z:' + z;
-			Titanium.API.info('geo - current heading: ' + new Date(timestamp) + ' x ' + x + ' y ' + y + ' z ' + z);
-		});
-
-		//
-		// EVENT LISTENER FOR COMPASS EVENTS - THIS WILL FIRE REPEATEDLY (BASED ON HEADING FILTER)
-		//
-		var headingCallback = function(e)
-		{
-			if (e.error)
-			{
-				updatedHeading.text = 'error: ' + e.error;
-				Ti.API.info("Code translation: "+translateErrorCode(e.code));
-				return;
-			}
-
-			var x = e.heading.x;
-			var y = e.heading.y;
-			var z = e.heading.z;
-			var magneticHeading = e.heading.magneticHeading;
-			var accuracy = e.heading.accuracy;
-			var trueHeading = e.heading.trueHeading;
-			var timestamp = e.heading.timestamp;
-
-			updatedHeading.text = 'x:' + x + ' y: ' + y + ' z:' + z;
-			updatedHeadingTime.text = 'timestamp:' + new Date(timestamp);
-			updatedHeading.color = 'red';
-			updatedHeadingTime.color = 'red';
-			setTimeout(function()
-			{
-				updatedHeading.color = '#444';
-				updatedHeadingTime.color = '#444';
-
-			},100);
-
-			Titanium.API.info('geo - heading updated: ' + new Date(timestamp) + ' x ' + x + ' y ' + y + ' z ' + z);
-		};
-		Titanium.Geolocation.addEventListener('heading', headingCallback);
-		headingAdded = true;
-	}
-	else
-	{
-		Titanium.API.info("No Compass on device");
-		currentHeading.text = 'No compass available';
-		updatedHeading.text = 'No compass available';
-	}
 
 	//
 	//  SET ACCURACY - THE FOLLOWING VALUES ARE SUPPORTED
@@ -329,7 +93,7 @@ else
 	{
 		if (!e.success || e.error)
 		{
-			currentLocation.text = 'error: ' + JSON.stringify(e.error);
+			
 			Ti.API.info("Code translation: "+translateErrorCode(e.code));
 			alert('error ' + JSON.stringify(e.error));
 			return;

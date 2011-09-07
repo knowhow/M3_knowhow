@@ -25,7 +25,7 @@ boPurchase.mainWindow = function() {
        	top:6,  
        	left:10,
        	text:"Odaberite zeljenu opciju:",
-       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:20}  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:26}  
 	});  
 		
 	// btn new... 
@@ -36,7 +36,7 @@ boPurchase.mainWindow = function() {
        	top:40,  
        	height:80,  
        	borderRadius:1,  
-       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:22}  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:30}  
 	});  
 
 	// btn list...
@@ -47,7 +47,7 @@ boPurchase.mainWindow = function() {
        	top:120,    
        	height:80,  
        	borderRadius:1,  
-       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:22}  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:30}  
 	});  
 		
 	// btn geo...
@@ -58,7 +58,7 @@ boPurchase.mainWindow = function() {
        	top:200,    
        	height:80,  
        	borderRadius:1,  
-       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:22}  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:30}  
 	});  
 	
 	win_main.add(info);
@@ -90,7 +90,12 @@ boPurchase.addPurchase = function() {
 		
 	// reset data
 	Ti.App.purchased_data = [];
-		
+	Ti.App.document_data = [];
+
+	// document data
+	var d_data = Ti.App.document_data;
+	d_data.push( { document_no:520, customer_id:10, customer_desc:"test partner" } );
+	 
 	// get articles from JSON
 	var a_data = boCodes.Articles.getArticles();
 	// send JSON to matrix and return data 
@@ -103,7 +108,7 @@ boPurchase.addPurchase = function() {
    		// read global variable...
     	var p_data = Ti.App.purchased_data;
    			
-   		var detail_win = boOrder.items.getOrderItems( p_data );
+   		var detail_win = boOrder.items.getOrderItems( d_data, p_data );
     		
 	    detail_win.addEventListener('close',function(e){
    				// store to db...

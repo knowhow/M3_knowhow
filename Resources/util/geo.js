@@ -1,4 +1,7 @@
 var boGeo = {};
+var location_data;
+var location_error = "";
+var location_added = false;
 
 boGeo.geoForm = function() {
 		
@@ -21,7 +24,7 @@ boGeo.geoForm = function() {
 		left:3,
 		width:200,
 		height:80,
-		top:500
+		bottom:5
 	});
 		
 	var g_c_btn = Ti.UI.createButton({
@@ -29,7 +32,7 @@ boGeo.geoForm = function() {
 		right:3,
 		width:200,
 		height:80,
-		top:500
+		bottom:5
 	});
 		
 	g_win.add(g_lbl);
@@ -42,70 +45,86 @@ boGeo.geoForm = function() {
 	});
 		
 	g_l_btn.addEventListener("click", function(){
-		var loc = boGeo.getCurrentLocation();
-		g_lbl.text = "lat: " + loc.lat + boUtil.str.newRow() + "lon: " + loc.lon + boUtil.str.newRow(2) + Ti.App.curr_location;  
+		// first start service - because of bug!
+		boGeo.getCurrentLocation();
+		// second instance
+		boGeo.getCurrentLocation();
+		
+		// listen for coords
+		// we have: e.coords
+		Ti.App.addEventListener("get_geo_coordinates",function(e){
+			var text = "lat: " + e.latitude + boUtil.str.newRow() 
+			text += "lon: " + e.longitude + boUtil.str.newRow();
+			text += "acc: " + e.accurate
+			g_lbl.text = text;
+		});
 
+		// listen for errors
+		// we have: e.error
+		Ti.App.addEventListener("get_geo_coordinates_errors",function(e){
+			g_lbl.text = "greška: " + JSON.stringify(e.error);
+		});
+				  
 	});
 		
 	g_win.open();
 		
 };
 	
-	
-var geoLocationCallback = function(e){
-			
+// geo callback function
+var geoLocationCallback = function(e){	
 	if (!e.success || e.error)
 	{
-		Ti.App.curr_location = JSON.stringify(e.error);
-		Ti.API.info("error 2: " + Ti.App.curr_location);
-		return res;
-	}
-		
-	var longitude = e.coords.longitude + 0;
-	var latitude = e.coords.latitude + 0;
-			
-	location = {lat: latitude, lon: longitude};
-			
-	Ti.App.curr_location = 'long: ' + longitude + boUtil.str.newRow() + 'lat: ' + latitude;
-	Ti.API.info("callback: " + Ti.App.curr_location);
-	
-	setTimeout(function(){},100);
-
+		Ti.App.fireEvent("get_geo_coordinates_errors", e.error);
+		return;
+	};
+	Ti.App.fireEvent("get_geo_coordinates", e.coords);
 };
 	
 // get current location based on geolocation
 boGeo.getCurrentLocation = function() {
       	
-    var location = {lat: 0, lon: 0};
-      	
-    if(Ti.Geolocation.locationServicesEnabled==false){
+    if(Ti.Geolocation.locationServicesEnabled == false){
     	alert("Geo services are turned off !");
-    	return location;
+    	return;
     };
     	
     Ti.Geolocation.preferredProvider = "gps";
     Ti.Geolocation.accuracy = Titanium.Geolocation.ACCURACY_BEST;
-    Ti.Geolocation.distanceFilter = 1;
+    Ti.Geolocation.distanceFilter = 10;
    
 	Ti.Geolocation.getCurrentPosition(function(e){
 		if (!e.success || e.error)
 		{
-			Ti.App.curr_location = JSON.stringify(e.error);
-			Ti.API.info("error 1: " + Ti.App.curr_location);
-			return location;
-		}
+			Ti.App.fireEvent("get_geo_coordinates_errors", e.error);
+			return;
+		};
 
-		var longitude = e.coords.longitude + 0;
-		var latitude = e.coords.latitude + 0;
-			
-		//result = {lat: latitude, lon: longitude};	
-		Ti.App.curr_location = 'long: ' + longitude + boUtil.str.newRow() + 'lat: ' + latitude;
-		Ti.API.info("currPosition: " + Ti.App.curr_location);
+		Ti.App.fireEvent("get_geo_coordinates", e.coords);
 	});
     	  
 	Ti.Geolocation.addEventListener( 'location', geoLocationCallback );
-		
-	return location;
+	location_added = true;
+	
+	Ti.Android.currentActivity.addEventListener('pause', function(e) {
+		if (locationAdded) {
+			Titanium.Geolocation.removeEventListener('location', locationCallback);
+			location_added = false;
+		}
+	});
+	Ti.Android.currentActivity.addEventListener('destroy', function(e) {
+		if (locationAdded) {
+			Titanium.Geolocation.removeEventListener('location', locationCallback);
+			location_added = false;
+		}
+	});
+	Ti.Android.currentActivity.addEventListener('resume', function(e) {
+		if (!locationAdded) {
+			Titanium.Geolocation.addEventListener('location', locationCallback);
+			location_added = true;
+		}
+	});
+
 };
 	 	
 

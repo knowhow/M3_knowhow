@@ -17,7 +17,9 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		var currentItem = 0;
  
 		var tableData = [];
+		var data = [];
 		var labelsDesc = [];
+		var labels = [];
 		var purchase_data = [];
 
 		var colorSet = [
@@ -106,10 +108,15 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
         		thisView.add(thisLabel);
         		thisView.add(thisLabelDescription);
         		thisRow.add(thisView);
-        		cellIndex++;
+    
+    			// push label info into labels[]
+        		labels.push(thisLabel);
+ 				// push article data into data[]
+        		data.push( {article_id: m_data.articles[cellIndex].id, article_desc:m_data.articles[cellIndex].desc, article_quantity:0} );
+ 
+         		cellIndex++;
         		dataIndex++;
        	 		colorSetIndex++;
-        		purchase_data.push(thisLabel);
  
         		if( colorSetIndex === colorSet.length ){
             		colorSetIndex = 0;
@@ -125,18 +132,10 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		var tableview = Ti.UI.createTableView({
     		data:tableData
 		});
- 
- 
+ 		
  		// on click item, set current index of item, show description
 		tableview.addEventListener("click", function(e){
     		
-    		// debug info...
-    		//if(e.source.objName){
-        		//Ti.API.info("---> " + e.source.objName+e.source.objIndex + " was clicked!");
-        		//Ti.API.info("- data --> " + m_data.articles.length + " " + m_data.articles[e.source.objIndex].id);
-        		//Ti.API.info("- lbl --> " + labels[e.source.objIndex].sifra );
-    		//}
-			
 			// selected item...
 			// show info at the bottom of screen
 			
@@ -158,8 +157,8 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
  		// double tap - increase amount of items
 		tableview.addEventListener("dblclick", function(e){
 			// increase number
-   			purchase_data[e.source.objIndex].text = (parseInt(purchase_data[e.source.objIndex].text) + 1).toString();
-   			purchase_data[e.source.objIndex].article_quantity = parseInt(purchase_data[e.source.objIndex].text);
+   			labels[e.source.objIndex].text = (parseInt(labels[e.source.objIndex].text) + 1).toString();
+   			data[e.source.objIndex].article_quantity = parseInt(labels[e.source.objIndex].text);
 		});
   
   		// description view - show item properties
@@ -222,23 +221,23 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
  		control_button.addEventListener('click',function(e){  
     		Ti.App.fireEvent('purchaseAccept');
     		// set global variable purchased data...
-    		Ti.App.purchased_data = purchase_data;
+    		Ti.App.purchased_data = data;
     		m_win.close();
     		return m_win;
 		});
 		
 		// minus items events
 		control_minus_button.addEventListener('click',function(e){ 
-			if(parseInt(purchase_data[currentItem].text) > 0 ){ 
-    			purchase_data[currentItem].text = (parseInt(purchase_data[currentItem].text) - 1).toString();
-    			purchase_data[currentItem].article_quantity = parseInt(purchase_data[currentItem].text);
+			if(parseInt(labels[currentItem].text) > 0 ){ 
+    			labels[currentItem].text = (parseInt(labels[currentItem].text) - 1).toString();
+    			data[currentItem].article_quantity = parseInt(labels[currentItem].text);
     		}
 		});
  		
  		// plus items events
  		control_plus_button.addEventListener('click',function(e){
-    		purchase_data[currentItem].text = (parseInt(purchase_data[currentItem].text) + 1).toString();
-    		purchase_data[currentItem].article_quantity = parseInt(purchase_data[currentItem].text);
+    		labels[currentItem].text = (parseInt(labels[currentItem].text) + 1).toString();
+    		data[currentItem].article_quantity = parseInt(labels[currentItem].text);
 		});
  
  		// add to desc view...

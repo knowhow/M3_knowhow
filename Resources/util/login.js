@@ -16,7 +16,7 @@ boMobileAppLib.Login.setUserName = function( u_name ) {
 boMobileAppLib.Login.LoginForm = function() {
 		
 	var _tf_width = 400;
-	var _tf_height = 60;
+	var _tf_height = 80;
 	var login = false;
 	// get defined username
 	var user_name = boMobileAppLib.Login.getUserName();
@@ -32,7 +32,8 @@ boMobileAppLib.Login.LoginForm = function() {
 	var username = Titanium.UI.createTextField({  
        	color:'#336699',  
         top:30,  
-        left:30,  
+        left:30,
+        value:"vsasa",  
         width:_tf_width,  
         height:_tf_height,  
         hintText:'Ime',  
@@ -44,36 +45,37 @@ boMobileAppLib.Login.LoginForm = function() {
 	login_window.add(username); 
 		
 	var password = Titanium.UI.createTextField({  
-        	color:'#336699',  
-        	top:100,  
-        	left:30,  
-        	width:_tf_width,  
-        	height:_tf_height,
-        	hintText:'Lozinka',  
-        	passwordMask:true,  
-        	keyboardType:Titanium.UI.KEYBOARD_DEFAULT,  
-        	returnKeyType:Titanium.UI.RETURNKEY_DEFAULT,  
-        	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED  
+        color:'#336699',  
+        top:120,  
+        left:30, 
+        value:"11", 
+        width:_tf_width,  
+        height:_tf_height,
+        hintText:'Lozinka',  
+        passwordMask:true,  
+        keyboardType:Titanium.UI.KEYBOARD_DEFAULT,  
+        returnKeyType:Titanium.UI.RETURNKEY_DEFAULT,  
+        borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED  
 	});  
 		
 	login_window.add(password);  
       
 	var loginBtn = Titanium.UI.createButton({  
-        	title:'Prijava',  
-        	top:200,  
-        	width:200,  
-        	height:60,  
-        	borderRadius:1,  
-        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:22}  
+        title:'Prijava',  
+        top:220,  
+        width:300,  
+        height:100,  
+        borderRadius:1,  
+        font:{fontFamily:'Arial',fontWeight:'bold',fontSize:30}  
 	});  
 		
 	login_window.add(loginBtn);  
 		
 	// if username exist, go to pwd 
 	if(user_name != ''){
-			username.value = user_name;
-			username.blur();	
-			password.focus();
+		username.value = user_name;
+		username.blur();	
+		password.focus();
 	};
 		
 	login_window.open();

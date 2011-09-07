@@ -1,23 +1,22 @@
 boCodes.Customers.customerForm = function(){
 		
 	var win = Ti.UI.createWindow({
-		backgroundColor:"#FFFFFF"
-	});
-		
-	var lbl = Ti.UI.createLabel({
-		text:"",
-		backgroundColor:"black",
-		top:10
+		backgroundColor:"#FFFFFF",
+		title:"lista narudzbi"
 	});
 		
 	var btn = Ti.UI.createButton({
-		title:"daj lokaciju",
+		title:"Zatvori",
 		height:"auto",
-		top:300
+		width:80,
+		bottom:10
 	});
-		
-	win.add(lbl);
+
 	win.add(btn);
+
+	btn.addEventListener("click", function(){
+		win.close();
+	});
 
 	win.open();
 };

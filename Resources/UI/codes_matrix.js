@@ -1,8 +1,6 @@
-(function(){
+boCodes.Matrix = {};
 	
-	boCodes.Matrix = {};
-	
-	boCodes.Matrix.getMatrix = function( m_data, m_title ) {
+boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		
 		var m_win = Ti.UI.createWindow({
 			backgroundColor:"white",
@@ -259,6 +257,4 @@
 		
 		return m_win;
 		
-		};
-	
-})();
+};

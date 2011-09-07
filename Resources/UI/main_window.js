@@ -51,10 +51,22 @@ var activity = Ti.Android.currentActivity;
         	borderRadius:1,  
         	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:22}  
 		});  
+		
+		// btn geo...
+		var where_am_i = Titanium.UI.createButton({  
+        	title:'Gdje sam ja ?',  
+        	left:3,
+        	right:3,
+        	top:200,    
+        	height:80,  
+        	borderRadius:1,  
+        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:22}  
+		});  
 	
 		win_main.add(info);
 		win_main.add(new_purchase);
 		win_main.add(list_purchase);
+		win_main.add(where_am_i);
 		
 		win_main.open();
 		
@@ -66,6 +78,11 @@ var activity = Ti.Android.currentActivity;
 		// list purchase event handler
 		list_purchase.addEventListener('click',function(e){  
     		boPurchase.listPurchase();
+		});
+		
+		// where am i event handler
+		where_am_i.addEventListener('click',function(e){  
+    		boGeo.geoForm();
 		});  	
 	
 	};

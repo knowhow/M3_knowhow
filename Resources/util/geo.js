@@ -46,7 +46,6 @@ boGeo.geoForm = function() {
 		
 	g_l_btn.addEventListener("click", function(){
 		
-		var text = "";
 		// first start service - because of bug!
 		boGeo.getCurrentLocation();
 		// second instance
@@ -56,23 +55,30 @@ boGeo.geoForm = function() {
 		// we have: e.coords
 		Ti.App.addEventListener("get_geo_coordinates_ready",function(e){
 			
-			if (!e.success || e.error){
-				
-				text = "Error:" + boUtil.str.newRow();
-				text += e.error.message + boUtil.str.newRow(); 
-				text += "Error code: " + e.error.code + boUtil.str.newRow();
-				g_lbl.text = text;
-			}
-			else
-			{
-				text = "Pozicija:" + boUtil.str.newRow();
-				text = "lat: " + e.coords.latitude + boUtil.str.newRow(); 
-				text += "lon: " + e.coords.longitude + boUtil.str.newRow();
-				text += "acc: " + e.coords.accuracy;
-				g_lbl.text = text;				
-			};
+			g_lbl.text = "";
 			
+			var text = "Pozicija:" + boUtil.str.newRow();
+			text += "lat: " + e.coords.latitude + boUtil.str.newRow(); 
+			text += "lon: " + e.coords.longitude + boUtil.str.newRow();
+			text += "acc: " + e.coords.accuracy;
+			
+			g_lbl.text = text;
+							
 		});
+
+		Ti.App.addEventListener("get_geo_coordinates_error",function(e){
+			
+			g_lbl.text = "";
+			
+			var text = "Error:" + boUtil.str.newRow();
+			
+			text += e.error.message + boUtil.str.newRow(); 
+			text += "Error code: " + e.error.code + boUtil.str.newRow();
+			
+			g_lbl.text = text;
+		
+		});
+				
 				  
 	});
 		
@@ -81,9 +87,15 @@ boGeo.geoForm = function() {
 };
 	
 // geo callback function
-var geoLocationCallback = function(e){	
-	Ti.App.fireEvent("get_geo_coordinates_ready", e);
+// force update e
+var geoLocationCallback = function(cb){	
+	if (!cb.success || cb.error){
+		Ti.App.fireEvent("get_geo_coordinates_error", cb);
+		return;
+	};
+	Ti.App.fireEvent("get_geo_coordinates_ready", cb);
 };
+	
 	
 // get current location based on geolocation
 boGeo.getCurrentLocation = function() {
@@ -97,16 +109,13 @@ boGeo.getCurrentLocation = function() {
     Ti.Geolocation.accuracy = Titanium.Geolocation.ACCURACY_BEST;
     Ti.Geolocation.distanceFilter = 10;
    
-	Ti.Geolocation.getCurrentPosition(function(e){
-		if (!e.success || e.error)
+	Ti.Geolocation.getCurrentPosition(function(cp){
+		if (!cp.success || cp.error)
 		{
-			Ti.App.fireEvent("get_geo_coordinates_ready", e);
+			Ti.App.fireEvent("get_geo_coordinates_error", cp);
 			return;
-		}
-		else
-		{
-			Ti.App.fireEvent("get_geo_coordinates_ready", e);
 		};
+		Ti.App.fireEvent("get_geo_coordinates_ready", cp);
 	});
     	  
 	Ti.Geolocation.addEventListener( 'location', geoLocationCallback );

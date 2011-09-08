@@ -39,6 +39,11 @@ boGeo.geoForm = function() {
 	g_win.add(g_l_btn);
 	g_win.add(g_c_btn);
 		
+	// android back function
+	g_win.addEventListener('android:back',function(e){
+    	g_win.close();
+ 	});
+ 			
 	g_c_btn.addEventListener("click", function(){
 		Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
 		g_win.close();
@@ -51,35 +56,45 @@ boGeo.geoForm = function() {
 		// second instance
 		boGeo.getCurrentLocation();
 		
+		var text = "";
+		
+		//
+		//ZENICA
+		//Latitude : 43.915886 North
+		//Longitude : 17.679076 East
+		
+		var zenica_lat = 43.915886;
+		var zenica_lon = 17.679076;
 		// listen for coords
 		// we have: e.coords
 		Ti.App.addEventListener("get_geo_coordinates_ready",function(e){
 			
-			g_lbl.text = "";
+			if (!e.success || e.error){
+				g_lbl.text = "";
 			
-			var text = "Pozicija:" + boUtil.str.newRow();
-			text += "lat: " + e.coords.latitude + boUtil.str.newRow(); 
-			text += "lon: " + e.coords.longitude + boUtil.str.newRow();
-			text += "acc: " + e.coords.accuracy;
+				text = "Error:" + boUtil.str.newRow();
 			
-			g_lbl.text = text;
-							
-		});
-
-		Ti.App.addEventListener("get_geo_coordinates_error",function(e){
+				text += e.error.message + boUtil.str.newRow(); 
+				text += "Error code: " + e.error.code + boUtil.str.newRow();
 			
-			g_lbl.text = "";
+				g_lbl.text = text;	
+			}
+			else
+			{
+				g_lbl.text = "";
 			
-			var text = "Error:" + boUtil.str.newRow();
-			
-			text += e.error.message + boUtil.str.newRow(); 
-			text += "Error code: " + e.error.code + boUtil.str.newRow();
-			
-			g_lbl.text = text;
-		
-		});
+				text = "Pozicija:" + boUtil.str.newRow();
+				text += "lat: " + e.coords.latitude + boUtil.str.newRow(); 
+				text += "lon: " + e.coords.longitude + boUtil.str.newRow();
+				text += "acc: " + e.coords.accuracy + boUtil.str.newRow();
 				
-				  
+				text += "Udaljenost od Zenice:" + boUtil.str.newRow();
+				text += Math.round( boGeo.getGeoDistance(e.coords.latitude, e.coords.longitude, zenica_lat, zenica_lon ) * 1000) / 1000;
+				
+				g_lbl.text = text;
+			};
+			
+		});				  
 	});
 		
 	g_win.open();
@@ -89,10 +104,10 @@ boGeo.geoForm = function() {
 // geo callback function
 // force update e
 var geoLocationCallback = function(cb){	
-	if (!cb.success || cb.error){
-		Ti.App.fireEvent("get_geo_coordinates_error", cb);
-		return;
-	};
+	//if (!cb.success || cb.error){
+		//Ti.App.fireEvent("get_geo_coordinates_error", cb);
+		//return;
+	//};
 	Ti.App.fireEvent("get_geo_coordinates_ready", cb);
 };
 	
@@ -112,7 +127,7 @@ boGeo.getCurrentLocation = function() {
 	Ti.Geolocation.getCurrentPosition(function(cp){
 		if (!cp.success || cp.error)
 		{
-			Ti.App.fireEvent("get_geo_coordinates_error", cp);
+			Ti.App.fireEvent("get_geo_coordinates_ready", cp);
 			return;
 		};
 		Ti.App.fireEvent("get_geo_coordinates_ready", cp);
@@ -142,4 +157,24 @@ boGeo.getCurrentLocation = function() {
 
 };
 	 	
+
+//calculate discance
+boGeo.getGeoDistance = function(lat1,lon1,lat2,lon2) {
+    var R = 6371; // km
+    var dLat = (lat2-lat1).toRad();
+    var dLon = (lon2-lon1).toRad(); 
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+            Math.sin(dLon/2) * Math.sin(dLon/2); 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    return R * c;
+};
+
+/** Converts numeric degrees to radians */
+if (typeof(Number.prototype.toRad) === "undefined") {
+  Number.prototype.toRad = function() {
+    return this * Math.PI / 180;
+  }
+}
+
 

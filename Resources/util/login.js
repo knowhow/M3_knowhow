@@ -96,12 +96,13 @@ boMobileAppLib.Login.LoginForm = function() {
   		loginBtn.focus();
 	});
 		
-	//login_window.addEventListener('focus', function() {
-    	//if(user_name != ''){
-			//username.blur();	
-			//password.focus();
-		//};
-	//});
+	// when open window go to pwd if username allready exist!
+	login_window.addEventListener('open', function() {
+    	if(user_name != ''){
+			username.blur();	
+			password.focus();
+		};
+	});
 				
 	loginBtn.addEventListener('click',function(e){  
     		

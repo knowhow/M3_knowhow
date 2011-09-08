@@ -239,7 +239,12 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
     		labels[currentItem].text = (parseInt(labels[currentItem].text) + 1).toString();
     		data[currentItem].article_quantity = parseInt(labels[currentItem].text);
 		});
- 
+
+		// android back function
+		m_win.addEventListener('android:back',function(e){
+    		m_win.close();
+ 		});
+ 		
  		// add to desc view...
  		desc_view.add(dv_label);
  		

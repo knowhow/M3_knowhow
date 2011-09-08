@@ -89,7 +89,7 @@ boGeo.geoForm = function() {
 				text += "acc: " + e.coords.accuracy + boUtil.str.newRow();
 				
 				text += "Udaljenost od Zenice:" + boUtil.str.newRow();
-				text += Math.round( boGeo.getGeoDistance(e.coords.latitude, e.coords.longitude, zenica_lat, zenica_lon ) * 1000) / 1000;
+				text += Math.round( boGeo.calcGeoDistance(e.coords.latitude, e.coords.longitude, zenica_lat, zenica_lon ) * 1000) / 1000;
 				
 				g_lbl.text = text;
 			};
@@ -157,24 +157,35 @@ boGeo.getCurrentLocation = function() {
 
 };
 	 	
-
-//calculate discance
-boGeo.getGeoDistance = function(lat1,lon1,lat2,lon2) {
-    var R = 6371; // km
-    var dLat = (lat2-lat1).toRad();
-    var dLon = (lon2-lon1).toRad(); 
-    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
-            Math.sin(dLon/2) * Math.sin(dLon/2); 
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    return R * c;
+// calculate distance between two long and latitude variables
+// return value is in kilometers "K"
+// what is "N" ?
+boGeo.calcGeoDistance = function(lat1, lon1, lat2, lon2, unit) {
+	var radlat1 = Math.PI * lat1/180;
+  	var radlat2 = Math.PI * lat2/180;
+  	var radlon1 = Math.PI * lon1/180;
+  	var radlon2 = Math.PI * lon2/180;
+  	var theta = lon1-lon2;
+  	var radtheta = Math.PI * theta/180;
+  	var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+  
+  	dist = Math.acos(dist);
+  	dist = dist * 180/Math.PI;
+  	dist = dist * 60 * 1.1515;
+  
+  	if(unit == null){
+  		unit = "K";
+  	};
+  
+  	if(unit == "K"){
+     dist = dist * 1.609344;
+    };
+    
+  	if(unit == "N") {
+    	dist = dist * 0.8684;
+    };
+	
+	return dist;
 };
-
-/** Converts numeric degrees to radians */
-if (typeof(Number.prototype.toRad) === "undefined") {
-  Number.prototype.toRad = function() {
-    return this * Math.PI / 180;
-  }
-}
 
 

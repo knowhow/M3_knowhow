@@ -117,6 +117,7 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 	cp_tbl_view.addEventListener("dblclick", function(e){
 		
 		if (e.source.objName) {
+			Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
 			var result = [];
 			result.push( c_data[e.source.objIndex] );
 			Ti.App.customer_data = result;
@@ -128,6 +129,7 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 
 	// close btn
 	cp_close_btn.addEventListener("click", function(){
+		Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
 		cp_win.purchase_abort = true;
 		cp_win.close();
 	});
@@ -224,6 +226,9 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
             	var ret_data = _refresh_tbl_data( dist_data );
 				
 				cp_tbl_view.setData( ret_data );
+				
+				// iskljuci gps
+				Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
             	
 
         	};
@@ -231,7 +236,8 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
         	if (tic == 200){
         		clearInterval(timer);
         		cp_win.remove(pb);
-        		cp_lbl_loc.text = "Nisam uspio pronaći lokaciju, pokušajte ručno!"
+        		cp_lbl_loc.text = "Nisam uspio pronaći lokaciju, pokušajte ručno!";
+        		Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
         	};
         	                    
 		},200);			  

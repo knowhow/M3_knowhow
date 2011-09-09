@@ -2,7 +2,7 @@ var boOrder = {};
 
 boOrder.items = {};
 	
-boOrder.items.getOrderItems = function( doc_data, items_data ) {
+boOrder.items.getOrderItems = function( doc_data, cust_data, items_data ) {
 	
 	//alert(JSON.stringify(items_data));
 		
@@ -25,15 +25,16 @@ boOrder.items.getOrderItems = function( doc_data, items_data ) {
 	var totalQt = 0;
 	var countItems = 1;
 	var orderItemsList = "";
-	var partnerId = doc_data[0].customer_id;
-	var partnerDesc = doc_data[0].customer_desc;
-	var documentNo = doc_data[0].document_no;
+	var partnerId = cust_data[0].id;
+	var partnerDesc = cust_data[0].desc;
+	var partnerCity = cust_data[0].city;
+	var documentNo = doc_data[0].doc_no;
 	var documentDate = boUtil.date.getCurrentDate();
 		
 	// document data:
 	orderItemsList += "Dokument broj: " + documentNo + ",    datum: " + documentDate + boUtil.str.newRow(2);
 	// partner data:
-	orderItemsList += "Partner: " + partnerId + "-" + partnerDesc + boUtil.str.newRow();
+	orderItemsList += "Partner: " + partnerId + " - " + partnerDesc + ", " + partnerCity + boUtil.str.newRow();
 	orderItemsList += line + boUtil.str.newRow();
 		
 	orderItemsList += "Stavke narudzbe:" + boUtil.str.newRow(2);

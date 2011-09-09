@@ -160,6 +160,7 @@ boGeo.getCurrentLocation = function() {
 // calculate distance between two long and latitude variables
 // return value is in kilometers "K"
 // what is "N" ?
+// return value must be rounded because is eg. 50.231322213
 boGeo.calcGeoDistance = function(lat1, lon1, lat2, lon2, unit) {
 	var radlat1 = Math.PI * lat1/180;
   	var radlat2 = Math.PI * lat2/180;

@@ -110,12 +110,14 @@ boMobileAppLib.Login.LoginForm = function() {
     		
     	if (username.value != '' && password.value != ''){  
         		
-        	var loginJSON = boMobileAppLib.db.getLoginData();
+        	var loginJSON = boCodes.Users.getUsersData();
         
         	for(var i=0; i < loginJSON.userdata.length; i++){
     	    
     	   		if ( loginJSON.userdata[i].name == username.value && loginJSON.userdata[i].pwd == password.value) { 
     	   			Ti.App.fireEvent('loggedin');
+    	   			// set global variable...
+    	   			Ti.App.current_logged_user = username.value;
     	   			return;	  	
     	   		};
     		};

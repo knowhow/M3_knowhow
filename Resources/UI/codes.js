@@ -4,23 +4,73 @@ var boCodes = {};
 boCodes.Articles = {};
 // customers namespace
 boCodes.Customers = {};
+
+boCodes.Users = {};
 	
 // get articles from db
 boCodes.Articles.getArticles = function() {
-	return boMobileAppLib.db.getArticlesData()
+	return boDb.getArticlesData()
 };		
 	
 // get article matrix based on article JSON data
 boCodes.Articles.getArticleMatrix = function( article_data ) {
 	return boCodes.Matrix.getMatrix( article_data, "artikli" );
 };
+
 // get customers
 boCodes.Customers.getCustomers = function() {
-		
+	
+	var data = boDb.getCustomersData()
+	var ret = [];
+	
+	for(var i=0; i < data.customers.length ; i++){
+	
+		if (data.customers[i].user == Ti.App.current_logged_user ){
+			ret.push( data.customers[i] );
+		}; 
+	};
+	
+	return ret;
+};
+
+// get customers by distance
+boCodes.Customers.getCustomersInRadius = function( lon, lat, radius ) {
+	
+	var data = boDb.getCustomersData()
+	var ret = [];
+	var dist = 0;
+	
+	if(lon == null){return ret};
+	
+	if(radius==null){radius = 300};
+	
+	for(var i=0; i < data.customers.length ; i++){
+	
+		if (data.customers[i].user == Ti.App.current_logged_user ){
+			
+			// calculate distance
+			dist = boGeo.calcGeoDistance( data.customers[i].lon, data.customers[i].lat, lon, lat );
+			// round to 3 decimals
+			dist = Math.round(dist*1000)/1000;
+			
+			// convert to meters and push data if exist
+			if (dist * 1000 < radius ){
+				ret.push( data.customers[i] );	
+			};
+		}; 
+	};
+	
+	return ret;
 };
 	
 // get customer form...
 boCodes.Customers.getCustomerForm = function() {
 	return boCodes.Customers.customerForm();
 };
+
+// get users data...
+boCodes.Users.getUsersData = function() {
+	return boDb.getUsersData();
+};
+
 

@@ -93,7 +93,8 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 		headerTitle:"Lista partnera za '" + Ti.App.current_logged_user + "'",
 		allowsSelection:true,
 		search:searchBar,
-		top:90
+		top:90,
+		bottom:90
 	});
 	
 	
@@ -137,7 +138,7 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 	// manual run
 	cp_man_btn.addEventListener("click", function(){
 		
-		var tbl_data = _refresh_tbl_data( c_data );
+		var tbl_data = _refresh_tbl_data( c_data, longitude, latitude );
 		//alert(JSON.stringify(customer_data.customers));
 		//alert(customer_data.customers.length);
 		cp_tbl_view.setData( tbl_data );
@@ -145,51 +146,6 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 	});
 	
 	cp_gps_btn.addEventListener("click", function(){
-		
-		// first start service - because of bug!
-		boGeo.getCurrentLocation();
-		// second instance
-		boGeo.getCurrentLocation();
-		
-		var text = "";
-		var latitude = null;
-		var longitude = null;
-		
-		// listen for coords
-		// we have: e.coords
-		Ti.App.addEventListener("get_geo_coordinates_ready",function(e){
-			
-			if (!e.success || e.error){
-				
-				latitude = null;
-				longitude = null;
-				
-				cp_lbl_loc.text = "";
-			
-				text = "Greška: " + e.error.message + boUtil.str.newRow(); 
-				text += "'kod': " + e.error.code + boUtil.str.newRow();
-			
-				cp_lbl_loc.text = text;
-				cp_top_view.backgroundColor = "red";	
-			}
-			else
-			{
-				
-				latitude = e.coords.latitude;
-				longitude = e.coords.longitude;
-				
-				cp_lbl_loc.text = "";
-			
-				text = "Gps info:" + boUtil.str.newRow();
-				text += "lat: " + e.coords.latitude; 
-				text += ", lon: " + e.coords.longitude + boUtil.str.newRow();
-				text += "preciznost: " + e.coords.accuracy;
-						
-				cp_lbl_loc.text = text;
-				cp_top_view.backgroundColor = "black";
-			};
-			
-		});	
 		
 		
 		var pb = Ti.UI.createProgressBar({
@@ -223,7 +179,7 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
             	
             	// calculate distance and fill table view
             	var dist_data = boCodes.Customers.getCustomersInRadius( longitude, latitude );
-            	var ret_data = _refresh_tbl_data( dist_data );
+            	var ret_data = _refresh_tbl_data( dist_data, longitude, latitude );
 				
 				cp_tbl_view.setData( ret_data );
 				
@@ -244,7 +200,51 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 	
 	});	
 	
-	
+	// first start service - because of bug!
+	boGeo.getCurrentLocation();
+	// second instance
+	boGeo.getCurrentLocation();
+		
+	var text = "";
+	var latitude = null;
+	var longitude = null;
+		
+	// listen for coords
+	// we have: e.coords
+	Ti.App.addEventListener("get_geo_coordinates_ready",function(e){
+			
+		if (!e.success || e.error){
+				
+			latitude = null;
+			longitude = null;
+				
+			cp_lbl_loc.text = "";
+			
+			text = "Greška: " + e.error.message + boUtil.str.newRow(); 
+			text += "'kod': " + e.error.code + boUtil.str.newRow();
+			
+			cp_lbl_loc.text = text;
+			cp_top_view.backgroundColor = "red";	
+		}
+		else
+		{
+				
+			latitude = e.coords.latitude;
+			longitude = e.coords.longitude;
+				
+			cp_lbl_loc.text = "";
+			
+			text = "Gps info:" + boUtil.str.newRow();
+			text += "lat: " + e.coords.latitude; 
+			text += ", lon: " + e.coords.longitude + boUtil.str.newRow();
+			text += "preciznost: " + e.coords.accuracy;
+						
+			cp_lbl_loc.text = text;
+			cp_top_view.backgroundColor = "black";
+		};
+			
+	});	
+		
 
 	cp_win.open();
 	
@@ -253,10 +253,22 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 };
 
 
-function _refresh_tbl_data( c_data ) {
+function _refresh_tbl_data( c_data, lon, lat ) {
 		
 	var tbl_data = [];
+	var dst = 0;
+	
 	for(var i=0; i < c_data.length; i++){
+		
+		// calculate distance for every customer
+		dst = 0;
+		if( c_data[i].lat != 0 && c_data[i].lat != null && lon != null ){
+			
+			dst = boGeo.calcGeoDistance( c_data[i].lon, c_data[i].lat, lon, lat );
+			dst = Math.round( dst * 1000 ) / 1000;
+			
+		};
+		
 					
 		var thisRow = Ti.UI.createTableViewRow({
         	className: "item",
@@ -271,25 +283,39 @@ function _refresh_tbl_data( c_data ) {
     	var thisView = Ti.UI.createView({
            	//backgroundColor:"white",
            	top:3,
-           	height:40,
+           	height:100,
            	width:420,
            	left:1,
            	objIndex:i,
            	objName:"view-desc"
         });
         
-    	var thisLabelDesc = Ti.UI.createLabel({
+    	var thisLabelCust = Ti.UI.createLabel({
            	color:"black",
            	top:1,
            	left:5,
            	font:{fontSize:26,fontWeight:'bold'},
            	objIndex:i,
-           	objName:"lbl-desc",
+           	objName:"lbl-cust",
            	textAlign:"left",
-           	text:boUtil.str.rPad( c_data[i].desc + ", " + c_data[i].city, 20),
+           	text:c_data[i].desc,
            	touchEnabled:false
         });
-        	
+
+    	var thisLabelDesc = Ti.UI.createLabel({
+           	color:"black",
+           	top:50,
+           	left:5,
+           	font:{fontSize:20,fontWeight:'bold'},
+           	objIndex:i,
+           	objName:"lbl-desc",
+           	textAlign:"left",
+           	text:c_data[i].addr + ", " + c_data[i].postcode + " - " + c_data[i].city + ", udalj: " + dst + " km",
+           	touchEnabled:false
+        });
+
+
+        thisView.add(thisLabelCust);
         thisView.add(thisLabelDesc);
         thisRow.add(thisView);	
 		

@@ -63,8 +63,8 @@ boGeo.geoForm = function() {
 		//Latitude : 43.915886 North
 		//Longitude : 17.679076 East
 		
-		var zenica_lat = 43.915886;
-		var zenica_lon = 17.679076;
+		var zenica_lat = 44.204231500625;
+		var zenica_lon = 17.905032634735;
 		// listen for coords
 		// we have: e.coords
 		Ti.App.addEventListener("get_geo_coordinates_ready",function(e){

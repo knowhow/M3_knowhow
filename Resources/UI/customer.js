@@ -24,6 +24,23 @@ boCodes.Customers.customerForm = function(){
 };
 
 
+// customer list 
+boCodes.Customers.customerList = function() {
+		
+	// reset global data
+	Ti.App.purchased_data = [];
+	Ti.App.document_data = [];
+	Ti.App.customer_data = [];
+	
+	// get customers from JSON
+	var cust_data = boCodes.Customers.getCustomers();
+	// open the get customer form
+	var customer_win = boCodes.Customers.getPurchaseCustomer( cust_data );
+			
+};
+
+
+
 // get customer on ordering form
 boCodes.Customers.getPurchaseCustomer = function( c_data ){
 		
@@ -31,8 +48,38 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 	
 	var cp_win = Ti.UI.createWindow({
 		backgroundColor:"#FFFFFF",
+		//navBarHidden:false,
 		title:"Odaberi partnera"
 	});
+	
+	/*
+	 * problem with menu and addEventListener("close") ?????
+	 * because of that I curently turn off this option
+	 */
+	
+	//cp_win.activity.onCreateOptionsMenu = function(e) {
+		//var menu = e.menu;
+		//var m_close = menu.add({ title : 'Vrati se nazad' });
+		//var m_all_cust = menu.add({ title : 'Svi partneri' });
+		
+		//m_close.setIcon(Titanium.Android.R.drawable.ic_menu_close_clear_cancel);
+		//m_all_cust.setIcon(Titanium.Android.R.drawable.btn_star);
+	
+		// close menu option
+		//m_close.addEventListener('click', function(e) {
+			// turn off the GPS system
+			//Titanium.Geolocation.removeEventListener('location', geoLocationCallback);
+			// close window
+
+			//cp_win.close();
+		//});
+		
+		// refresh menu option
+		//m_all_cust.addEventListener('click', function(e) {
+			//cp_tbl_view.setData( _refresh_tbl_data( c_data, longitude, latitude ) );
+		//});
+		
+	//};
 	
 	var cp_top_view = Ti.UI.createView({
 		backgroundColor:"black",
@@ -97,6 +144,9 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 		bottom:90
 	});
 	
+	// set the table contents, all customers
+	cp_tbl_view.setData( _refresh_tbl_data( c_data, longitude, latitude ) );
+	
 	
 	cp_top_view.add(cp_lbl_loc);
 
@@ -107,31 +157,30 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 	cp_win.add(cp_top_view);
 	cp_win.add(cp_tbl_view);
 	cp_win.add(cp_bottom_view);
-
-	// main window 
-	//cp_win.addEventListener("dblclick", function(){
-		//cp_win.purchase_abort = false;
-		//cp_win.close();
-	//});
 	
 	// tbl view dbl click 
 	cp_tbl_view.addEventListener("dblclick", function(e){
 		
 		if (e.source.objName) {
+			// turn off gps system
 			Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
+			// set global customer data for purchase
 			var result = [];
 			result.push( c_data[e.source.objIndex] );
 			Ti.App.customer_data = result;
-		
-			cp_win.purchase_abort = false;
+
+			// open purchase
+			boPurchase.newPurchase();
+			
+			// close customer list
 			cp_win.close();
+			
 		};
 	});
 
 	// close btn
 	cp_close_btn.addEventListener("click", function(){
 		Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
-		cp_win.purchase_abort = true;
 		cp_win.close();
 	});
 	
@@ -182,9 +231,7 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
             	var ret_data = _refresh_tbl_data( dist_data, longitude, latitude );
 				
 				cp_tbl_view.setData( ret_data );
-				
-				// iskljuci gps
-				Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
+				//Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
             	
 
         	};
@@ -193,7 +240,7 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
         		clearInterval(timer);
         		cp_win.remove(pb);
         		cp_lbl_loc.text = "Nisam uspio pronaći lokaciju, pokušajte ručno!";
-        		Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
+        		//Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
         	};
         	                    
 		},200);			  

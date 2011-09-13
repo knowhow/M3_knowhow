@@ -24,9 +24,19 @@ boMobileAppLib.Login.LoginForm = function() {
 	// create login window
 	var login_window = Titanium.UI.createWindow({
    		tabBarHidden:true,
+   		navBarHidden:false,
    		backgroundColor:"white",
    		title:'Prijava'
 	});
+	
+	login_window.activity.onCreateOptionsMenu = function(e) {
+		var menu = e.menu;
+		var m1 = menu.add({ title : 'Zatvori aplikaciju' });
+		m1.setIcon(Titanium.Android.R.drawable.ic_menu_close_clear_cancel);
+		m1.addEventListener('click', function(e) {
+			Ti.UI.currentWindow.close();
+		});
+	};
 		
 	// create username input
 	var username = Titanium.UI.createTextField({  

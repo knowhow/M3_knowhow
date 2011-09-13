@@ -20,21 +20,9 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		var data = [];
 		var labelsDesc = [];
 		var labels = [];
+		var views = [];
 		var purchase_data = [];
 
-		var colorSet = [
-                "#D44646",
-                "#46D463",
-                "#46D4BE",
-                "#C2D446",
-                "#D446D5",
-                "#4575D5",
-                "#E39127",
-                "#879181",
-                "#E291D4"
-              ];
- 
-		var colorSetIndex = 0;
 		var cellIndex = 0;
 		
 		// count m_data items...
@@ -50,7 +38,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
         			className: "grid",
         			layout: "horizontal",
         			height: cellHeight+(2*ySpacer),
-        			selectedBackgroundColor:"red"
+        			backgroundSelectedColor:"red"
     		});
     		
     		for (var x=0; x<xGrid; x++){
@@ -62,24 +50,26 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
         		var thisView = Ti.UI.createView({
             		objName:"grid-art-view",
             		objIndex:cellIndex.toString(),
-            		backgroundColor: colorSet[colorSetIndex],
+            		focusable:true,
+            		//backgroundFocusedImage:'img/ok_sign.jpg',
             		left: ySpacer,
             		height: cellHeight,
             		width: cellWidth
        			});
        			
+
        			// find background image if exist... 
        			if(m_data.articles[cellIndex].pict != ''){
        				
-       				var thisFile = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory + '/img/', m_data.articles[cellIndex].pict);
+       				//var thisFile = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory + '/img/', m_data.articles[cellIndex].pict);
        				thisView.backgroundImage = 'img/' + m_data.articles[cellIndex].pict;
        			};
  
  				// main label - count items
         		var thisLabel = Ti.UI.createLabel({
-            		color:"black",
+            		color:"red",
             		top:10,
-            		left:60,
+            		left:20,
             		font:{fontSize:48,fontWeight:'bold'},
             		objIndex:cellIndex.toString(),
             		objName:"lbl",
@@ -94,7 +84,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 				// description item label into view 
         		var thisLabelDescription = Ti.UI.createLabel({
             		color:"black",
-            		top:120,
+            		top:110,
             		left:5,
             		font:{fontSize:14,fontWeight:'bold'},
             		objIndex:cellIndex.toString(),
@@ -104,23 +94,22 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
             		touchEnabled:false
         		});
         		
-        		
         		thisView.add(thisLabel);
         		thisView.add(thisLabelDescription);
+        		
         		thisRow.add(thisView);
     
     			// push label info into labels[]
-        		labels.push(thisLabel);
+        		labels.push(thisLabel);	
+        		labelsDesc.push(thisLabelDescription);
+        		
+        		views.push(thisView);
+        		
  				// push article data into data[]
         		data.push( {article_id: m_data.articles[cellIndex].id, article_desc:m_data.articles[cellIndex].desc, article_quantity:0} );
  
          		cellIndex++;
         		dataIndex++;
-       	 		colorSetIndex++;
- 
-        		if( colorSetIndex === colorSet.length ){
-            		colorSetIndex = 0;
-       			}
        			
        			//Ti.API.info("dataIndex: " + dataIndex.toString() + " length : " + m_data.articles.length );
             			
@@ -146,7 +135,9 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 				
 				// set current item
 				currentItem = e.source.objIndex;
-			
+				
+				item_set_focus( currentItem, labels );
+				
 				// show item on desc label
 				dv_label.text = m_ob_id + " - " + m_ob_desc;
 				
@@ -262,3 +253,21 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		return m_win;
 		
 };
+
+
+
+var item_set_focus = function( index, obj ) {
+	
+	obj[index].font = {fontSize:67,fontWeight:'bold'};
+	obj[index].left = 40;
+	
+	
+	for (var i=0; i < obj.length; i++) {
+		if (i != index ){
+			obj[i].font = {fontSize:48,fontWeight:'bold'};
+			obj[i].left = 20;
+		};
+	};
+};
+
+

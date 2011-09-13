@@ -11,7 +11,6 @@ boOrder.items.getOrderItems = function( doc_data, cust_data, items_data ) {
 	// create window
 	var ordWin = Ti.UI.createWindow({
 		backgroundColor:"white",
-		//modal:true,
 		title:"trenutna narudzba"
 	});		
 		
@@ -106,14 +105,12 @@ boOrder.items.getOrderItems = function( doc_data, cust_data, items_data ) {
  	ctrl_ok_button.addEventListener('click',function(e){  
     	ordWin.close();
     	ordWin.accepted = 1;
-    	return ordWin;
 	});
 		
 	// control accept button event
  	ctrl_cancel_button.addEventListener('click',function(e){  
     	ordWin.close();	
     	ordWin.accepted = 0;
-    	return ordWin;
 	});		
 		
 	return ordWin;

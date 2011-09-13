@@ -18,5 +18,5 @@ Ti.App.addEventListener('loggedout',function(){
 // listen to login events
 Ti.App.addEventListener('loggedin',function(){
     // go to main form
-    boPurchase.mainWindow();
+    mainWindow();
 });

@@ -137,20 +137,20 @@ boGeo.getCurrentLocation = function() {
 	location_added = true;
 	
 	Ti.Android.currentActivity.addEventListener('pause', function(e) {
-		if (locationAdded) {
-			Titanium.Geolocation.removeEventListener('location', locationCallback);
+		if (location_added) {
+			Titanium.Geolocation.removeEventListener('location', geoLocationCallback);
 			location_added = false;
 		}
 	});
 	Ti.Android.currentActivity.addEventListener('destroy', function(e) {
-		if (locationAdded) {
-			Titanium.Geolocation.removeEventListener('location', locationCallback);
+		if (location_added) {
+			Titanium.Geolocation.removeEventListener('location', geoLocationCallback);
 			location_added = false;
 		}
 	});
 	Ti.Android.currentActivity.addEventListener('resume', function(e) {
-		if (!locationAdded) {
-			Titanium.Geolocation.addEventListener('location', locationCallback);
+		if (!location_added) {
+			Titanium.Geolocation.addEventListener('location', geoLocationCallback);
 			location_added = true;
 		}
 	});

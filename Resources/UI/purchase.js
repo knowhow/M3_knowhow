@@ -4,6 +4,7 @@ var boPurchase = {};
 // list purchase method
 boPurchase.listPurchase = function() {
 	
+	var current_purchase_no = 0;
 	var main_db = boDb.openDB();
 	var p_data = boDb.getPurcasesData( main_db );
 	
@@ -15,18 +16,57 @@ boPurchase.listPurchase = function() {
 	var p_btn_close = Ti.UI.createButton({
 		title:"Zatvori",
 		height:"auto",
-		width:80,
-		bottom:10
+		left:'2%',
+		width:'20%',
+		height:'10%',
+		bottom:'1%'
 	});
 	
 	var p_tbl_view = Ti.UI.createTableView({
 		headerTitle:"Lista narudžbi za '" + Ti.App.current_logged_user + "'",
 		allowsSelection:true,
-		bottom:90
+		bottom:'10%'
 	});
 
 	// set the table contents, all customers
 	p_tbl_view.setData( _refresh_purchase_data( p_data ) );
+
+	// options dialog 
+	var dlg_opt = {
+		options:['Pogledaj detalje', 'Brisi'],
+		destructive:1,
+		cancel:2,
+		title:'Opcije:'
+	};
+
+	// create dialog
+	var win_dlg_opt = Titanium.UI.createOptionDialog(dlg_opt);
+
+	// add event listener
+	win_dlg_opt.addEventListener('click',function(e)
+	{
+		
+		switch(e.index)
+		{
+			case 0:
+  				alert("vidi detalje narudžbe");
+  				break;
+			case 1:
+				boDb.deleteFromPurchases(main_db, current_purchase_no);
+  				p_data = boDb.getPurcasesData(main_db);
+  				p_tbl_view.setData(_refresh_purchase_data(p_data));
+  				break;
+		};
+	
+	});
+	
+	// tableview on click show options dialog
+	p_tbl_view.addEventListener("click", function(e){
+		current_purchase_no = p_data[e.source.objIndex].purchase_no;
+		win_dlg_opt.show();
+	});
+
+
 
 	p_win.add(p_tbl_view);
 	p_win.add(p_btn_close);
@@ -48,7 +88,10 @@ function _refresh_purchase_data(data) {
 	var tbl_data = [];
 	
 	for(var i=0; i < data.length; i++){
-					
+				
+		// customer array	
+		var c_arr = boDb.getCustomerArrayByIdJSON(data[i].cust_id);
+		
 		var thisRow = Ti.UI.createTableViewRow({
         	className: "item",
         	objIndex:i,
@@ -77,7 +120,7 @@ function _refresh_purchase_data(data) {
            	objIndex:i,
            	objName:"lbl-cust",
            	textAlign:"left",
-           	text:data[i].purchase_no + " - " + boDb.getCustomerByIdJSON(data[i].cust_id),
+           	text:data[i].purchase_no + " - " + c_arr[0].desc,
            	touchEnabled:false
         });
         
@@ -90,7 +133,7 @@ function _refresh_purchase_data(data) {
            	objIndex:i,
            	objName:"lbl-desc",
            	textAlign:"left",
-           	text:boUtil.date.getCurrentDate(data[i].date) + ", total: " + boDb.getSumOfPurchase(main_db, data[i].purchase_no ) ,
+           	text:boUtil.date.getCurrentDate(data[i].date) + ", " + c_arr[0].addr + ", total: " + boDb.getSumOfPurchase(main_db, data[i].purchase_no ) ,
            	touchEnabled:false
         });
 

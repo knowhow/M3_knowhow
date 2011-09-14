@@ -347,3 +347,14 @@ function _refresh_cust_data( c_data, lon, lat ) {
 	return tbl_data;
 };
 
+
+// new customer form
+boCodes.Customers.newCustomer = function(){
+	
+};
+
+// edit customer form
+boCodes.Customers.editCustomer = function(){
+	
+};
+

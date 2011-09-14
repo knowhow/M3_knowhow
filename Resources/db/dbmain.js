@@ -120,6 +120,24 @@ boDb.getCustomerByIdJSON = function( customer_id ){
 	return "";
 };
 
+// get customer desc from db
+boDb.getCustomerArrayById = function( oDb, customer_id ){
+	var row = oDb.execute('SELECT * FROM customers WHERE id = ?', customer_id);
+	return [{ desc: row.fieldByName('desc'), city: row.fieldByName('city'), postcode: row.fieldByName('postcode'), addr: row.fieldByName('addr'), lat: row.fieldByName('lat'), lon: row.fieldByName('lon') }];
+};
+
+
+// get customer desc from JSON
+boDb.getCustomerArrayByIdJSON = function( customer_id ){
+	var data = boDb.getCustomersDataJSON();
+	for (var i=0; i < data.customers.length; i++) {
+	  if(data.customers[i].id == customer_id){
+	  	return [{ desc: data.customers[i].desc, city: data.customers[i].city, postcode: data.customers[i].postcode, addr: data.customers[i].addr, lat: data.customers[i].lat, lon: data.customers[i].lon }];
+	  };
+	};
+	return "";
+};
+
 
 // get customer data JSON
 boDb.getCustomersDataJSON = function() {
@@ -189,6 +207,12 @@ boDb.getPurchaseItemsData = function( oDb, purchase_no ){
 boDb.getSumOfPurchase = function( oDb, p_no ){
 	var row = oDb.execute('SELECT items_total FROM purchases WHERE purchase_no = ?', p_no);
 	return Number(row.fieldByName('items_total'));
+};
+
+// delete purchase
+boDb.deleteFromPurchases = function( oDb, p_no ){
+	oDb.execute('DELETE FROM purchases WHERE purchase_no = ?', p_no);
+	oDb.execute('DELETE FROM purchase_items WHERE purchase_no = ?', p_no);	
 };
 
 

@@ -23,20 +23,10 @@ boMobileAppLib.Login.LoginForm = function() {
 		
 	// create login window
 	var login_window = Titanium.UI.createWindow({
-   		tabBarHidden:true,
-   		navBarHidden:false,
+   		//tabBarHidden:true,
    		backgroundColor:"white",
    		title:'Prijava'
 	});
-	
-	login_window.activity.onCreateOptionsMenu = function(e) {
-		var menu = e.menu;
-		var m1 = menu.add({ title : 'Zatvori aplikaciju' });
-		m1.setIcon(Titanium.Android.R.drawable.ic_menu_close_clear_cancel);
-		m1.addEventListener('click', function(e) {
-			Ti.UI.currentWindow.close();
-		});
-	};
 		
 	// create username input
 	var username = Titanium.UI.createTextField({  
@@ -80,8 +70,18 @@ boMobileAppLib.Login.LoginForm = function() {
         borderRadius:1,  
         font:{fontFamily:'Arial',fontWeight:'bold',fontSize:30}  
 	});  
-		
+
+	var closeBtn = Titanium.UI.createButton({  
+        title:'Odustani',  
+        top:320,  
+        width:300,  
+        height:100,  
+        borderRadius:1,  
+        font:{fontFamily:'Arial',fontWeight:'bold',fontSize:30}  
+	});  
+
 	login_window.add(loginBtn);  
+	login_window.add(closeBtn);  
 		
 	// if username exist, go to pwd 
 	if(user_name != ''){
@@ -115,6 +115,11 @@ boMobileAppLib.Login.LoginForm = function() {
 			password.focus();
 		};
 	});
+	
+	closeBtn.addEventListener('click',function(){  
+   		login_window.close();
+   	});
+	
 				
 	loginBtn.addEventListener('click',function(e){  
     		

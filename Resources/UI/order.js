@@ -2,7 +2,7 @@ var boOrder = {};
 
 boOrder.items = {};
 	
-boOrder.items.getOrderItems = function( doc_data, cust_data, items_data ) {
+boOrder.items.getOrderItems = function( cust_data, items_data ) {
 	
 	//alert(JSON.stringify(items_data));
 		
@@ -27,7 +27,7 @@ boOrder.items.getOrderItems = function( doc_data, cust_data, items_data ) {
 	var partnerId = cust_data[0].id;
 	var partnerDesc = cust_data[0].desc;
 	var partnerCity = cust_data[0].city;
-	var documentNo = doc_data[0].doc_no;
+	var documentNo = "xxxxxx";
 	var documentDate = boUtil.date.getCurrentDate();
 		
 	// document data:

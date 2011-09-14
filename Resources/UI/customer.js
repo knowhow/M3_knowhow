@@ -1,29 +1,4 @@
 
-// new customer, update existing customer
-boCodes.Customers.customerForm = function(){
-		
-	var cf_win = Ti.UI.createWindow({
-		backgroundColor:"#FFFFFF",
-		title:"partneri"
-	});
-		
-	var cf_btn_close = Ti.UI.createButton({
-		title:"Zatvori",
-		height:"auto",
-		width:80,
-		bottom:10
-	});
-
-	cf_win.add(cf_btn_close);
-
-	cf_btn_close.addEventListener("click", function(){
-		cf_win.close();
-	});
-
-	cf_win.open();
-};
-
-
 // customer list 
 boCodes.Customers.customerList = function() {
 		
@@ -145,7 +120,7 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 	});
 	
 	// set the table contents, all customers
-	cp_tbl_view.setData( _refresh_tbl_data( c_data, longitude, latitude ) );
+	cp_tbl_view.setData( _refresh_cust_data( c_data, longitude, latitude ) );
 	
 	
 	cp_top_view.add(cp_lbl_loc);
@@ -187,7 +162,7 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 	// manual run
 	cp_man_btn.addEventListener("click", function(){
 		
-		var tbl_data = _refresh_tbl_data( c_data, longitude, latitude );
+		var tbl_data = _refresh_cust_data( c_data, longitude, latitude );
 		//alert(JSON.stringify(customer_data.customers));
 		//alert(customer_data.customers.length);
 		cp_tbl_view.setData( tbl_data );
@@ -228,7 +203,7 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
             	
             	// calculate distance and fill table view
             	var dist_data = boCodes.Customers.getCustomersInRadius( longitude, latitude );
-            	var ret_data = _refresh_tbl_data( dist_data, longitude, latitude );
+            	var ret_data = _refresh_cust_data( dist_data, longitude, latitude );
 				
 				cp_tbl_view.setData( ret_data );
 				//Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
@@ -300,7 +275,7 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 };
 
 
-function _refresh_tbl_data( c_data, lon, lat ) {
+function _refresh_cust_data( c_data, lon, lat ) {
 		
 	var tbl_data = [];
 	var dst = 0;

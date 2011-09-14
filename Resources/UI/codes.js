@@ -9,7 +9,7 @@ boCodes.Users = {};
 	
 // get articles from db
 boCodes.Articles.getArticles = function() {
-	return boDb.getArticlesData()
+	return boDb.getArticlesDataJSON()
 };		
 	
 // get article matrix based on article JSON data
@@ -20,7 +20,7 @@ boCodes.Articles.getArticleMatrix = function( article_data ) {
 // get customers
 boCodes.Customers.getCustomers = function() {
 	
-	var data = boDb.getCustomersData()
+	var data = boDb.getCustomersDataJSON()
 	var ret = [];
 	
 	for(var i=0; i < data.customers.length ; i++){
@@ -36,7 +36,7 @@ boCodes.Customers.getCustomers = function() {
 // get customers by distance
 boCodes.Customers.getCustomersInRadius = function( lon, lat, radius ) {
 	
-	var data = boDb.getCustomersData()
+	var data = boDb.getCustomersDataJSON()
 	var ret = [];
 	var dist = 0;
 	
@@ -70,7 +70,7 @@ boCodes.Customers.getCustomerForm = function() {
 
 // get users data...
 boCodes.Users.getUsersData = function() {
-	return boDb.getUsersData();
+	return boDb.getUsersDataJSON();
 };
 
 

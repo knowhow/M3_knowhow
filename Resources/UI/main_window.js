@@ -49,11 +49,23 @@ var mainWindow = function() {
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:30}  
 	});  
 	
+	// btn geo...
+	var delete_db = Titanium.UI.createButton({  
+       	title:'Obrisi db',  
+       	left:3,
+       	right:3,
+       	top:280,    
+       	height:80,  
+       	borderRadius:1,  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:30}  
+	});  
+	
 	win_main.add(info);
 	win_main.add(customer_list);
 	win_main.add(list_purchase);
 	win_main.add(where_am_i);
-		
+	win_main.add(delete_db);
+	
 	win_main.open();
 		
 	// customer list event handler
@@ -70,6 +82,14 @@ var mainWindow = function() {
 	where_am_i.addEventListener('click',function(e){  
    		boGeo.geoForm();
 	});  	
+
+	// delete db
+	delete_db.addEventListener('click',function(e){  
+   		var db = boDb.openDB();
+   		db.close();
+   		db.remove();
+	});  	
+
 	
 };
 	

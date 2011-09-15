@@ -200,11 +200,11 @@ boPurchase.newPurchase = function() {
    			main_db.close();
    				
    			if(e.source.accepted == 1){
-   				alert("Narudzba prihvacena, snimljeno u db!");	   			
+   				alert("Narudzba ažurirana...");	   			
    			} 
   			else
    			{
-   				alert("Narudzba odbijena !!! Snimljeno kao valid = 0");
+   				alert("Narudzba odbijena !!!");
    			};
    					
 		});

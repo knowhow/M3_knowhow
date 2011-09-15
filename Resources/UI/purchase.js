@@ -6,7 +6,7 @@ boPurchase.listPurchase = function() {
 	
 	var current_purchase_no = 0;
 	var main_db = boDb.openDB();
-	var p_data = boDb.getPurcasesData( main_db );
+	var d_data = boDb.getPurcasesData( main_db );
 	
 	var p_win = Ti.UI.createWindow({
 		backgroundColor:"#FFFFFF",
@@ -29,7 +29,7 @@ boPurchase.listPurchase = function() {
 	});
 
 	// set the table contents, all customers
-	p_tbl_view.setData( _refresh_purchase_data( p_data ) );
+	p_tbl_view.setData( _refresh_purchase_data( d_data ) );
 
 	// options dialog 
 	var dlg_opt = {
@@ -53,8 +53,8 @@ boPurchase.listPurchase = function() {
   				break;
 			case 1:
 				boDb.deleteFromPurchases(main_db, current_purchase_no);
-  				p_data = boDb.getPurcasesData(main_db);
-  				p_tbl_view.setData(_refresh_purchase_data(p_data));
+  				d_data = boDb.getPurcasesData(main_db);
+  				p_tbl_view.setData(_refresh_purchase_data(d_data));
   				break;
 		};
 	
@@ -62,7 +62,7 @@ boPurchase.listPurchase = function() {
 	
 	// tableview on click show options dialog
 	p_tbl_view.addEventListener("click", function(e){
-		current_purchase_no = p_data[e.source.objIndex].purchase_no;
+		current_purchase_no = d_data[e.source.objIndex].doc_no;
 		win_dlg_opt.show();
 	});
 
@@ -106,21 +106,30 @@ function _refresh_purchase_data(data) {
            	//backgroundColor:"white",
            	top:3,
            	height:100,
-           	width:420,
+           	width:480,
            	left:1,
            	objIndex:i,
            	objName:"view-desc"
+        });
+        
+        var thisImage = Ti.UI.createImageView({
+        	image:'img/check_ok.png',
+        	height:50,
+        	width:50,
+        	left:'85%',
+        	top:2
         });
         
     	var thisLabelPurch = Ti.UI.createLabel({
            	color:"black",
            	top:1,
            	left:5,
+           	width:'80%',
            	font:{fontSize:26,fontWeight:'bold'},
            	objIndex:i,
            	objName:"lbl-cust",
            	textAlign:"left",
-           	text:data[i].purchase_no + " - " + c_arr[0].desc,
+           	text:data[i].doc_no + " - " + c_arr[0].desc,
            	touchEnabled:false
         });
         
@@ -133,18 +142,21 @@ function _refresh_purchase_data(data) {
            	objIndex:i,
            	objName:"lbl-desc",
            	textAlign:"left",
-           	text:boUtil.date.getCurrentDate(data[i].date) + ", " + c_arr[0].addr + ", total: " + boDb.getSumOfPurchase(main_db, data[i].purchase_no ) ,
+           	text:boUtil.date.getCurrentDate(data[i].doc_date) + ", " + c_arr[0].addr + ", total: " + data[i].items_total ,
            	touchEnabled:false
         });
-
+		
         // if purch not valid
-        if(data[i].purchase_valid == 0){
+        if(data[i].doc_valid == 0){
         	thisLabelPurch.color = "red";
-        	thisLabelPurch.text += " (odbačena !!!)";
+        	thisImage.image = 'img/check_cancel.png';
         };
 
+        
         thisView.add(thisLabelPurch);
         thisView.add(thisLabelDesc);
+        thisView.add(thisImage);
+        
         thisRow.add(thisView);	
 		
 		tbl_data.push(thisRow);

@@ -7,7 +7,7 @@ var boDb = {};
 // get users data from db
 boDb.getUsersData = function( oDb ){
 	var aData = [];
-	var rows = oDb.execute('SELECT * FROM ' + table);
+	var rows = oDb.execute('SELECT * FROM users');
 	while (rows.isValidRow()) {
   		aData.push({ 
   			title: rows.fieldByName('name'), hasChild:true,
@@ -38,7 +38,7 @@ boDb.getUsersDataJSON = function() {
 // get articles data from db
 boDb.getArticlesData = function( oDb ){
 	var aData = [];
-	var rows = oDb.execute('SELECT * FROM ' + table);
+	var rows = oDb.execute('SELECT * FROM articles');
 	while (rows.isValidRow()) {
   		aData.push({ 
   			title: rows.fieldByName('name'), hasChild:true,
@@ -84,7 +84,7 @@ boDb.getArticlesDataJSON = function() {
 // get customer data from db
 boDb.getCustomerData = function( oDb ){
 	var aData = [];
-	var rows = oDb.execute('SELECT * FROM ' + table);
+	var rows = oDb.execute('SELECT * FROM customers');
 	while (rows.isValidRow()) {
   		aData.push({ 
   			title: rows.fieldByName('name'), hasChild:true,
@@ -162,19 +162,21 @@ boDb.getPurcasesData = function( oDb, valid ){
 	var rows;
 	
 	if(valid != null){
-		rows = oDb.execute('SELECT * FROM purchases WHERE customer_id <> "" AND purchase_valid = ?', valid);
+		rows = oDb.execute('SELECT * FROM docs WHERE cust_id <> "" AND doc_valid = ?', valid);
 	}
 	else
 	{
-		rows = oDb.execute('SELECT * FROM purchases WHERE customer_id <> ""');		
+		rows = oDb.execute('SELECT * FROM docs WHERE cust_id <> ""');		
 	};
 	
 	while (rows.isValidRow()) {
   		aData.push({ 
-  			purchase_no: rows.fieldByName('purchase_no'), 
-  			date: rows.fieldByName('date'), 
-  			cust_id: rows.fieldByName('customer_id'), 
-  			purchase_valid: rows.fieldByName('purchase_valid')
+  			doc_no: rows.fieldByName('doc_no'), 
+  			doc_date: rows.fieldByName('doc_date'), 
+  			cust_id: rows.fieldByName('cust_id'), 
+  			user_id: rows.fieldByName('user_id'),
+  			items_total: rows.fieldByName('items_total'),
+  			doc_valid: rows.fieldByName('doc_valid')
   			});
 
 		rows.next();
@@ -188,11 +190,11 @@ boDb.getPurcasesData = function( oDb, valid ){
 // get purchase items data from db
 boDb.getPurchaseItemsData = function( oDb, purchase_no ){
 	var aData = [];
-	var rows = oDb.execute('SELECT * FROM purchase_items WHERE purchase_no = ?', purchase_no);
+	var rows = oDb.execute('SELECT * FROM doc_items WHERE doc_no = ?', purchase_no);
 	while (rows.isValidRow()) {
   		aData.push({ 
-  			purchase_item_no: rows.fieldByName('purchase_item_no'), 
-  			article_id: rows.fieldByName('article_id'), 
+  			doc_item_no: rows.fieldByName('doc_item_no'), 
+  			art_id: rows.fieldByName('art_id'), 
   			quantity: rows.fieldByName('quantity') 
   			});
 
@@ -203,16 +205,11 @@ boDb.getPurchaseItemsData = function( oDb, purchase_no ){
 	return aData;
 };
 
-// get sum of purchase
-boDb.getSumOfPurchase = function( oDb, p_no ){
-	var row = oDb.execute('SELECT items_total FROM purchases WHERE purchase_no = ?', p_no);
-	return Number(row.fieldByName('items_total'));
-};
 
 // delete purchase
 boDb.deleteFromPurchases = function( oDb, p_no ){
-	oDb.execute('DELETE FROM purchases WHERE purchase_no = ?', p_no);
-	oDb.execute('DELETE FROM purchase_items WHERE purchase_no = ?', p_no);	
+	oDb.execute('DELETE FROM docs WHERE doc_no = ?', p_no);
+	oDb.execute('DELETE FROM doc_items WHERE doc_no = ?', p_no);	
 };
 
 
@@ -220,21 +217,22 @@ boDb.deleteFromPurchases = function( oDb, p_no ){
 boDb.insertIntoPurchases = function( oDb, cust_id, p_valid, items_data ) {
 	
 	// insert into table purchases
-	var _p_date = Date();
+	var _d_date = Date();
 	var _cust_id = cust_id;
-	var _p_valid = p_valid;
+	var _d_valid = p_valid;
+	var _user_id = 0;
 	
-	oDb.execute('INSERT INTO purchases (date, customer_id, purchase_valid, items_total) VALUES(?,?,?,?)', _p_date, _cust_id, _p_valid, 0 );
+	oDb.execute('INSERT INTO docs (doc_date, cust_id, doc_valid, items_total, user_id) VALUES(?,?,?,?,?)', _d_date, _cust_id, _d_valid, 0, _user_id );
  	
- 	var p_last = oDb.execute("SELECT * FROM purchases ORDER BY purchase_no DESC LIMIT 1");
+ 	var d_last = oDb.execute("SELECT * FROM docs ORDER BY doc_no DESC LIMIT 1");
 	
 	// get the inserted purchase_no
-	var _p_no = Number( p_last.fieldByName('purchase_no')); 
+	var _d_no = Number( d_last.fieldByName('doc_no')); 
 	
 	// close queries
-	p_last.close();
+	d_last.close();
 	
-	var _p_item_no = 0;
+	var _d_item_no = 0;
 	var _art_id = "";
 	var _quantity = 0;
 	var _total = 0;
@@ -242,16 +240,16 @@ boDb.insertIntoPurchases = function( oDb, cust_id, p_valid, items_data ) {
     // now insert into purchase_items
     for (var i=0; i < items_data.length; i++) {
     	// add to item counter
-    	_p_item_no++;
+    	_d_item_no++;
     	_art_id = items_data[i].article_id;
     	_quantity = items_data[i].article_quantity;
     	_total += _quantity;
     	// insert item
-		oDb.execute('INSERT INTO purchase_items (purchase_no, purchase_item_no, article_id, quantity) VALUES(?,?,?,?)', _p_no, _p_item_no, _art_id, _quantity );
+		oDb.execute('INSERT INTO doc_items (doc_no, doc_item_no, art_id, quantity) VALUES(?,?,?,?)', _d_no, _d_item_no, _art_id, _quantity );
     }; 
     
     // update total in purchases
-    oDb.execute('UPDATE purchases SET items_total = ? WHERE purchase_no = ?', _total, _p_no);
+    oDb.execute('UPDATE docs SET items_total = ? WHERE doc_no = ?', _total, _d_no);
     
 };
 
@@ -265,22 +263,24 @@ boDb.openDB = function() {
 	
 	var db = Titanium.Database.open('purchase');
 	
-	// purchases
+	// docs
 	//
-	// purchase_no INT
-	// date DATE
-	// customer_id TEXT
-	// purchase_valid INT
-	db.execute('CREATE TABLE IF NOT EXISTS purchases (purchase_no INTEGER PRIMARY KEY, date DATE, customer_id TEXT, purchase_valid INT, items_total REAL)');
+	// doc_no INT
+	// doc_date DATE
+	// cust_id TEXT
+	// doc_valid INT
+	// user_id INT
+	// items_total REAL
+	db.execute('CREATE TABLE IF NOT EXISTS docs (doc_no INTEGER PRIMARY KEY, doc_date DATE, cust_id TEXT, doc_valid INT, items_total REAL, user_id INT)');
 	
-	// purchase_items
+	// doc_items
 	// 
-	// purchase_no INT
-	// purchase_item_no INT
-	// artcle_id TEXT
+	// doc_no INT
+	// doc_item_no INT
+	// art_id TEXT
 	// quantity REAL
 	
-	db.execute('CREATE TABLE IF NOT EXISTS purchase_items (purchase_no INT, purchase_item_no INT, article_id TEXT, quantity REAL)');
+	db.execute('CREATE TABLE IF NOT EXISTS doc_items (doc_no INT, doc_item_no INT, art_id TEXT, quantity REAL)');
 	
 	// customers
 	//
@@ -304,9 +304,3 @@ boDb.alterDB = function(oDb){
 };
 
 
-
-boDb.insertIntoTable = function( oDb ) {
-
-db.execute('INSERT INTO bringout (name, jmbg, koef) VALUES(?,?,?)', _name, _jmbg, _koef );
-   
-};

@@ -133,6 +133,7 @@ boMobileAppLib.Login.LoginForm = function() {
     	   			Ti.App.fireEvent('loggedin');
     	   			// set global variable...
     	   			Ti.App.current_logged_user = username.value;
+    	   			Ti.App.current_logged_user_id = Number(loginJSON.userdata[i].id);
     	   			return;	  	
     	   		};
     		};

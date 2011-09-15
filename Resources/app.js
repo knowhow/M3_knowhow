@@ -2,6 +2,7 @@ Titanium.UI.setBackgroundColor('#000');
 
 // global variables
 Ti.App.current_logged_user = "";
+Ti.App.current_logged_user_id = 0;
 
 // include lib 
 Ti.include("lib.js");

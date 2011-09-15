@@ -192,9 +192,10 @@ boPurchase.newPurchase = function() {
    			
    			// store to db...
    			var main_db = boDb.openDB();
-   			var cust_id = _cust_result[0].id;   
+   			var cust_id = Number(_cust_result[0].id);   
+   			var user_id = Ti.App.current_logged_user_id;
    							
-   			boDb.insertIntoPurchases(main_db, cust_id, e.source.accepted, purch_data);
+   			boDb.insertIntoPurchases(main_db, user_id, cust_id, e.source.accepted, purch_data);
    			
    			main_db.close();
    				

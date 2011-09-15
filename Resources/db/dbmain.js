@@ -10,11 +10,9 @@ boDb.getUsersData = function( oDb ){
 	var rows = oDb.execute('SELECT * FROM users');
 	while (rows.isValidRow()) {
   		aData.push({ 
-  			title: rows.fieldByName('name'), hasChild:true,
   			id: rows.fieldByName('id'), 
-  			jmbg: rows.fieldByName('jmbg'), 
-  			koef: rows.fieldByName('koef'), 
-  			color:'green' 
+  			name: rows.fieldByName('name'), 
+  			pwd: rows.fieldByName('pwd') 
   			});
 
 		rows.next();
@@ -26,7 +24,7 @@ boDb.getUsersData = function( oDb ){
 
 	
 boDb.getUsersDataJSON = function() {
-	var acc = JSON.parse('{"userdata":[{"name":"vsasa","pwd":"11"},{"name":"bjasko","pwd":"22"},{"name":"hernad","pwd":"33"}]}');
+	var acc = JSON.parse('{"userdata":[{"id":"1","name":"vsasa","pwd":"11"},{"id":"2","name":"bjasko","pwd":"22"},{"id":"3","name":"hernad","pwd":"33"}]}');
 	return acc;
 };
 
@@ -41,11 +39,10 @@ boDb.getArticlesData = function( oDb ){
 	var rows = oDb.execute('SELECT * FROM articles');
 	while (rows.isValidRow()) {
   		aData.push({ 
-  			title: rows.fieldByName('name'), hasChild:true,
   			id: rows.fieldByName('id'), 
-  			jmbg: rows.fieldByName('jmbg'), 
-  			koef: rows.fieldByName('koef'), 
-  			color:'green' 
+  			desc: rows.fieldByName('desc'), 
+  			price: rows.fieldByName('price'), 
+  			pict: rows.fieldByName('pict') 
   			});
 
 		rows.next();
@@ -87,11 +84,15 @@ boDb.getCustomerData = function( oDb ){
 	var rows = oDb.execute('SELECT * FROM customers');
 	while (rows.isValidRow()) {
   		aData.push({ 
-  			title: rows.fieldByName('name'), hasChild:true,
   			id: rows.fieldByName('id'), 
-  			jmbg: rows.fieldByName('jmbg'), 
-  			koef: rows.fieldByName('koef'), 
-  			color:'green' 
+  			desc: rows.fieldByName('desc'), 
+  			addr: rows.fieldByName('addr'), 
+  			city: rows.fieldByName('city'), 
+  			postcode: rows.fieldByName('postcode'),   			
+  			tel: rows.fieldByName('tel'), 
+  			user_id: rows.fieldByName('user_id'),   			
+  			lon: rows.fieldByName('lon'), 
+  			lat: rows.fieldByName('lat')
   			});
 
 		rows.next();
@@ -214,15 +215,15 @@ boDb.deleteFromPurchases = function( oDb, p_no ){
 
 
 // insert data into purchases
-boDb.insertIntoPurchases = function( oDb, cust_id, p_valid, items_data ) {
+boDb.insertIntoPurchases = function( oDb, user_id, cust_id, d_valid, items_data ) {
 	
 	// insert into table purchases
 	var _d_date = Date();
 	var _cust_id = cust_id;
-	var _d_valid = p_valid;
-	var _user_id = 0;
+	var _d_valid = d_valid;
+	var _user_id = user_id;
 	
-	oDb.execute('INSERT INTO docs (doc_date, cust_id, doc_valid, items_total, user_id) VALUES(?,?,?,?,?)', _d_date, _cust_id, _d_valid, 0, _user_id );
+	oDb.execute('INSERT INTO docs (doc_date, cust_id, doc_valid, user_id) VALUES(?,?,?,?)', _d_date, _cust_id, _d_valid, _user_id );
  	
  	var d_last = oDb.execute("SELECT * FROM docs ORDER BY doc_no DESC LIMIT 1");
 	
@@ -271,7 +272,7 @@ boDb.openDB = function() {
 	// doc_valid INT
 	// user_id INT
 	// items_total REAL
-	db.execute('CREATE TABLE IF NOT EXISTS docs (doc_no INTEGER PRIMARY KEY, doc_date DATE, cust_id TEXT, doc_valid INT, items_total REAL, user_id INT)');
+	db.execute('CREATE TABLE IF NOT EXISTS docs (doc_no INTEGER PRIMARY KEY, doc_date DATE, cust_id INT, doc_valid INT, items_total REAL, user_id INT)');
 	
 	// doc_items
 	// 
@@ -292,7 +293,7 @@ boDb.openDB = function() {
 	// user TEXT
 	// lat REAL
 	// lon REAL
-	db.execute('CREATE TABLE IF NOT EXISTS customers (id TEXT, desc TEXT, addr TEXT, city TEXT, postcode TEXT, user TEXT, lon REAL, lat REAL)'); 
+	db.execute('CREATE TABLE IF NOT EXISTS customers (id INTEGER PRIMARY KEY, desc TEXT, addr TEXT, city TEXT, postcode TEXT, user_id INT, lon REAL, lat REAL)'); 
 	
 	return db;
 };

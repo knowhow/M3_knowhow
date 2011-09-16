@@ -5,6 +5,11 @@ var boPurchase = {};
 boPurchase.listPurchase = function() {
 	
 	var current_purchase_no = 0;
+	var current_purchase_date = Date();
+	var current_purchase_valid = 0;
+	var current_purchase_cust_id = 0;
+	var current_purchase_doc_total = 0;
+	
 	var main_db = boDb.openDB();
 	var d_data = boDb.getPurcasesData( main_db );
 	
@@ -39,7 +44,7 @@ boPurchase.listPurchase = function() {
 
 	// options dialog 
 	var dlg_opt = {
-		options:['Pogledaj detalje', 'Brisi'],
+		options:['Pogledaj detalje', 'Poništi', 'Aktiviraj', 'Brisi'],
 		destructive:1,
 		cancel:2,
 		title:'Opcije:'
@@ -54,10 +59,48 @@ boPurchase.listPurchase = function() {
 		
 		switch(e.index)
 		{
+			// view details
 			case 0:
-  				alert("vidi detalje narudžbe");
+				
+				// open db
+				var tmp_db = boDb.openDB();
+				// get items data
+				var items_data = boDb.getPurchaseItemsData(tmp_db, current_purchase_no);
+				// get customer data
+				var cust_data = boDb.getCustomerArrayById(tmp_db, current_purchase_cust_id);
+				// close db
+				tmp_db.close();
+				
+				// open purchase preview form
+				// cust_data, items_data, doc_no, doc_date, doc_valid
+  				var ordForm = boOrder.items.getPurchasePreview(cust_data, items_data, current_purchase_no, current_purchase_date, current_purchase_valid, current_purchase_doc_total );
+  				
+  				ordForm.addEventListener("close", function(){
+  					// ...
+  				});
+  				
   				break;
-			case 1:
+  				
+  			// cancel purchase
+  			case 1:
+  			
+  				boDb.cancelPurchase(main_db, current_purchase_no);
+  				d_data = boDb.getPurcasesData(main_db);
+  				p_tbl_view.setData(_refresh_purchase_data(d_data));
+  				break;
+  				
+  			// activate purchase
+  			case 2:
+  			
+  				boDb.activatePurchase(main_db, current_purchase_no);
+  				d_data = boDb.getPurcasesData(main_db);
+  				p_tbl_view.setData(_refresh_purchase_data(d_data));
+  				break;
+  			
+  			// delete purchase
+			case 3:
+			
+				// delete record from purchases
 				boDb.deleteFromPurchases(main_db, current_purchase_no);
   				d_data = boDb.getPurcasesData(main_db);
   				p_tbl_view.setData(_refresh_purchase_data(d_data));
@@ -68,7 +111,13 @@ boPurchase.listPurchase = function() {
 	
 	// tableview on click show options dialog
 	p_tbl_view.addEventListener("click", function(e){
+		
 		current_purchase_no = d_data[e.source.objIndex].doc_no;
+		current_purchase_date = boUtil.date.getCurrentDate( d_data[e.source.objIndex].doc_date);
+		current_purchase_valid = d_data[e.source.objIndex].doc_valid;
+		current_purchase_cust_id = d_data[e.source.objIndex].cust_id;
+		current_purchase_doc_total = d_data[e.source.objIndex].doc_total;
+
 		win_dlg_opt.show();
 	});
 
@@ -97,7 +146,7 @@ function _refresh_purchase_data(data) {
 	for(var i=0; i < data.length; i++){
 				
 		// customer array	
-		var c_arr = boDb.getCustomerArrayByIdJSON(data[i].cust_id);
+		var c_arr = boDb.getCustomerArrayById( main_db, data[i].cust_id );
 		
 		var thisRow = Ti.UI.createTableViewRow({
         	className: "item",
@@ -193,7 +242,7 @@ boPurchase.newPurchase = function() {
     	var purch_data = Ti.App.purchased_data;
    			
    		// get the final order report form...
-   		var detail_win = boOrder.items.getOrderItems( _cust_result, purch_data );
+   		var detail_win = boOrder.items.getPurchasePreview( _cust_result, purch_data );
     		
 		detail_win.addEventListener('close',function(e){
    			

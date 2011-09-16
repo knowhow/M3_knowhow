@@ -74,6 +74,17 @@ boDb.getArticlesDataJSON = function() {
 };
 
 
+// get article desc from JSON
+boDb.getArticleDescByIdJSON = function( article_id ){
+	var data = boDb.getArticlesDataJSON();
+	for (var i=0; i < data.articles.length; i++) {
+	  if(data.articles[i].id == article_id){
+	  	return data.articles[i].desc;
+	  };
+	};
+	return "";
+};
+
 /*
  * CUSTOMERS DB methods
  */
@@ -191,7 +202,7 @@ boDb.getCustomerByIdJSON = function( customer_id ){
 // get customer desc from db
 boDb.getCustomerArrayById = function( oDb, customer_id ){
 	var row = oDb.execute('SELECT * FROM customers WHERE id = ?', customer_id);
-	return [{ desc: row.fieldByName('desc'), city: row.fieldByName('city'), postcode: row.fieldByName('postcode'), addr: row.fieldByName('addr'), lat: row.fieldByName('lat'), lon: row.fieldByName('lon') }];
+	return [{ id: row.fieldByName('id') ,desc: row.fieldByName('desc'), city: row.fieldByName('city'), postcode: row.fieldByName('postcode'), addr: row.fieldByName('addr'), lat: row.fieldByName('lat'), lon: row.fieldByName('lon') }];
 };
 
 
@@ -262,8 +273,8 @@ boDb.getPurchaseItemsData = function( oDb, purchase_no ){
 	while (rows.isValidRow()) {
   		aData.push({ 
   			doc_item_no: rows.fieldByName('doc_item_no'), 
-  			art_id: rows.fieldByName('art_id'), 
-  			quantity: rows.fieldByName('quantity') 
+  			article_id: rows.fieldByName('art_id'), 
+  			article_quantity: rows.fieldByName('quantity') 
   			});
 
 		rows.next();
@@ -271,6 +282,17 @@ boDb.getPurchaseItemsData = function( oDb, purchase_no ){
 	rows.close();
 	
 	return aData;
+};
+
+
+// cancel purchase
+boDb.cancelPurchase = function( oDb, p_no ){
+	oDb.execute('UPDATE docs SET doc_valid = 0 WHERE doc_no = ?', p_no);
+};
+
+// activate purchase
+boDb.activatePurchase = function( oDb, p_no ){
+	oDb.execute('UPDATE docs SET doc_valid = 1 WHERE doc_no = ?', p_no);
 };
 
 
@@ -307,13 +329,18 @@ boDb.insertIntoPurchases = function( oDb, user_id, cust_id, d_valid, items_data 
 	
     // now insert into purchase_items
     for (var i=0; i < items_data.length; i++) {
+    	
     	// add to item counter
     	_d_item_no++;
     	_art_id = items_data[i].article_id;
     	_quantity = items_data[i].article_quantity;
     	_total += _quantity;
-    	// insert item
-		oDb.execute('INSERT INTO doc_items (doc_no, doc_item_no, art_id, quantity) VALUES(?,?,?,?)', _d_no, _d_item_no, _art_id, _quantity );
+    	
+    	// only if quantity <> 0
+    	if(_quantity != 0){
+    		// insert item
+			oDb.execute('INSERT INTO doc_items (doc_no, doc_item_no, art_id, quantity) VALUES(?,?,?,?)', _d_no, _d_item_no, _art_id, _quantity );
+		};
     }; 
     
     // update total in purchases

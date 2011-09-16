@@ -82,39 +82,63 @@ boDb.getArticlesDataJSON = function() {
 boDb.insertIntoCustomers = function( oDb, cust_data ) {
 	
 	// insert into table customers
-	var _desc = cust_data[0].desc;
-	var _addr = cust_data[0].addr;
-	var _city = cust_data[0].city;
-	var _pcode = cust_data[0].pcode;
-	var _tel1 = cust_data[0].tel1;
-	var _tel2 = cust_data[0].tel2;
-	var _lon = cust_data[0].lon;
-	var _lat = cust_data[0].lat;
-
+	var _desc;
+	var _addr;
+	var _city;
+	var _pcode;
+	var _tel1;
+	var _tel2;
+	var _lon;
+	var _lat;
 	var _user_id = Ti.App.current_logged_user_id;
 	
-	oDb.execute('INSERT INTO customers (desc, addr, city, postcode, tel1, tel2, lon, lat, user_id) VALUES(?,?,?,?,?,?,?,?,?)', _desc, _addr, _city, _pcode, _tel1, _tel2, _lon, _lat, _user_id );
+	for (var i=0; i < cust_data.length; i++) {
+		
+		_desc = cust_data[i].desc;
+		_addr = cust_data[i].addr;
+		_city = cust_data[i].city;
+		_pcode = cust_data[i].pcode;
+		_tel1 = cust_data[i].tel1;
+		_tel2 = cust_data[i].tel2;
+		_lon = cust_data[i].lon;
+		_lat = cust_data[i].lat;
+	
+		oDb.execute('INSERT INTO customers (desc, addr, city, postcode, tel1, tel2, lon, lat, user_id) VALUES(?,?,?,?,?,?,?,?,?)', _desc, _addr, _city, _pcode, _tel1, _tel2, _lon, _lat, _user_id );
+	  
+	};
      
 };
 
 
 // insert data into customers
 boDb.updateCustomers = function( oDb, cust_data ) {
-	
-	// insert into table customers
-	var _id = cust_data[0].id;
-	var _desc = cust_data[0].desc;
-	var _addr = cust_data[0].addr;
-	var _city = cust_data[0].city;
-	var _pcode = cust_data[0].pcode;
-	var _tel1 = cust_data[0].tel1;
-	var _tel2 = cust_data[0].tel2;
-	var _lon = cust_data[0].lon;
-	var _lat = cust_data[0].lat;
 
+	var _desc;
+	var _addr;
+	var _city;
+	var _pcode;
+	var _tel1;
+	var _tel2;
+	var _lon;
+	var _lat;
 	var _user_id = Ti.App.current_logged_user_id;
-
-	oDb.execute('UPDATE customers SET desc = ?, addr = ?, city = ?, postcode = ?, tel1 = ?, tel2 = ?, lon = ?, lat = ?, user_id = ? WHERE id = ?', _desc, _addr, _city, _pcode, _tel1, _tel2, _lon, _lat, _user_id, _id );
+	
+	for (var i=0; i < cust_data.length; i++) {
+	
+		// insert into table customers
+		_id = cust_data[0].id;
+		_desc = cust_data[0].desc;
+		_addr = cust_data[0].addr;
+		_city = cust_data[0].city;
+		_pcode = cust_data[0].pcode;
+		_tel1 = cust_data[0].tel1;
+		_tel2 = cust_data[0].tel2;
+		_lon = cust_data[0].lon;
+		_lat = cust_data[0].lat;
+	
+		oDb.execute('UPDATE customers SET desc = ?, addr = ?, city = ?, postcode = ?, tel1 = ?, tel2 = ?, lon = ?, lat = ?, user_id = ? WHERE id = ?', _desc, _addr, _city, _pcode, _tel1, _tel2, _lon, _lat, _user_id, _id );
+	
+	};
      
 };
 
@@ -123,7 +147,7 @@ boDb.updateCustomers = function( oDb, cust_data ) {
 // get customer data from db
 boDb.getCustomerData = function( oDb ){
 	var aData = [];
-	var rows = oDb.execute('SELECT * FROM customers');
+	var rows = oDb.execute('SELECT * FROM customers ORDER BY desc');
 	while (rows.isValidRow()) {
   		aData.push({ 
   			id: rows.fieldByName('id'), 

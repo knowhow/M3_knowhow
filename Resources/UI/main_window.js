@@ -3,61 +3,71 @@ var mainWindow = function() {
 		
 	var win_main = Ti.UI.createWindow({
 		backgroundColor:'#87CEFA',
-		title:'Narudzbe'
+		title:'Narudzbe : glavni menij'
 	});
 	
 		
 	var info = Titanium.UI.createLabel({  
-       	color:'#000000',
-       	width:"auto",
-       	top:6,  
-       	left:10,
+       	color:'black',
+       	top:'1%',  
+       	left:'5%',
        	text:"Odaberite zeljenu opciju:",
-       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:26}  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'6pt'}  
 	});  
 		
 	// btn new... 
 	var customer_list = Titanium.UI.createButton({  
        	title:'Partneri',  
-       	left:3,
-       	right:3,
-       	top:40,  
-       	height:80,  
+       	left:'2%',
+       	right:'2%',
+       	top:'6%',  
+       	height:'10%',  
        	borderRadius:1,  
-       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:30}  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
 	});  
 
 	// btn list...
 	var list_purchase = Titanium.UI.createButton({  
        	title:'Lista narudzbi',  
-       	left:3,
-       	right:3,
-       	top:120,    
-       	height:80,  
+       	left:'2%',
+       	right:'2%',
+       	top:'16%',    
+       	height:'10%',  
        	borderRadius:1,  
-       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:30}  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
 	});  
 		
 	// btn geo...
 	var where_am_i = Titanium.UI.createButton({  
        	title:'Gdje sam ja ?',  
-       	left:3,
-       	right:3,
-       	top:200,    
-       	height:80,  
+       	left:'2%',
+       	right:'2%',
+       	top:'26%',    
+       	height:'10%',  
        	borderRadius:1,  
-       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:30}  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
 	});  
 	
 	// btn geo...
 	var delete_db = Titanium.UI.createButton({  
        	title:'Obrisi db',  
-       	left:3,
-       	right:3,
-       	top:280,    
-       	height:80,  
+       	left:'2%',
+       	right:'2%',
+       	top:'36%',    
+       	height:'10%',  
        	borderRadius:1,  
-       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:30}  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
+	});  
+	
+	// send to server...
+	var send_db = Titanium.UI.createButton({  
+       	title:'Pošalji podatke na server',  
+       	left:'2%',
+       	right:'2%',
+       	top:'46%',    
+       	height:'10%',  
+       	borderRadius:1,  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
 	});  
 	
 	win_main.add(info);
@@ -65,6 +75,7 @@ var mainWindow = function() {
 	win_main.add(list_purchase);
 	win_main.add(where_am_i);
 	win_main.add(delete_db);
+	win_main.add(send_db);
 	
 	win_main.open();
 		

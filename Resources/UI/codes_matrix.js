@@ -8,6 +8,8 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 			title:m_title
 		});
 		
+		// w: 130
+		// h: 150
 		var cellWidth = 130;
 		var cellHeight = 150;
 		var xSpacer = 10;
@@ -68,9 +70,9 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
  				// main label - count items
         		var thisLabel = Ti.UI.createLabel({
             		color:"red",
-            		top:10,
-            		left:20,
-            		font:{fontSize:48,fontWeight:'bold'},
+            		top:'5%',
+            		left:'10%',
+            		font:{fontSize:'16pt',fontWeight:'bold'},
             		objIndex:cellIndex.toString(),
             		objName:"lbl",
             		textAlign:"left",
@@ -83,14 +85,17 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
         		
 				// description item label into view 
         		var thisLabelDescription = Ti.UI.createLabel({
-            		color:"black",
-            		top:110,
-            		left:5,
-            		font:{fontSize:14,fontWeight:'bold'},
+            		color:"white",
+            		top:'75%',
+            		left:'10%',
+            		height:'23%',
+            		width:'85%',
+            		backgroundColor:'gray',
+            		font:{fontSize:'4pt',fontWeight:'bold'},
             		objIndex:cellIndex.toString(),
             		objName:"lbl-it-desc",
             		textAlign:"left",
-            		text:m_data.articles[cellIndex].desc,
+            		text:boUtil.str.rPad( m_data.articles[cellIndex].desc, 20),
             		touchEnabled:false
         		});
         		
@@ -119,7 +124,9 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 	
 		// table view
 		var tableview = Ti.UI.createTableView({
-    		data:tableData
+    		data:tableData,
+    		top:0,
+    		bottom:'20%'
 		});
  		
  		// on click item, set current index of item, show description
@@ -136,7 +143,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 				// set current item
 				currentItem = e.source.objIndex;
 				
-				item_set_focus( currentItem, labels );
+				item_set_focus( currentItem, labels, labelsDesc );
 				
 				// show item on desc label
 				dv_label.text = m_ob_id + " - " + m_ob_desc;
@@ -154,8 +161,8 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
   
   		// description view - show item properties
  		var desc_view = Ti.UI.createView({
- 			top:550,
- 			bottom:100,
+ 			height:'8%',
+ 			bottom:'12%',
  			backgroundColor:"black"
  		});
  
@@ -164,47 +171,49 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 			text:"kliknite na jedan od artikala",
 			textAlign:"left",
 			wordWrap:"auto",
-			left:10,
+			left:'3%',
 			color:"white",
-            font:{fontSize:22,fontWeight:'bold'},
+            font:{fontSize:'7pt',fontWeight:'bold'},
             objName:"lbl-desc",
             touchEnabled:false
 		});
 
 		// controls view - button controls, plus, minus, accept
   		var controls_view = Ti.UI.createView({
- 			top:600,
+ 			bottom:0,
+ 			height:'12%',
  			backgroundColor:"black"
  		});
 
 		// accept button
  		var control_button = Ti.UI.createButton({
  			title:'Potvrdi',  
-       		left:100,
-       		right:100,    
-        	height:80,  
+       		left:'30%',    
+        	height:'90%',
+        	width:'40%',
+        	bottom:'5%',  
         	borderRadius:1,  
-        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:22}  
+        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
  		});
  	
  		// plus button
  		var control_plus_button = Ti.UI.createButton({
  			title:'+',  
-       		left:3,    
-        	height:80,
-        	width:100,  
+       		right:'2%',    
+        	height:'100%',
+        	width:'20%',  
         	borderRadius:1,  
-        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:48}  
+        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'20pt'}  
  		});
  		
  		// minus button
  		var control_minus_button = Ti.UI.createButton({
  			title:'-',  
-       		right:3,    
-        	height:80,
-        	width:100,  
+       		left:'2%',    
+        	height:'100%',
+        	width:'20%',  
         	borderRadius:1,  
-        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:48}  
+        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'20pt'}  
  		});
  	
  	
@@ -256,16 +265,23 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 
 
 
-var item_set_focus = function( index, obj ) {
+var item_set_focus = function( index, label_qt, label_desc ) {
 	
-	obj[index].font = {fontSize:67,fontWeight:'bold'};
-	obj[index].left = 40;
+	// set label quantity
+	label_qt[index].font = {fontSize:'22pt',fontWeight:'bold'};
+	label_qt[index].left = '10%';
 	
+	// set label desc
+	label_desc[index].backgroundColor = 'red';
+	label_desc[index].color = 'white';
 	
-	for (var i=0; i < obj.length; i++) {
+	for (var i=0; i < label_qt.length; i++) {
 		if (i != index ){
-			obj[i].font = {fontSize:48,fontWeight:'bold'};
-			obj[i].left = 20;
+			label_qt[i].font = {fontSize:'16pt',fontWeight:'bold'};
+			label_qt[i].left = '10%';
+			
+			label_desc[i].backgroundColor = 'gray';
+			label_desc[i].color = 'white';
 		};
 	};
 };

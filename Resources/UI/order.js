@@ -11,7 +11,7 @@ boOrder.items.getOrderItems = function( cust_data, items_data ) {
 	// create window
 	var ordWin = Ti.UI.createWindow({
 		backgroundColor:"white",
-		title:"trenutna narudzba"
+		title:"Pregled narudžbe"
 	});		
 		
 	// show items on orders window
@@ -70,28 +70,31 @@ boOrder.items.getOrderItems = function( cust_data, items_data ) {
 		
 	// controls view - button controls, plus, minus, accept
   	var controls_view = Ti.UI.createView({
- 		top:600,
+ 		bottom:0,
+ 		height:'12%',
  		backgroundColor:"black"
  	});
 
 	// accept button
  	var ctrl_ok_button = Ti.UI.createButton({
  		title:'Potvrdi',  
-     	left:10,
-       	width:200,    
-        height:80,  
+     	right:'2%',
+       	width:'35%',    
+        height:'80%',  
+        bottom:'5%',
         borderRadius:1,  
-        font:{fontFamily:'Arial',fontWeight:'bold',fontSize:22}  
+        font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
  	});
 		
 	// accept button
  	var ctrl_cancel_button = Ti.UI.createButton({
- 		title:'Ponisti',  
-    	right:10,
-       	width:200,    
-        height:80,  
+ 		title:'< Ponisti',  
+    	left:'2%',
+       	width:'35%',    
+        height:'80%',
+        bottom:'5%',  
         borderRadius:1,  
-        font:{fontFamily:'Arial',fontWeight:'bold',fontSize:22}  
+        font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
  	});
 		
 		

@@ -13,13 +13,19 @@ boPurchase.listPurchase = function() {
 		title:"Lista narudžbi:"
 	});
 		
+	var p_bottom_view = Ti.UI.createView({
+		backgroundColor:"black",
+		bottom:0,
+		height:'12%'
+	});
+	
 	var p_btn_close = Ti.UI.createButton({
-		title:"Zatvori",
-		height:"auto",
-		left:'2%',
-		width:'20%',
-		height:'10%',
-		bottom:'1%'
+		title:"<",
+		font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'10pt'},
+		left:'1%',
+		width:'15%',
+		height:'80%',
+		bottom:'5%'
 	});
 	
 	var p_tbl_view = Ti.UI.createTableView({
@@ -67,9 +73,10 @@ boPurchase.listPurchase = function() {
 	});
 
 
+	p_bottom_view.add(p_btn_close);
 
 	p_win.add(p_tbl_view);
-	p_win.add(p_btn_close);
+	p_win.add(p_bottom_view);
 
 	p_btn_close.addEventListener("click", function(){
 		main_db.close();

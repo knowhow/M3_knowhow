@@ -23,8 +23,6 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		
 	var c_data = boCodes.Customers.getCustomers();
 	
-	var btn_height = 70;
-	
 	var cp_win = Ti.UI.createWindow({
 		backgroundColor:"#FFFFFF",
 		//navBarHidden:false,
@@ -62,65 +60,74 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	
 	var cp_top_view = Ti.UI.createView({
 		backgroundColor:"black",
-		top:1,
-		height:90
+		top:0,
+		height:'10%'
 	});
 	
 	var cp_bottom_view = Ti.UI.createView({
 		backgroundColor:"black",
 		bottom:0,
-		height:90
+		height:'12%'
 	});
 	
 	var cp_lbl_loc = Ti.UI.createLabel({
 		text:"gps lokacija...",
 		color:"white",
 		borderRadius:5,
-		font:{fontFamily:'Arial',fontWeight:'bold',fontSize:18},
+		font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'4pt'},
 		textAlign:"left",
-		left:5,
-		top:5
+		left:'1%',
+		top:'1.5%'
 	});
 
 	var cp_close_btn = Ti.UI.createButton({
-		title:"Poništi",
-		height:btn_height,
-		left:5,
-		width:150,
-		font:{fontFamily:'Arial',fontWeight:'bold',fontSize:26},
-		bottom:5
+		title:"<",
+		left:'1%',
+		width:'15%',
+		height:'80%',
+		font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'10pt'},
+		bottom:'5%'
 	});
 
 	// get customers by gps research...
 	var cp_gps_btn = Ti.UI.createButton({
-		title:"GPS",
-		height:btn_height,
-		right:160,
-		width:150,
-		font:{fontFamily:'Arial',fontWeight:'bold',fontSize:26},
-		bottom:5
+		title:"GPS...",
+		left:'35%',
+		width:'30%',
+		height:'80%',
+		font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'},
+		bottom:'5%'
 	});
 
 	// options...
 	var cp_opt_btn = Ti.UI.createButton({
 		title:"Opcije",
-		height:btn_height,
-		right:5,
-		width:150,
-		font:{fontFamily:'Arial',fontWeight:'bold',fontSize:26},
-		bottom:5
+		right:'1%',
+		width:'30%',
+		height:'80%',
+		font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'},
+		bottom:'5%'
 	});
 
 	// search table
-	var searchBar = Ti.UI.createSearchBar({value:""});	
+	var searchBar = Ti.UI.createSearchBar({
+		value:"",
+		left:'1%'
+	});	
+	
+	searchBar.addEventListener("return", function(){
+		searchBar.blur();
+	});
+
 	
 	// table view of this form
 	var cp_tbl_view = Ti.UI.createTableView({
 		headerTitle:"Lista partnera za '" + Ti.App.current_logged_user + "'",
 		allowsSelection:true,
 		search:searchBar,
-		top:90,
-		bottom:90
+		top:'12%',
+		bottom:'12%',
+		maxRowHeight:120
 	});
 	
 	// options dialog 
@@ -142,11 +149,11 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		{
 			case 0:
   				// new customer
-  				boCodes.Customers.newCustomer( cp_tbl_view );
+  				boCodes.Customers.newCustomer();
   				break;
 			case 1:
 				// edit customer
-				boCodes.Customers.editCustomer( cp_tbl_view );
+				boCodes.Customers.editCustomer();
 				break;
 			case 3:
 				// refresh table
@@ -155,6 +162,12 @@ boCodes.Customers.getPurchaseCustomer = function(){
 				break;
 		};
 	
+	});
+	
+	// listen for edited event
+	Ti.App.addEventListener("customerEdited", function(){
+		c_data = boCodes.Customers.getCustomers();
+		cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
 	});
 	
 	// set the table contents, all customers
@@ -171,14 +184,20 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	cp_win.add(cp_tbl_view);
 	cp_win.add(cp_bottom_view);
 	
+	// click on table
 	cp_tbl_view.addEventListener("click", function(e){
+		
 		if (e.source.objName) {
 			// set current id
 			Ti.App.current_customer_id = c_data[e.source.objIndex].id;
+			
+			// set current data array
 			var curr_data = [];
 			curr_data.push(c_data[e.source.objIndex]);
 			Ti.App.current_customer_data = curr_data;
+			
 		};
+		
 	});
 	
 	// tbl view dbl click 
@@ -335,33 +354,34 @@ function _refresh_cust_data( c_data, lon, lat ) {
 			dst = Math.round( dst * 1000 ) / 1000;
 			
 		};
-		
-					
+							
 		var thisRow = Ti.UI.createTableViewRow({
         	className: "item",
         	objIndex:i,
         	objName:"grid-item",
         	layout: "horizontal",
-        	height:"auto",
+        	height:120,
+        	width:Ti.Platform.displayCaps.platformWidth,
         	left:1,
         	right:1
     	});
     		
     	var thisView = Ti.UI.createView({
            	//backgroundColor:"white",
-           	top:3,
-           	height:100,
-           	width:420,
-           	left:1,
+           	top:'.5%',
+           	height:'250%',
+           	width:'100%',
+           	left:'.5%',
            	objIndex:i,
            	objName:"view-desc"
         });
         
     	var thisLabelCust = Ti.UI.createLabel({
            	color:"black",
-           	top:1,
-           	left:5,
-           	font:{fontSize:26,fontWeight:'bold'},
+           	top:'.5%',
+           	left:'1%',
+           	width:'90%',
+           	font:{fontSize:'8pt',fontWeight:'bold'},
            	objIndex:i,
            	objName:"lbl-cust",
            	textAlign:"left",
@@ -371,9 +391,10 @@ function _refresh_cust_data( c_data, lon, lat ) {
 
     	var thisLabelDesc = Ti.UI.createLabel({
            	color:"black",
-           	top:50,
-           	left:5,
-           	font:{fontSize:20,fontWeight:'bold'},
+           	top:'50%',
+           	left:'1%',
+           	width:'90%',
+           	font:{fontSize:'6pt',fontWeight:'bold'},
            	objIndex:i,
            	objName:"lbl-desc",
            	textAlign:"left",
@@ -399,10 +420,14 @@ boCodes.Customers.customerForm = function( cust_data ) {
 	// window
 	var c_win = Ti.UI.createWindow({
 		backgroundColor:"black",
-		title:"Partner:",
+		title:"Unos novog partnera...",
 		// this is my variable
 		canceled:false
 	});
+	
+	if(cust_data != null){
+		c_win.title = "Ispravka podataka, partner: " + cust_data[0].id;
+	};
 		
 	// views
 	var c_scroll_view = Ti.UI.createScrollView({
@@ -677,6 +702,17 @@ boCodes.Customers.customerForm = function( cust_data ) {
 		c_location_btn.focus();
 	});	
 	
+	c_lon.addEventListener("return", function(){
+		c_lon.blur();
+		c_lat.focus();
+	});
+	
+	c_lat.addEventListener("return", function(){
+		c_lat.blur();
+		c_btn_save.focus();
+	});
+	
+	
 	// fill customer data
 	if(cust_data != null){
 		// set text fields
@@ -698,7 +734,7 @@ boCodes.Customers.customerForm = function( cust_data ) {
 };
 
 // new customer form
-boCodes.Customers.newCustomer = function( cp_view ){
+boCodes.Customers.newCustomer = function(){
 	
 	var frm = boCodes.Customers.customerForm();
 	
@@ -708,8 +744,7 @@ boCodes.Customers.newCustomer = function( cp_view ){
 			boDb.insertIntoCustomers( main_db, Ti.App.customer_data );
 			main_db.close();
 			
-			var c_data = boCodes.Customers.getCustomers();
-			cp_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ));
+			Ti.App.fireEvent("customerEdited");
 
 		};
 		
@@ -717,7 +752,7 @@ boCodes.Customers.newCustomer = function( cp_view ){
 };
 
 // edit customer form
-boCodes.Customers.editCustomer = function( cp_view ){
+boCodes.Customers.editCustomer = function(){
 	
 	// get current customer
 	var frm = boCodes.Customers.customerForm( Ti.App.current_customer_data );
@@ -729,8 +764,7 @@ boCodes.Customers.editCustomer = function( cp_view ){
 			boDb.updateCustomers( main_db, Ti.App.customer_data );
 			main_db.close();
 			
-			var c_data = boCodes.Customers.getCustomers();
-			cp_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ));
+			Ti.App.fireEvent("customerEdited");
 		};
 	});
 	

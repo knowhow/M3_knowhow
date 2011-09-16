@@ -179,7 +179,7 @@ function _refresh_purchase_data(data) {
     		
     	var thisView = Ti.UI.createView({
            	top:'1%',
-           	height:90,
+           	height:boUtil.math.getControlPostitionHeight(11),
            	right:'.2%',
            	left:'.2%',
            	width:'100%',

@@ -361,7 +361,7 @@ function _refresh_cust_data( c_data, lon, lat ) {
         	objIndex:i,
         	objName:"grid-item",
         	layout: "horizontal",
-        	height:90,
+        	height:boUtil.math.getControlPostitionHeight(11),
         	color:"transparent",
         	title:c_data[i].desc, 
         	width:Ti.Platform.displayCaps.platformWidth,
@@ -373,7 +373,7 @@ function _refresh_cust_data( c_data, lon, lat ) {
            	//backgroundColor:"white",
            	top:'.5%',
            	//height:'250%',
-           	height:90,
+           	height:boUtil.math.getControlPostitionHeight(11),
            	width:'100%',
            	left:'.5%',
            	objIndex:i,
@@ -395,20 +395,33 @@ function _refresh_cust_data( c_data, lon, lat ) {
 
     	var thisLabelDesc = Ti.UI.createLabel({
            	color:"black",
-           	top:'45%',
+           	top:'47%',
            	left:'1%',
-           	width:'90%',
+           	width:'80%',
            	font:{fontSize:'5pt',fontWeight:'normal'},
            	objIndex:i,
            	objName:"lbl-desc",
            	textAlign:"left",
-           	text:c_data[i].addr + ", " + c_data[i].postcode + " - " + c_data[i].city + ", udalj: " + dst + " km",
+           	text:c_data[i].addr + ", " + c_data[i].postcode + " - " + c_data[i].city,
+           	touchEnabled:false
+        });
+
+    	var thisLabelDist = Ti.UI.createLabel({
+           	color:"#32CD32",
+           	top:'45%',
+           	left:'80%',
+           	font:{fontSize:'6pt',fontWeight:'bold'},
+           	objIndex:i,
+           	objName:"lbl-desc",
+           	textAlign:"left",
+           	text:dst + " km",
            	touchEnabled:false
         });
 
 
         thisView.add(thisLabelCust);
         thisView.add(thisLabelDesc);
+        thisView.add(thisLabelDist);
         thisRow.add(thisView);	
 		
 		tbl_data.push(thisRow);
@@ -688,7 +701,14 @@ boCodes.Customers.customerForm = function( cust_data ) {
 
 	c_city.addEventListener("return", function(){
 		c_city.blur();
-		c_pcode.focus();
+		if(c_city.value != ''){
+			c_pcode.value = boCodes.Postal.getPostCode( c_city.value );
+			c_tel1.focus();
+		}
+		else
+		{
+			c_pcode.focus();
+		};
 	});
 	
 	c_pcode.addEventListener("return", function(){

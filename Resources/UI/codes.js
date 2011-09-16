@@ -6,6 +6,25 @@ boCodes.Articles = {};
 boCodes.Customers = {};
 
 boCodes.Users = {};
+
+boCodes.Postal = {};
+
+
+// get postal code by city
+boCodes.Postal.getPostCode = function(city) {
+	
+	switch (city.toLowerCase())
+	{
+	
+		case 'zenica':
+			return '72000';
+		case 'sarajevo':
+			return '71000';
+	
+	};
+		
+};
+
 	
 // get articles from db
 boCodes.Articles.getArticles = function() {

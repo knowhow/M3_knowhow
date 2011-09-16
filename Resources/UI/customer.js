@@ -322,8 +322,8 @@ boCodes.Customers.getPurchaseCustomer = function(){
 			cp_lbl_loc.text = "";
 			
 			text = "Gps info:" + boUtil.str.newRow();
-			text += "lat: " + e.coords.latitude; 
-			text += ", lon: " + e.coords.longitude + boUtil.str.newRow();
+			text += "lat: " + Ti.App.current_latitude; 
+			text += ", lon: " + Ti.App.current_longitude + boUtil.str.newRow();
 			text += "preciznost: " + e.coords.accuracy;
 						
 			cp_lbl_loc.text = text;
@@ -677,11 +677,12 @@ boCodes.Customers.customerForm = function( cust_data ) {
 	c_location_btn.addEventListener("click", function(){
 		
 		if(Ti.App.current_longitude != null){
-			c_lat.value = Ti.App.current_latitude;
-			c_lon.value = Ti.App.current_longitude;
+			c_lat.value = Ti.App.current_latitude.toString();
+			c_lon.value = Ti.App.current_longitude.toString();
 			c_btn_save.focus();
 		}
-		else{
+		else
+		{
 			c_lat.value = "?????";
 			c_lon.value = "?????";
 			c_view_additional.backgroundColor = "red";

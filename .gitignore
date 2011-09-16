@@ -1,6 +1,11 @@
 tmp
-build
 build.log
 dist
 .gitignore
 .fastdev.lock
+assets
+bin
+gen
+lib
+res
+src

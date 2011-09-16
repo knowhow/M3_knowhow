@@ -94,12 +94,57 @@ var mainWindow = function() {
    		boGeo.geoForm();
 	});  	
 
-	// delete db
+	// remove completely db
 	delete_db.addEventListener('click',function(e){  
-   		var db = boDb.openDB();
-   		db.close();
-   		db.remove();
+   		
+   		var alertDialog = Ti.UI.createAlertDialog({
+            title:'Pitanje',
+            message:'Da li zaista želite ukloniti bazu ?',
+            buttonNames:['Da','Ne'],
+            cancel:1
+        });
+ 
+        alertDialog.addEventListener('click', function(e)
+        {
+            if (e.index == 1) {
+                return;
+            }
+
+   			var db = boDb.openDB();
+   			db.close();
+   			db.remove();
+   			
+   		});
+ 
+        alertDialog.show();
+
 	});  	
+	
+	// currently delete all purchases
+	send_db.addEventListener("click", function(){
+		
+		var alertDialog = Ti.UI.createAlertDialog({
+            title:'Pitanje',
+            message:'Da li zaista želite izbrisati podatke ?',
+            buttonNames:['Da','Ne'],
+            cancel:1
+        });
+ 
+        alertDialog.addEventListener('click', function(e)
+        {
+            if (e.index == 1) {
+                return;
+            }
+ 
+            var db = boDb.openDB();
+			boDb.deleteAllPurchases(db);
+			db.close();
+
+        });
+ 
+        alertDialog.show();
+		
+	});
 
 	
 };

@@ -302,6 +302,12 @@ boDb.deleteFromPurchases = function( oDb, p_no ){
 	oDb.execute('DELETE FROM doc_items WHERE doc_no = ?', p_no);	
 };
 
+// delete purchase
+boDb.deleteAllPurchases = function( oDb ){
+	oDb.execute('DELETE ALL FROM docs');
+	oDb.execute('DELETE ALL FROM doc_items');	
+};
+
 
 // insert data into purchases
 boDb.insertIntoPurchases = function( oDb, user_id, cust_id, d_valid, items_data ) {

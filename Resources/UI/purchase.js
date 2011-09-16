@@ -100,11 +100,29 @@ boPurchase.listPurchase = function() {
   			// delete purchase
 			case 3:
 			
-				// delete record from purchases
-				boDb.deleteFromPurchases(main_db, current_purchase_no);
-  				d_data = boDb.getPurcasesData(main_db);
-  				p_tbl_view.setData(_refresh_purchase_data(d_data));
-  				break;
+				var alertDialog = Ti.UI.createAlertDialog({
+            		title:'Pitanje',
+            		message:'Izbrisati narudžbu iz baze ?',
+            		buttonNames:['Da','Ne'],
+            		cancel:1
+        		});
+ 
+        		alertDialog.addEventListener('click', function(e){
+            		
+            		if (e.index == 1) {
+                		
+                		return;
+            		};
+				
+					// delete record from purchases
+					boDb.deleteFromPurchases(main_db, current_purchase_no);
+  					d_data = boDb.getPurcasesData(main_db);
+  					p_tbl_view.setData(_refresh_purchase_data(d_data));
+  					
+  					return;
+  				});
+  				
+  				alertDialog.show();
 		};
 	
 	});

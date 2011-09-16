@@ -312,6 +312,17 @@ boDb.deleteAllPurchases = function( oDb ){
 // insert data into purchases
 boDb.insertIntoPurchases = function( oDb, user_id, cust_id, d_valid, items_data ) {
 	
+	var tmp_qt = 0;
+	// check data
+	for (var x=0; x < items_data.length; x++) {
+		tmp_qt += items_data[x].article_quantity;
+	};
+	
+	if(tmp_qt == 0){
+		alert("Nema stavki za ažuriranje!");
+		return;
+	};
+	
 	// insert into table purchases
 	var _d_date = Date();
 	var _cust_id = cust_id;

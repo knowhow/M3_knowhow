@@ -39,6 +39,14 @@ boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no,
 		font:{fontFamily:'Helvetica',fontWeight:'normal',fontSize:'6pt'}
 	});
 	
+	var ord_image = Ti.UI.createImageView({
+        image:'img/check_ok.png',
+        height:boUtil.math.getControlPostitionWidth(9),
+        width:boUtil.math.getControlPostitionWidth(9),
+        left:'3%',
+        bottom:'13%'
+   	});
+   	
 
 	if(document_no != null){
 		ordWin.title = 'Pregled narudžbe broj: ' + document_no;
@@ -88,7 +96,7 @@ boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no,
     	//alert(JSON.stringify(items_data));
    	    // show only ones with qt > 0
    	    if(parseInt(_art_qt) > 0) {
-   			tbl_data.push( { title: boUtil.str.rPad(_item_no, 3) + ") " + boUtil.str.rPad(_art_desc,20) + " x " + _art_qt } );
+   			tbl_data.push( { title: boUtil.str.lPad(_item_no, 3) + ") " + boUtil.str.rPad(_art_desc,20) + " x " + _art_qt } );
    			countItems++ ;
    	    };
     	
@@ -147,12 +155,22 @@ boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no,
 	ordWin.add(ord_lbl_customer);
 	ordWin.add(ord_lbl_document);
 	ordWin.add(ord_lbl_doc_total);
+	ordWin.add(ord_image);
 	
 	ordWin.add(ord_tbl_view);
 	
 	ordWin.add(controls_view);
 
 	ordWin.open();
+	
+	if(doc_valid == null){
+   		ordWin.remove(ord_image);
+   	}
+   	else{
+   		if(doc_valid == 0){
+   			ord_image.image = 'img/check_cancel.png';
+   		};
+   	};
 	
 	if(document_no != null){
 		controls_view.remove(ctrl_ok_button);

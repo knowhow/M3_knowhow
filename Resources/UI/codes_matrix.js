@@ -10,10 +10,10 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		
 		// w: 130
 		// h: 150
-		var cellWidth = 130;
-		var cellHeight = 150;
-		var xSpacer = 10;
-		var ySpacer = 10;
+		var cellWidth = boUtil.math.getControlPostitionWidth(25);
+		var cellHeight = boUtil.math.getControlPostitionWidth(30);
+		var xSpacer = boUtil.math.getControlPostitionWidth(5);
+		var ySpacer = boUtil.math.getControlPostitionWidth(5);
 		var xGrid = 3;
 		var yGrid = 100;
 		var currentItem = 0;

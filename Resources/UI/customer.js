@@ -123,9 +123,10 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	// table view of this form
 	var cp_tbl_view = Ti.UI.createTableView({
 		headerTitle:"Lista partnera za '" + Ti.App.current_logged_user + "'",
+		backgroundColor:'white',
 		allowsSelection:true,
 		search:searchBar,
-		top:'12%',
+		top:'10%',
 		bottom:'12%',
 		maxRowHeight:120
 	});
@@ -360,7 +361,9 @@ function _refresh_cust_data( c_data, lon, lat ) {
         	objIndex:i,
         	objName:"grid-item",
         	layout: "horizontal",
-        	height:120,
+        	height:90,
+        	color:"transparent",
+        	title:c_data[i].desc, 
         	width:Ti.Platform.displayCaps.platformWidth,
         	left:1,
         	right:1
@@ -369,7 +372,8 @@ function _refresh_cust_data( c_data, lon, lat ) {
     	var thisView = Ti.UI.createView({
            	//backgroundColor:"white",
            	top:'.5%',
-           	height:'250%',
+           	//height:'250%',
+           	height:90,
            	width:'100%',
            	left:'.5%',
            	objIndex:i,
@@ -377,7 +381,7 @@ function _refresh_cust_data( c_data, lon, lat ) {
         });
         
     	var thisLabelCust = Ti.UI.createLabel({
-           	color:"black",
+           	color:"#4169E1",
            	top:'.5%',
            	left:'1%',
            	width:'90%',
@@ -391,10 +395,10 @@ function _refresh_cust_data( c_data, lon, lat ) {
 
     	var thisLabelDesc = Ti.UI.createLabel({
            	color:"black",
-           	top:'50%',
+           	top:'45%',
            	left:'1%',
            	width:'90%',
-           	font:{fontSize:'6pt',fontWeight:'bold'},
+           	font:{fontSize:'5pt',fontWeight:'normal'},
            	objIndex:i,
            	objName:"lbl-desc",
            	textAlign:"left",

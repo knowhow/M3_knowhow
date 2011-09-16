@@ -2,7 +2,7 @@
 var mainWindow = function() {
 		
 	var win_main = Ti.UI.createWindow({
-		backgroundColor:'#87CEFA',
+		backgroundColor:'#a0c0ff',
 		title:'Narudzbe : glavni menij'
 	});
 	
@@ -67,7 +67,7 @@ var mainWindow = function() {
        	top:'46%',    
        	height:'10%',  
        	borderRadius:1,  
-       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}
 	});  
 	
 	win_main.add(info);

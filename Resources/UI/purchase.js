@@ -167,39 +167,40 @@ function _refresh_purchase_data(data) {
 		var c_arr = boDb.getCustomerArrayById( main_db, data[i].cust_id );
 		
 		var thisRow = Ti.UI.createTableViewRow({
-        	className: "item",
+        	className:"item",
         	objIndex:i,
         	objName:"grid-item",
         	layout: "horizontal",
         	height:"auto",
+        	width:Ti.Platform.displayCaps.platformWidth,
         	left:1,
         	right:1
     	});
     		
     	var thisView = Ti.UI.createView({
-           	//backgroundColor:"white",
-           	top:3,
-           	height:100,
-           	width:480,
-           	left:1,
+           	top:'1%',
+           	height:90,
+           	right:'.2%',
+           	left:'.2%',
+           	width:'100%',
            	objIndex:i,
            	objName:"view-desc"
         });
         
         var thisImage = Ti.UI.createImageView({
         	image:'img/check_ok.png',
-        	height:50,
-        	width:50,
-        	left:'85%',
-        	top:2
+        	height:boUtil.math.getControlPostitionWidth(10),
+        	width:boUtil.math.getControlPostitionWidth(10),
+        	left:'87%',
+        	top:'5%'
         });
         
     	var thisLabelPurch = Ti.UI.createLabel({
-           	color:"black",
+           	color:"#4169E1",
            	top:1,
-           	left:5,
+           	left:'2%',
            	width:'80%',
-           	font:{fontSize:26,fontWeight:'bold'},
+           	font:{fontSize:'8pt',fontWeight:'bold'},
            	objIndex:i,
            	objName:"lbl-cust",
            	textAlign:"left",
@@ -210,9 +211,9 @@ function _refresh_purchase_data(data) {
 
     	var thisLabelDesc = Ti.UI.createLabel({
            	color:"black",
-           	top:50,
-           	left:5,
-           	font:{fontSize:20,fontWeight:'bold'},
+           	top:'50%',
+           	left:'2%',
+           	font:{fontSize:'5pt',fontWeight:'normal'},
            	objIndex:i,
            	objName:"lbl-desc",
            	textAlign:"left",
@@ -274,7 +275,7 @@ boPurchase.newPurchase = function() {
    			main_db.close();
    				
    			if(e.source.accepted == 1){
-   				alert("Narudzba ažurirana...");	   			
+   				//alert("Narudzba ažurirana...");	   			
    			} 
   			else
    			{

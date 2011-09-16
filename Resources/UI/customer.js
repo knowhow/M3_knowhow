@@ -6,19 +6,23 @@ boCodes.Customers.customerList = function() {
 	Ti.App.purchased_data = [];
 	Ti.App.document_data = [];
 	Ti.App.customer_data = [];
+	Ti.App.current_longitude = null;
+	Ti.App.current_latitude = null;
+	Ti.App.current_customer_id = null;
+	Ti.App.current_customer_data = [];
 	
-	// get customers from JSON
-	var cust_data = boCodes.Customers.getCustomers();
 	// open the get customer form
-	var customer_win = boCodes.Customers.getPurchaseCustomer( cust_data );
+	var customer_win = boCodes.Customers.getPurchaseCustomer();
 			
 };
 
 
 
 // get customer on ordering form
-boCodes.Customers.getPurchaseCustomer = function( c_data ){
+boCodes.Customers.getPurchaseCustomer = function(){
 		
+	var c_data = boCodes.Customers.getCustomers();
+	
 	var btn_height = 70;
 	
 	var cp_win = Ti.UI.createWindow({
@@ -97,9 +101,9 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 		bottom:5
 	});
 
-	// get customers manualy...
-	var cp_man_btn = Ti.UI.createButton({
-		title:"Ručno",
+	// options...
+	var cp_opt_btn = Ti.UI.createButton({
+		title:"Opcije",
 		height:btn_height,
 		right:5,
 		width:150,
@@ -119,19 +123,63 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 		bottom:90
 	});
 	
+	// options dialog 
+	var dlg_opt = {
+		options:['Novi partner', 'Ispravi partnera', 'Osvježi tabelu'],
+		destructive:1,
+		cancel:2,
+		title:'Opcije:'
+	};
+
+	// create dialog
+	var win_dlg_opt = Titanium.UI.createOptionDialog(dlg_opt);
+
+	// add event listener
+	win_dlg_opt.addEventListener('click',function(e)
+	{
+		
+		switch(e.index)
+		{
+			case 0:
+  				// new customer
+  				boCodes.Customers.newCustomer( cp_tbl_view );
+  				break;
+			case 1:
+				// edit customer
+				boCodes.Customers.editCustomer( cp_tbl_view );
+				break;
+			case 3:
+				// refresh table
+				c_data = boCodes.Customers.getCustomers();
+				cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
+				break;
+		};
+	
+	});
+	
 	// set the table contents, all customers
-	cp_tbl_view.setData( _refresh_cust_data( c_data, longitude, latitude ) );
+	cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
 	
 	
 	cp_top_view.add(cp_lbl_loc);
 
 	cp_bottom_view.add(cp_close_btn);
 	cp_bottom_view.add(cp_gps_btn);
-	cp_bottom_view.add(cp_man_btn);
+	cp_bottom_view.add(cp_opt_btn);
 	
 	cp_win.add(cp_top_view);
 	cp_win.add(cp_tbl_view);
 	cp_win.add(cp_bottom_view);
+	
+	cp_tbl_view.addEventListener("click", function(e){
+		if (e.source.objName) {
+			// set current id
+			Ti.App.current_customer_id = c_data[e.source.objIndex].id;
+			var curr_data = [];
+			curr_data.push(c_data[e.source.objIndex]);
+			Ti.App.current_customer_data = curr_data;
+		};
+	});
 	
 	// tbl view dbl click 
 	cp_tbl_view.addEventListener("dblclick", function(e){
@@ -143,6 +191,9 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 			var result = [];
 			result.push( c_data[e.source.objIndex] );
 			Ti.App.customer_data = result;
+			// set current id
+			Ti.App.current_customer_id = c_data[e.source.objIndex].id;
+			Ti.App.current_customer_data = result;
 
 			// open purchase
 			boPurchase.newPurchase();
@@ -159,14 +210,10 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 		cp_win.close();
 	});
 	
-	// manual run
-	cp_man_btn.addEventListener("click", function(){
-		
-		var tbl_data = _refresh_cust_data( c_data, longitude, latitude );
-		//alert(JSON.stringify(customer_data.customers));
-		//alert(customer_data.customers.length);
-		cp_tbl_view.setData( tbl_data );
-		
+	// options
+	cp_opt_btn.addEventListener("click", function(){
+		// open options
+		win_dlg_opt.show();		
 	});
 	
 	cp_gps_btn.addEventListener("click", function(){
@@ -193,7 +240,7 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
     		tic++;
     		pb.value = tic;
     			
-    		if( tic == 50 && longitude != null ) {
+    		if( tic == 50 && Ti.App.current_longitude != null ) {
         		
 				pb.value = 200;
             	cp_win.remove(pb);
@@ -202,8 +249,8 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
             	clearInterval(timer);
             	
             	// calculate distance and fill table view
-            	var dist_data = boCodes.Customers.getCustomersInRadius( longitude, latitude );
-            	var ret_data = _refresh_cust_data( dist_data, longitude, latitude );
+            	var dist_data = boCodes.Customers.getCustomersInRadius( Ti.App.current_longitude, Ti.App.current_latitude );
+            	var ret_data = _refresh_cust_data( dist_data, Ti.App.current_longitude, Ti.App.current_latitude );
 				
 				cp_tbl_view.setData( ret_data );
 				//Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
@@ -228,8 +275,6 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 	boGeo.getCurrentLocation();
 		
 	var text = "";
-	var latitude = null;
-	var longitude = null;
 		
 	// listen for coords
 	// we have: e.coords
@@ -237,8 +282,8 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 			
 		if (!e.success || e.error){
 				
-			latitude = null;
-			longitude = null;
+			Ti.App.current_latitude = null;
+			Ti.App.current_longitude = null;
 				
 			cp_lbl_loc.text = "";
 			
@@ -251,8 +296,8 @@ boCodes.Customers.getPurchaseCustomer = function( c_data ){
 		else
 		{
 				
-			latitude = e.coords.latitude;
-			longitude = e.coords.longitude;
+			Ti.App.current_latitude = e.coords.latitude;
+			Ti.App.current_longitude = e.coords.longitude;
 				
 			cp_lbl_loc.text = "";
 			
@@ -348,13 +393,346 @@ function _refresh_cust_data( c_data, lon, lat ) {
 };
 
 
-// new customer form
-boCodes.Customers.newCustomer = function(){
+// customer edit form
+boCodes.Customers.customerForm = function( cust_data ) {
 	
+	// window
+	var c_win = Ti.UI.createWindow({
+		backgroundColor:"black",
+		title:"Partner:",
+		// this is my variable
+		canceled:false
+	});
+		
+	// views
+	var c_scroll_view = Ti.UI.createScrollView({
+		contentWidth:Ti.Platform.displayCaps.platformWidth,
+		top:0,
+		bottom:'12%',
+		showVerticalScrollIndicator:true
+	});
+	
+	var c_view_main = Ti.UI.createView({
+		backgroundColor:'white',
+		borderRadius:10,
+		width:'97%',
+		height:'2000',
+		top:'.5%',
+		left:'1%'
+	});
+
+
+	// description
+	var l_desc = Ti.UI.createLabel({
+		text:'Naziv partnera:',
+		color:'black',
+		left:'3%',
+		top:'.5%'
+	});
+
+	var c_desc = Ti.UI.createTextField({
+		left:'2%',
+		width:'90%',
+		height:'3%',
+		top:'2%'
+	});
+	
+	// address
+	var l_addr = Ti.UI.createLabel({
+		text:'Adresa:',
+		color:'black',
+		left:'3%',
+		top:'5%'		
+	});
+	
+	var c_addr = Ti.UI.createTextField({
+		left:'2%',
+		width:'90%',
+		height:'3%',
+		top:'6.5%'
+	});
+
+	// city
+	var l_city = Ti.UI.createLabel({
+		text:'Grad:',
+		color:'black',
+		left:'3%',
+		top:'9.5%'		
+	});
+	
+	var c_city = Ti.UI.createTextField({
+		left:'2%',
+		width:'50%',
+		height:'3%',
+		top:'11%'
+	});
+
+	// postcode
+	var l_pcode = Ti.UI.createLabel({
+		text:'Poštanski broj:',
+		color:'black',
+		left:'53%',
+		top:'9.5%'		
+	});
+	
+	var c_pcode = Ti.UI.createTextField({
+		left:'53%',
+		width:'30%',
+		height:'3%',
+		top:'11%'
+	});
+
+	// telephone
+	var l_tel1 = Ti.UI.createLabel({
+		text:'Telefon:',
+		color:'black',
+		left:'3%',
+		top:'14%'		
+	});
+	
+	var c_tel1 = Ti.UI.createTextField({
+		left:'2%',
+		width:'45%',
+		height:'3%',
+		top:'15.5%'
+	});
+
+	// telephone
+	var l_tel2 = Ti.UI.createLabel({
+		text:'Mobitel:',
+		color:'black',
+		left:'53%',
+		top:'14%'		
+	});
+	
+	var c_tel2 = Ti.UI.createTextField({
+		left:'53%',
+		width:'45%',
+		height:'3%',
+		top:'15.5%'
+	});
+	
+	var c_view_additional = Ti.UI.createView({
+		backgroundColor:'gray',
+		borderRadius:10,
+		width:'97%',
+		height:'10%',
+		top:'19%',
+		left:'2%'
+	});	
+
+	// latitude longitude
+	var c_location_btn = Ti.UI.createButton({
+		title:'Setuj lokaciju',
+		height:'30%',
+		width:'40%',
+		left:'3%',
+		top:'60%'		
+	});
+
+	// latitude longitude
+	var l_lon = Ti.UI.createLabel({
+		text:'Longitude:',
+		color:'black',
+		left:'3%',
+		top:'1%'		
+	});
+	
+	var c_lon = Ti.UI.createTextField({
+		left:'2%',
+		width:'45%',
+		height:'28%',
+		top:'23%'
+	});
+
+	var l_lat = Ti.UI.createLabel({
+		text:'Latitude:',
+		color:'black',
+		left:'53%',
+		top:'1%'		
+	});
+	
+	var c_lat = Ti.UI.createTextField({
+		left:'50%',
+		width:'45%',
+		height:'28%',
+		top:'23%'
+	});
+
+	// buttons
+	var c_btn_close = Ti.UI.createButton({
+		title:"Zatvori",
+		left:'2%',
+		width:'30%',
+		height:'10%',
+		bottom:'1%'
+	});
+
+	var c_btn_save = Ti.UI.createButton({
+		title:"Snimi",
+		right:'2%',
+		width:'30%',
+		height:'10%',
+		bottom:'1%'
+	});	
+	
+	
+	// add controls to form
+	c_view_main.add(l_desc);
+	c_view_main.add(c_desc);
+	
+	c_view_main.add(c_addr);
+	c_view_main.add(l_addr);
+
+	c_view_main.add(c_city);
+	c_view_main.add(l_city);
+
+	c_view_main.add(c_pcode);
+	c_view_main.add(l_pcode);
+
+	c_view_main.add(c_tel1);
+	c_view_main.add(l_tel1);
+
+	c_view_main.add(c_tel2);
+	c_view_main.add(l_tel2);
+	
+	c_view_additional.add(l_lon);
+	c_view_additional.add(c_lon);
+
+	c_view_additional.add(l_lat);
+	c_view_additional.add(c_lat);
+	
+	c_view_additional.add(c_location_btn);
+	
+	c_view_main.add(c_view_additional);
+
+	c_scroll_view.add(c_view_main);
+	
+	c_win.add(c_scroll_view);
+	
+	c_win.add(c_btn_close);
+	c_win.add(c_btn_save);
+	
+	// close button event
+	c_btn_close.addEventListener("click", function(){
+		c_win.canceled = true;
+		c_win.close();
+	});
+	
+	// save button
+	c_btn_save.addEventListener("click", function(){
+			// check data if... if...
+			var _c_id = 0;
+			if(cust_data != null){
+				_c_id = cust_data[0].id;
+			};
+			// add data to current_data
+			Ti.App.customer_data = [{ id: _c_id, desc: c_desc.value, addr: c_addr.value, city: c_city.value, pcode: c_pcode.value, tel1: c_tel1.value, tel2: c_tel2.value, lon: Number(c_lon.value), lat: Number(c_lat.value) }];
+			// close the window
+			c_win.close();
+	});
+	
+	c_location_btn.addEventListener("click", function(){
+		
+		if(Ti.App.current_longitude != null){
+			c_lat.value = Ti.App.current_latitude;
+			c_lon.value = Ti.App.current_longitude;
+			c_btn_save.focus();
+		}
+		else{
+			c_lat.value = "?????";
+			c_lon.value = "?????";
+			c_view_additional.backgroundColor = "red";
+		};
+	});
+	
+	// set text manipulation
+	c_desc.addEventListener("return", function(){
+		c_desc.blur();
+		c_addr.focus();
+	});
+	
+	c_addr.addEventListener("return", function(){
+		c_addr.blur();
+		c_city.focus();
+	});
+
+	c_city.addEventListener("return", function(){
+		c_city.blur();
+		c_pcode.focus();
+	});
+	
+	c_pcode.addEventListener("return", function(){
+		c_pcode.blur();
+		c_tel1.focus();
+	});
+	
+	c_tel1.addEventListener("return", function(){
+		c_tel1.blur();
+		c_tel2.focus();
+	});
+	
+	c_tel2.addEventListener("return", function(){
+		c_tel2.blur();
+		c_location_btn.focus();
+	});	
+	
+	// fill customer data
+	if(cust_data != null){
+		// set text fields
+		c_desc.value = cust_data[0].desc;
+		c_addr.value = cust_data[0].addr;
+		c_city.value = cust_data[0].city;
+		c_pcode.value = cust_data[0].postcode;
+		c_tel1.value = cust_data[0].tel1;
+		c_tel2.value = cust_data[0].tel2;
+		c_lon.value = cust_data[0].lon;
+		c_lat.value = cust_data[0].lat;
+		
+	};
+	
+	
+	c_win.open();
+	
+	return c_win;
+};
+
+// new customer form
+boCodes.Customers.newCustomer = function( cp_view ){
+	
+	var frm = boCodes.Customers.customerForm();
+	
+	frm.addEventListener("close", function() {
+		if(frm.canceled == false && Ti.App.customer_data != null){
+			var main_db = boDb.openDB();
+			boDb.insertIntoCustomers( main_db, Ti.App.customer_data );
+			main_db.close();
+			
+			var c_data = boCodes.Customers.getCustomers();
+			cp_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ));
+
+		};
+		
+	});
 };
 
 // edit customer form
-boCodes.Customers.editCustomer = function(){
+boCodes.Customers.editCustomer = function( cp_view ){
+	
+	// get current customer
+	var frm = boCodes.Customers.customerForm( Ti.App.current_customer_data );
+	
+	frm.addEventListener("close", function() {
+	
+		if(frm.canceled == false && Ti.App.customer_data != null){
+			var main_db = boDb.openDB();
+			boDb.updateCustomers( main_db, Ti.App.customer_data );
+			main_db.close();
+			
+			var c_data = boCodes.Customers.getCustomers();
+			cp_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ));
+		};
+	});
 	
 };
 

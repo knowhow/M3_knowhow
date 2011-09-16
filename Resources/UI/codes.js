@@ -17,8 +17,16 @@ boCodes.Articles.getArticleMatrix = function( article_data ) {
 	return boCodes.Matrix.getMatrix( article_data, "artikli" );
 };
 
-// get customers
-boCodes.Customers.getCustomers = function() {
+// get customers from DB
+boCodes.Customers.getCustomers = function(){
+	var main_db = boDb.openDB();
+	var cust_data = boDb.getCustomerData( main_db );
+	main_db.close();
+	return cust_data;
+};
+
+// get customers from JSON
+boCodes.Customers.getCustomersJSON = function() {
 	
 	var data = boDb.getCustomersDataJSON()
 	var ret = [];

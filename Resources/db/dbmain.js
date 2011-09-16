@@ -78,6 +78,48 @@ boDb.getArticlesDataJSON = function() {
  * CUSTOMERS DB methods
  */
 
+// insert data into customers
+boDb.insertIntoCustomers = function( oDb, cust_data ) {
+	
+	// insert into table customers
+	var _desc = cust_data[0].desc;
+	var _addr = cust_data[0].addr;
+	var _city = cust_data[0].city;
+	var _pcode = cust_data[0].pcode;
+	var _tel1 = cust_data[0].tel1;
+	var _tel2 = cust_data[0].tel2;
+	var _lon = cust_data[0].lon;
+	var _lat = cust_data[0].lat;
+
+	var _user_id = Ti.App.current_logged_user_id;
+	
+	oDb.execute('INSERT INTO customers (desc, addr, city, postcode, tel1, tel2, lon, lat, user_id) VALUES(?,?,?,?,?,?,?,?,?)', _desc, _addr, _city, _pcode, _tel1, _tel2, _lon, _lat, _user_id );
+     
+};
+
+
+// insert data into customers
+boDb.updateCustomers = function( oDb, cust_data ) {
+	
+	// insert into table customers
+	var _id = cust_data[0].id;
+	var _desc = cust_data[0].desc;
+	var _addr = cust_data[0].addr;
+	var _city = cust_data[0].city;
+	var _pcode = cust_data[0].pcode;
+	var _tel1 = cust_data[0].tel1;
+	var _tel2 = cust_data[0].tel2;
+	var _lon = cust_data[0].lon;
+	var _lat = cust_data[0].lat;
+
+	var _user_id = Ti.App.current_logged_user_id;
+
+	oDb.execute('UPDATE customers SET desc = ?, addr = ?, city = ?, postcode = ?, tel1 = ?, tel2 = ?, lon = ?, lat = ?, user_id = ? WHERE id = ?', _desc, _addr, _city, _pcode, _tel1, _tel2, _lon, _lat, _user_id, _id );
+     
+};
+
+
+
 // get customer data from db
 boDb.getCustomerData = function( oDb ){
 	var aData = [];
@@ -89,7 +131,8 @@ boDb.getCustomerData = function( oDb ){
   			addr: rows.fieldByName('addr'), 
   			city: rows.fieldByName('city'), 
   			postcode: rows.fieldByName('postcode'),   			
-  			tel: rows.fieldByName('tel'), 
+  			tel1: rows.fieldByName('tel1'), 
+  			tel2: rows.fieldByName('tel2'),
   			user_id: rows.fieldByName('user_id'),   			
   			lon: rows.fieldByName('lon'), 
   			lat: rows.fieldByName('lat')
@@ -293,7 +336,7 @@ boDb.openDB = function() {
 	// user TEXT
 	// lat REAL
 	// lon REAL
-	db.execute('CREATE TABLE IF NOT EXISTS customers (id INTEGER PRIMARY KEY, desc TEXT, addr TEXT, city TEXT, postcode TEXT, user_id INT, lon REAL, lat REAL)'); 
+	db.execute('CREATE TABLE IF NOT EXISTS customers (id INTEGER PRIMARY KEY, desc TEXT, addr TEXT, city TEXT, postcode TEXT, tel1 TEXT, tel2 TEXT, user_id INT, lon REAL, lat REAL)'); 
 	
 	return db;
 };

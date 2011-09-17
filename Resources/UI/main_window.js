@@ -50,7 +50,7 @@ var mainWindow = function() {
 	
 	// btn geo...
 	var delete_db = Titanium.UI.createButton({  
-       	title:'Obrisi db',  
+       	title:'Obrisi db (debug)',  
        	left:'2%',
        	right:'2%',
        	top:'36%',    
@@ -72,7 +72,7 @@ var mainWindow = function() {
 	
 	// send to server...
 	var close_btn = Titanium.UI.createButton({  
-       	title:'Zatvori',  
+       	title:'Log out',  
        	left:'2%',
        	right:'2%',
        	top:'80%',    

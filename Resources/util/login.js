@@ -18,6 +18,8 @@ boMobileAppLib.Login.LoginForm = function() {
 	var login = false;
 	// get defined username
 	var user_name = boMobileAppLib.Login.getUserName();
+	
+	alert(user_name);
 		
 	// create login window
 	var login_window = Ti.UI.createWindow({
@@ -41,7 +43,6 @@ boMobileAppLib.Login.LoginForm = function() {
         right:'5%',
         //value:"vsasa",  
         height:'11%',  
-        hintText:'...korisničko ime',  
         keyboardType:Ti.UI.KEYBOARD_DEFAULT,  
         returnKeyType:Ti.UI.RETURNKEY_DEFAULT,  
         borderStyle:Ti.UI.INPUT_BORDERSTYLE_ROUNDED  
@@ -65,7 +66,6 @@ boMobileAppLib.Login.LoginForm = function() {
         right:'5%', 
         //value:"11", 
         height:'11%',
-        hintText:'...lozinka',  
         passwordMask:true,  
         keyboardType:Titanium.UI.KEYBOARD_DEFAULT,  
         returnKeyType:Titanium.UI.RETURNKEY_DEFAULT,  

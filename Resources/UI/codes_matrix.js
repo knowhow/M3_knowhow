@@ -12,8 +12,8 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		// h: 150
 		var cellWidth = boUtil.math.getControlPostitionWidth(25);
 		var cellHeight = boUtil.math.getControlPostitionWidth(30);
-		var xSpacer = boUtil.math.getControlPostitionWidth(4);
-		var ySpacer = boUtil.math.getControlPostitionWidth(4);
+		var xSpacer = boUtil.math.getControlPostitionWidth(1);
+		var ySpacer = boUtil.math.getControlPostitionWidth(1);
 		var xGrid = 3;
 		var yGrid = 100;
 		var currentItem = 0;
@@ -71,7 +71,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
             		color:"red",
             		top:'5%',
             		left:'10%',
-            		font:{fontSize:'16pt',fontWeight:'bold'},
+            		font:{fontSize:'10pt',fontWeight:'bold'},
             		objIndex:cellIndex.toString(),
             		objName:"lbl",
             		textAlign:"left",
@@ -158,9 +158,20 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
  
  		// double tap - increase amount of items
 		tableview.addEventListener("dblclick", function(e){
+			
 			// increase number
-   			labels[e.source.objIndex].text = (parseInt(labels[e.source.objIndex].text) + 1).toString();
-   			data[e.source.objIndex].article_quantity = parseInt(labels[e.source.objIndex].text);
+   			
+   			//labels[e.source.objIndex].text = (parseInt(labels[e.source.objIndex].text) + 1).toString();
+   			//data[e.source.objIndex].article_quantity = parseInt(labels[e.source.objIndex].text);
+		
+			var man = boCodes.Matrix.getItemManualValue();
+			man.addEventListener("close", function(){
+				
+				labels[e.source.objIndex].text = man.item_value;
+				data[e.source.objIndex].article_quantity = parseInt(man.item_value);
+			
+			});
+			
 		});
   
   		// description view - show item properties
@@ -267,12 +278,71 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		
 };
 
+// get item manual value...
+boCodes.Matrix.getItemManualValue = function( curr_value ){
+	
+	var mv_win = Ti.UI.createWindow({
+		backgroundColor:'white',
+		title:'unesi iznos',
+		height:'40%',
+		width:'85%',
+		top:'5%',
+		borderRadius:10,
+		borderColor:'gray',
+		borderWidth:5
+	});
+	
+	var mv_lbl = Ti.UI.createLabel({
+		text:'Unesi željenu vrijednost:',
+		top:'12%',
+		color:'black',
+		left:'12%',
+		font:{fontSize:'8pt', fontWeight:'bold'}	
+	});
+	
+	var mv_text = Ti.UI.createTextField({
+		top:'35%',
+		left:'10%',
+		right:'10%',
+		height:'25%',
+		keyboardType: Titanium.UI.KEYBOARD_NUMBER_PAD
+	});
+	
+	var btn_ok = Ti.UI.createButton({
+		top:'70%',
+		left:'30%',
+		right:'30%',
+		height:'25%',
+		title:'Uredu'
+	});
+	
+	mv_win.add(mv_lbl);
+	mv_win.add(mv_text);
+	mv_win.add(btn_ok);
+	
+	mv_text.addEventListener("return", function(){
+		mv_text.blur();
+		btn_ok.focus();
+	});
+	
+	btn_ok.addEventListener("click", function(){
+		mv_text.blur();
+		mv_win.item_value = mv_text.value;
+		mv_win.close();
+	});
+	
+	mv_text.focus();
+	mv_win.open();
+	
+	return mv_win;
+};
+
 
 
 var item_set_focus = function( index, label_qt, label_desc ) {
 	
 	// set label quantity
-	label_qt[index].font = {fontSize:'22pt',fontWeight:'bold'};
+	label_qt[index].font = {fontSize:'16pt',fontWeight:'bold'};
 	label_qt[index].left = '10%';
 	
 	// set label desc
@@ -281,7 +351,7 @@ var item_set_focus = function( index, label_qt, label_desc ) {
 	
 	for (var i=0; i < label_qt.length; i++) {
 		if (i != index ){
-			label_qt[i].font = {fontSize:'16pt',fontWeight:'bold'};
+			label_qt[i].font = {fontSize:'10pt',fontWeight:'bold'};
 			label_qt[i].left = '10%';
 			
 			label_desc[i].backgroundColor = 'gray';

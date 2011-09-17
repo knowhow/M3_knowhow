@@ -399,7 +399,7 @@ function _refresh_cust_data( tbl_data, lon, lat ) {
            	color:"black",
            	top:'47%',
            	left:'1%',
-           	width:'80%',
+           	width:'75%',
            	font:{fontSize:'5pt',fontWeight:'normal'},
            	objIndex:i,
            	objName:"lbl-desc",
@@ -410,13 +410,13 @@ function _refresh_cust_data( tbl_data, lon, lat ) {
 
     	var thisLabelDist = Ti.UI.createLabel({
            	color:"#32CD32",
-           	top:'45%',
-           	left:'80%',
-           	font:{fontSize:'4pt',fontWeight:'bold'},
+           	top:'35%',
+           	left:'75%',
+           	font:{fontSize:'6pt',fontWeight:'bold'},
            	objIndex:i,
            	objName:"lbl-desc",
            	textAlign:"left",
-           	text:dst + " km",
+           	text:'distanca: ' + boUtil.str.newRow() + dst,
            	touchEnabled:false
         });
 
@@ -523,7 +523,8 @@ boCodes.Customers.customerForm = function( cust_data ) {
 		left:'53%',
 		width:'30%',
 		height:'3%',
-		top:'11%'
+		top:'11%',
+		keyboardType: Titanium.UI.KEYBOARD_NUMBER_PAD
 	});
 
 	// telephone
@@ -538,7 +539,8 @@ boCodes.Customers.customerForm = function( cust_data ) {
 		left:'2%',
 		width:'45%',
 		height:'3%',
-		top:'15.5%'
+		top:'15.5%',
+		keyboardType: Titanium.UI.KEYBOARD_NUMBER_PAD
 	});
 
 	// telephone
@@ -553,7 +555,8 @@ boCodes.Customers.customerForm = function( cust_data ) {
 		left:'53%',
 		width:'45%',
 		height:'3%',
-		top:'15.5%'
+		top:'15.5%',
+		keyboardType: Titanium.UI.KEYBOARD_NUMBER_PAD
 	});
 	
 	var c_view_additional = Ti.UI.createView({
@@ -586,7 +589,8 @@ boCodes.Customers.customerForm = function( cust_data ) {
 		left:'2%',
 		width:'45%',
 		height:'28%',
-		top:'23%'
+		top:'23%',
+		keyboardType: Titanium.UI.KEYBOARD_NUMBER_PAD
 	});
 
 	var l_lat = Ti.UI.createLabel({
@@ -600,7 +604,8 @@ boCodes.Customers.customerForm = function( cust_data ) {
 		left:'50%',
 		width:'45%',
 		height:'28%',
-		top:'23%'
+		top:'23%',
+		keyboardType: Titanium.UI.KEYBOARD_NUMBER_PAD
 	});
 
 	// buttons
@@ -712,6 +717,18 @@ boCodes.Customers.customerForm = function( cust_data ) {
 		else
 		{
 			c_pcode.focus();
+		};
+	});
+	
+	c_pcode.addEventListener("focus", function(){
+		if(c_city.value != ''){
+			c_pcode.value = boCodes.Postal.getPostCode( c_city.value );
+		};
+	});
+	
+	c_pcode.addEventListener("click", function(){
+		if(c_city.value != ''){
+			c_pcode.value = boCodes.Postal.getPostCode( c_city.value );
 		};
 	});
 	

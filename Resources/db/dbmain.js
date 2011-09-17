@@ -188,46 +188,10 @@ boDb.getCustomerById = function( oDb, customer_id ){
 };
 
 
-// get customer desc from JSON
-boDb.getCustomerByIdJSON = function( customer_id ){
-	var data = boDb.getCustomersDataJSON();
-	for (var i=0; i < data.customers.length; i++) {
-	  if(data.customers[i].id == customer_id){
-	  	return data.customers[i].desc;
-	  };
-	};
-	return "";
-};
-
 // get customer desc from db
 boDb.getCustomerArrayById = function( oDb, customer_id ){
 	var row = oDb.execute('SELECT * FROM customers WHERE id = ?', customer_id);
 	return [{ id: row.fieldByName('id') ,desc: row.fieldByName('desc'), city: row.fieldByName('city'), postcode: row.fieldByName('postcode'), addr: row.fieldByName('addr'), lat: row.fieldByName('lat'), lon: row.fieldByName('lon') }];
-};
-
-
-// get customer desc from JSON
-boDb.getCustomerArrayByIdJSON = function( customer_id ){
-	var data = boDb.getCustomersDataJSON();
-	for (var i=0; i < data.customers.length; i++) {
-	  if(data.customers[i].id == customer_id){
-	  	return [{ desc: data.customers[i].desc, city: data.customers[i].city, postcode: data.customers[i].postcode, addr: data.customers[i].addr, lat: data.customers[i].lat, lon: data.customers[i].lon }];
-	  };
-	};
-	return "";
-};
-
-
-// get customer data JSON
-boDb.getCustomersDataJSON = function() {
-	var cust = JSON.parse(
-		'{"customers":[{"id":"1","desc":"Firma A","addr":"Ulica 1","city":"Zenica","postcode":"72000","tel":"032000000","user":"vsasa","lat":"44.20408666133","lon":"17.90695884"},'+
-		'{"id":"2","desc":"Firma B","addr":"Ulica 2","city":"Zenica","postcode":"72000","tel":"032100000","user":"vsasa","lat":"43.915886","lon":"17.679076"},' +
-		'{"id":"3","desc":"Firma C","addr":"Ulica 3","city":"Sarajevo","postcode":"71000","tel":"032110000","user":"vsasa","lat":"43.915886","lon":"17.679076"},' +
-		'{"id":"4","desc":"Firma D","addr":"Ulica 4","city":"Sarajevo","postcode":"71000","tel":"032111000","user":"hernad","lat":"43.915886","lon":"17.679076"},' +
-		'{"id":"5","desc":"Firma E","addr":"Ulica 5","city":"Sarajevo","postcode":"71000","tel":"032220000","user":"vsasa","lat":"43.915886","lon":"17.679076"},' +
-		'{"id":"6","desc":"Firma F","addr":"Ulica 6","city":"Konjic","postcode":"75000","tel":"032555000","user":"vsasa","lat":"43.915886","lon":"17.679076"}]}' );
-	return cust;
 };
 
 

@@ -156,9 +156,10 @@ boCodes.Customers.getPurchaseCustomer = function(){
 				// edit customer
 				boCodes.Customers.editCustomer();
 				break;
-			case 3:
+			case 2:
 				// refresh table
 				c_data = boCodes.Customers.getCustomers();
+				//alert(JSON.stringify(c_data));
 				cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
 				break;
 		};
@@ -265,10 +266,8 @@ boCodes.Customers.getPurchaseCustomer = function(){
             	clearInterval(timer);
             	
             	// calculate distance and fill table view
-            	var dist_data = boCodes.Customers.getCustomersInRadius( Ti.App.current_longitude, Ti.App.current_latitude );
-            	var ret_data = _refresh_cust_data( dist_data, Ti.App.current_longitude, Ti.App.current_latitude );
-				
-				cp_tbl_view.setData( ret_data );
+            	c_data = boCodes.Customers.getCustomersInRadius( Ti.App.current_longitude, Ti.App.current_latitude );
+				cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
 				//Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
             	
 

@@ -44,45 +44,36 @@ boCodes.Customers.getCustomers = function(){
 	return cust_data;
 };
 
-// get customers from JSON
-boCodes.Customers.getCustomersJSON = function() {
-	
-	var data = boDb.getCustomersDataJSON()
-	var ret = [];
-	
-	for(var i=0; i < data.customers.length ; i++){
-	
-		if (data.customers[i].user == Ti.App.current_logged_user ){
-			ret.push( data.customers[i] );
-		}; 
-	};
-	
-	return ret;
-};
+
 
 // get customers by distance
 boCodes.Customers.getCustomersInRadius = function( lon, lat, radius ) {
 	
-	var data = boDb.getCustomersDataJSON()
+	var main_db = boDb.openDB();
+	var data = boDb.getCustomerData( main_db );
+	main_db.close();
 	var ret = [];
 	var dist = 0;
 	
-	if(lon == null){return ret};
+	if(lon == null){
+		return ret;
+	};
 	
-	if(radius==null){radius = 300};
+	if(radius==null){
+		radius = 300;
+	};
 	
-	for(var i=0; i < data.customers.length ; i++){
+	for(var i=0; i < data.length ; i++){
 	
-		if (data.customers[i].user == Ti.App.current_logged_user ){
+		if (data[i].user_id == Ti.App.current_logged_user_id ){
 			
 			// calculate distance
-			dist = boGeo.calcGeoDistance( data.customers[i].lon, data.customers[i].lat, lon, lat );
+			dist = boGeo.calcGeoDistance( data[i].lon, data[i].lat, lon, lat );
 			// round to 3 decimals
 			dist = Math.round(dist*1000)/1000;
-			
 			// convert to meters and push data if exist
-			if (dist * 1000 < radius ){
-				ret.push( data.customers[i] );	
+			if ((dist * 1000) < radius ){
+				ret.push( data[i] );	
 			};
 		}; 
 	};

@@ -38,6 +38,7 @@ boPurchase.listPurchase = function() {
 		bottom:'10%'
 	});
 
+	p_tbl_view.setData([]);
 	// set the table contents, all customers
 	p_tbl_view.setData( _refresh_purchase_data( d_data ) );
 

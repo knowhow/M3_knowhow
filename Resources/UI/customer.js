@@ -3,16 +3,17 @@
 boCodes.Customers.customerList = function() {
 		
 	// reset global data
-	Ti.App.purchased_data = [];
-	Ti.App.document_data = [];
-	Ti.App.customer_data = [];
+	Ti.App.purchased_data = null;
+	Ti.App.document_data = null;
+	Ti.App.customer_data = null;
 	Ti.App.current_longitude = null;
 	Ti.App.current_latitude = null;
 	Ti.App.current_customer_id = null;
 	Ti.App.current_customer_data = null;
 	
 	// open the get customer form
-	var customer_win = boCodes.Customers.getPurchaseCustomer();
+	var customer_win = null;
+	customer_win = boCodes.Customers.getPurchaseCustomer();
 			
 };
 
@@ -158,9 +159,9 @@ boCodes.Customers.getPurchaseCustomer = function(){
 				break;
 			case 2:
 				// refresh table
-				c_data = boCodes.Customers.getCustomers();
-				//alert(JSON.stringify(c_data));
-				cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
+				var curr_data = boCodes.Customers.getCustomers();
+				var tbl_upd = _refresh_cust_data( curr_data, Ti.App.current_longitude, Ti.App.current_latitude );
+				cp_tbl_view.setData( tbl_upd );
 				break;
 		};
 	
@@ -169,7 +170,8 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	// listen for edited event
 	Ti.App.addEventListener("customerEdited", function(){
 		c_data = boCodes.Customers.getCustomers();
-		cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
+		var tbl_upd = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
+		cp_tbl_view.setData( tbl_upd );
 	});
 		
 	cp_top_view.add(cp_lbl_loc);
@@ -224,6 +226,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	// close btn
 	cp_close_btn.addEventListener("click", function(){
 		Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
+		Ti.App.removeEventListener("customerEdited", function(){});
 		cp_win.close();
 	});
 	
@@ -267,7 +270,8 @@ boCodes.Customers.getPurchaseCustomer = function(){
             	
             	// calculate distance and fill table view
             	c_data = boCodes.Customers.getCustomersInRadius( Ti.App.current_longitude, Ti.App.current_latitude );
-				cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
+				var upd_tbl = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
+				cp_tbl_view.setData( upd_tbl );
 				//Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
             	
 
@@ -325,8 +329,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 			cp_top_view.backgroundColor = "black";
 		};
 		
-		// set the table contents, all customers
-		cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
+		
 			
 	});	
 	
@@ -334,6 +337,10 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	//var st_data = [];
 	//st_data.push(c_data[0]);
 	//Ti.App.current_customer_data = st_data;
+	
+	// set the table contents, all customers
+	var upd_tbl = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
+	cp_tbl_view.setData( upd_tbl );
 	
 	cp_win.open();
 	

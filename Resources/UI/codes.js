@@ -38,9 +38,7 @@ boCodes.Articles.getArticleMatrix = function( article_data ) {
 
 // get customers from DB
 boCodes.Customers.getCustomers = function(){
-	var main_db = boDb.openDB();
-	var cust_data = boDb.getCustomerData( main_db );
-	main_db.close();
+	var cust_data = boDb.getCustomerData();
 	return cust_data;
 };
 
@@ -49,9 +47,7 @@ boCodes.Customers.getCustomers = function(){
 // get customers by distance
 boCodes.Customers.getCustomersInRadius = function( lon, lat, radius ) {
 	
-	var main_db = boDb.openDB();
-	var data = boDb.getCustomerData( main_db );
-	main_db.close();
+	var data = boDb.getCustomerData();
 	var ret = [];
 	var dist = 0;
 	

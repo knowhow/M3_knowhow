@@ -10,8 +10,7 @@ boPurchase.listPurchase = function() {
 	var current_purchase_cust_id = 0;
 	var current_purchase_doc_total = 0;
 	
-	var main_db = boDb.openDB();
-	var d_data = boDb.getPurcasesData( main_db );
+	var d_data = boDb.getPurcasesData();
 	
 	var p_win = Ti.UI.createWindow({
 		backgroundColor:"#FFFFFF",
@@ -62,14 +61,10 @@ boPurchase.listPurchase = function() {
 			// view details
 			case 0:
 				
-				// open db
-				var tmp_db = boDb.openDB();
 				// get items data
-				var items_data = boDb.getPurchaseItemsData(tmp_db, current_purchase_no);
+				var items_data = boDb.getPurchaseItemsData(current_purchase_no);
 				// get customer data
-				var cust_data = boDb.getCustomerArrayById(tmp_db, current_purchase_cust_id);
-				// close db
-				tmp_db.close();
+				var cust_data = boDb.getCustomerArrayById(current_purchase_cust_id);
 				
 				// open purchase preview form
 				// cust_data, items_data, doc_no, doc_date, doc_valid
@@ -84,16 +79,16 @@ boPurchase.listPurchase = function() {
   			// cancel purchase
   			case 1:
   			
-  				boDb.cancelPurchase(main_db, current_purchase_no);
-  				d_data = boDb.getPurcasesData(main_db);
+  				boDb.cancelPurchase(current_purchase_no);
+  				d_data = boDb.getPurcasesData();
   				p_tbl_view.setData(_refresh_purchase_data(d_data));
   				break;
   				
   			// activate purchase
   			case 2:
   			
-  				boDb.activatePurchase(main_db, current_purchase_no);
-  				d_data = boDb.getPurcasesData(main_db);
+  				boDb.activatePurchase(current_purchase_no);
+  				d_data = boDb.getPurcasesData();
   				p_tbl_view.setData(_refresh_purchase_data(d_data));
   				break;
   			
@@ -115,8 +110,8 @@ boPurchase.listPurchase = function() {
             		};
 				
 					// delete record from purchases
-					boDb.deleteFromPurchases(main_db, current_purchase_no);
-  					d_data = boDb.getPurcasesData(main_db);
+					boDb.deleteFromPurchases(current_purchase_no);
+  					d_data = boDb.getPurcasesData();
   					p_tbl_view.setData(_refresh_purchase_data(d_data));
   					
   					return;
@@ -146,7 +141,6 @@ boPurchase.listPurchase = function() {
 	p_win.add(p_bottom_view);
 
 	p_btn_close.addEventListener("click", function(){
-		main_db.close();
 		p_win.close();
 	});
 
@@ -156,15 +150,13 @@ boPurchase.listPurchase = function() {
 
 
 function _refresh_purchase_data(data) {
-	
-	var main_db = boDb.openDB();
 		
 	var tbl_data = [];
 	
 	for(var i=0; i < data.length; i++){
 				
 		// customer array	
-		var c_arr = boDb.getCustomerArrayById( main_db, data[i].cust_id );
+		var c_arr = boDb.getCustomerArrayById( data[i].cust_id );
 		
 		var thisRow = Ti.UI.createTableViewRow({
         	className:"item",
@@ -237,7 +229,6 @@ function _refresh_purchase_data(data) {
 		tbl_data.push(thisRow);
 	};
 	
-	main_db.close();
 	return tbl_data;
 };
 
@@ -266,13 +257,10 @@ boPurchase.newPurchase = function() {
 		detail_win.addEventListener('close',function(e){
    			
    			// store to db...
-   			var main_db = boDb.openDB();
    			var cust_id = Number(_cust_result[0].id);   
    			var user_id = Ti.App.current_logged_user_id;
    							
-   			boDb.insertIntoPurchases(main_db, user_id, cust_id, e.source.accepted, purch_data);
-   			
-   			main_db.close();
+   			boDb.insertIntoPurchases(user_id, cust_id, e.source.accepted, purch_data);
    				
    			if(e.source.accepted == 1){
    				//alert("Narudzba ažurirana...");	   			

@@ -3,25 +3,6 @@ var boDb = {};
 /*
  * USERS DB methods
  */
-
-// get users data from db
-boDb.getUsersData = function( oDb ){
-	var aData = [];
-	var rows = oDb.execute('SELECT * FROM users');
-	while (rows.isValidRow()) {
-  		aData.push({ 
-  			id: rows.fieldByName('id'), 
-  			name: rows.fieldByName('name'), 
-  			pwd: rows.fieldByName('pwd') 
-  			});
-
-		rows.next();
-	};
-	rows.close();
-	
-	return aData;
-};
-
 	
 boDb.getUsersDataJSON = function() {
 	var acc = JSON.parse('{"userdata":[{"id":"1","name":"vsasa","pwd":"11"},{"id":"2","name":"bjasko","pwd":"22"},{"id":"3","name":"hernad","pwd":"33"}]}');
@@ -32,25 +13,6 @@ boDb.getUsersDataJSON = function() {
 /*
  * ARTICLES DB methods
  */
-
-// get articles data from db
-boDb.getArticlesData = function( oDb ){
-	var aData = [];
-	var rows = oDb.execute('SELECT * FROM articles');
-	while (rows.isValidRow()) {
-  		aData.push({ 
-  			id: rows.fieldByName('id'), 
-  			desc: rows.fieldByName('desc'), 
-  			price: rows.fieldByName('price'), 
-  			pict: rows.fieldByName('pict') 
-  			});
-
-		rows.next();
-	};
-	rows.close();
-	
-	return aData;
-};
 
 
 // get articles data JSON
@@ -90,8 +52,9 @@ boDb.getArticleDescByIdJSON = function( article_id ){
  */
 
 // insert data into customers
-boDb.insertIntoCustomers = function( oDb, cust_data ) {
+boDb.insertIntoCustomers = function( cust_data ) {
 	
+	//var oDb = boDb.openDB();
 	// insert into table customers
 	var _desc;
 	var _addr;
@@ -117,13 +80,16 @@ boDb.insertIntoCustomers = function( oDb, cust_data ) {
 		oDb.execute('INSERT INTO customers (desc, addr, city, postcode, tel1, tel2, lon, lat, user_id) VALUES(?,?,?,?,?,?,?,?,?)', _desc, _addr, _city, _pcode, _tel1, _tel2, _lon, _lat, _user_id );
 	  
 	};
+	
+	//oDb.close();
      
 };
 
 
 // insert data into customers
-boDb.updateCustomers = function( oDb, cust_data ) {
+boDb.updateCustomers = function( cust_data ) {
 
+	//var oDb = boDb.openDB();
 	var _desc;
 	var _addr;
 	var _city;
@@ -150,13 +116,16 @@ boDb.updateCustomers = function( oDb, cust_data ) {
 		oDb.execute('UPDATE customers SET desc = ?, addr = ?, city = ?, postcode = ?, tel1 = ?, tel2 = ?, lon = ?, lat = ?, user_id = ? WHERE id = ?', _desc, _addr, _city, _pcode, _tel1, _tel2, _lon, _lat, _user_id, _id );
 	
 	};
+	
+	//oDb.close();
      
 };
 
 
 
 // get customer data from db
-boDb.getCustomerData = function( oDb ){
+boDb.getCustomerData = function(){
+	//var oDb = boDb.openDB();
 	var aData = [];
 	var rows = oDb.execute('SELECT * FROM customers ORDER BY desc');
 	while (rows.isValidRow()) {
@@ -176,22 +145,29 @@ boDb.getCustomerData = function( oDb ){
 		rows.next();
 	};
 	rows.close();
+	//oDb.close();
 	
 	return aData;
 };
 
 
 // get customer desc from db
-boDb.getCustomerById = function( oDb, customer_id ){
+boDb.getCustomerById = function( customer_id ){
+	//var oDb = boDb.openDB();
 	var row = oDb.execute('SELECT * FROM customers WHERE id = ?', customer_id);
-	return row.fieldByName('desc');
+	var res = row.fieldByName('desc');
+	//oDb.close();
+	return res;
 };
 
 
 // get customer desc from db
-boDb.getCustomerArrayById = function( oDb, customer_id ){
+boDb.getCustomerArrayById = function( customer_id ){
+	//var oDb = boDb.openDB();
 	var row = oDb.execute('SELECT * FROM customers WHERE id = ?', customer_id);
-	return [{ id: row.fieldByName('id') ,desc: row.fieldByName('desc'), city: row.fieldByName('city'), postcode: row.fieldByName('postcode'), addr: row.fieldByName('addr'), lat: row.fieldByName('lat'), lon: row.fieldByName('lon') }];
+	var res = [{ id: row.fieldByName('id') ,desc: row.fieldByName('desc'), city: row.fieldByName('city'), postcode: row.fieldByName('postcode'), addr: row.fieldByName('addr'), lat: row.fieldByName('lat'), lon: row.fieldByName('lon') }];
+	//oDb.close();
+	return res;
 };
 
 
@@ -200,17 +176,12 @@ boDb.getCustomerArrayById = function( oDb, customer_id ){
  */
 
 // get purchases from db
-boDb.getPurcasesData = function( oDb, valid ){
+boDb.getPurcasesData = function(){
+	//var oDb = boDb.openDB();
 	var aData = [];
 	var rows;
 	
-	if(valid != null){
-		rows = oDb.execute('SELECT * FROM docs WHERE cust_id <> "" AND doc_valid = ?', valid);
-	}
-	else
-	{
-		rows = oDb.execute('SELECT * FROM docs WHERE cust_id <> ""');		
-	};
+	rows = oDb.execute('SELECT * FROM docs WHERE cust_id <> 0');		
 	
 	while (rows.isValidRow()) {
   		aData.push({ 
@@ -225,13 +196,15 @@ boDb.getPurcasesData = function( oDb, valid ){
 		rows.next();
 	};
 	rows.close();
+	//oDb.close();
 	
 	return aData;
 };
 
 
 // get purchase items data from db
-boDb.getPurchaseItemsData = function( oDb, purchase_no ){
+boDb.getPurchaseItemsData = function( purchase_no ){
+	//var oDb = boDb.openDB();
 	var aData = [];
 	var rows = oDb.execute('SELECT * FROM doc_items WHERE doc_no = ?', purchase_no);
 	while (rows.isValidRow()) {
@@ -244,38 +217,47 @@ boDb.getPurchaseItemsData = function( oDb, purchase_no ){
 		rows.next();
 	};
 	rows.close();
-	
+	//oDb.close();
 	return aData;
 };
 
 
 // cancel purchase
-boDb.cancelPurchase = function( oDb, p_no ){
+boDb.cancelPurchase = function( p_no ){
+	//var oDb = boDb.openDB();
 	oDb.execute('UPDATE docs SET doc_valid = 0 WHERE doc_no = ?', p_no);
+	//oDb.close();
 };
 
 // activate purchase
-boDb.activatePurchase = function( oDb, p_no ){
+boDb.activatePurchase = function( p_no ){
+	//var oDb = boDb.openDB();
 	oDb.execute('UPDATE docs SET doc_valid = 1 WHERE doc_no = ?', p_no);
+	//oDb.close();
 };
 
 
 // delete purchase
-boDb.deleteFromPurchases = function( oDb, p_no ){
+boDb.deleteFromPurchases = function( p_no ){
+	//var oDb = boDb.openDB();
 	oDb.execute('DELETE FROM docs WHERE doc_no = ?', p_no);
 	oDb.execute('DELETE FROM doc_items WHERE doc_no = ?', p_no);	
+	//oDb.close();
 };
 
 // delete purchase
-boDb.deleteAllPurchases = function( oDb ){
-	oDb.execute('DELETE ALL FROM docs');
-	oDb.execute('DELETE ALL FROM doc_items');	
+boDb.deleteAllPurchases = function(){
+	//var oDb = boDb.openDB();
+	oDb.execute('DELETE FROM docs');
+	oDb.execute('DELETE FROM doc_items');	
+	//oDb.close();
 };
 
 
 // insert data into purchases
-boDb.insertIntoPurchases = function( oDb, user_id, cust_id, d_valid, items_data ) {
+boDb.insertIntoPurchases = function( user_id, cust_id, d_valid, items_data ) {
 	
+	//var oDb = boDb.openDB();
 	var tmp_qt = 0;
 	// check data
 	for (var x=0; x < items_data.length; x++) {
@@ -284,6 +266,7 @@ boDb.insertIntoPurchases = function( oDb, user_id, cust_id, d_valid, items_data 
 	
 	if(tmp_qt == 0){
 		alert("Nema stavki za ažuriranje!");
+		//oDb.close();
 		return;
 	};
 	
@@ -326,7 +309,7 @@ boDb.insertIntoPurchases = function( oDb, user_id, cust_id, d_valid, items_data 
     
     // update total in purchases
     oDb.execute('UPDATE docs SET items_total = ? WHERE doc_no = ?', _total, _d_no);
-    
+    //oDb.close();
 };
 
 
@@ -360,7 +343,7 @@ boDb.openDB = function() {
 	
 	// customers
 	//
-	// id TEXT
+	// id INT
 	// desc TEXT
 	// addr TEXT
 	// city TEXT

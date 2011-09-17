@@ -7,6 +7,8 @@ Ti.App.current_logged_user_id = 0;
 // include lib 
 Ti.include("lib.js");
 
+oDb = boDb.openDB();
+
 // open login form
 boMobileAppLib.Login.LoginForm();
 
@@ -25,4 +27,11 @@ Ti.App.addEventListener('loggedin',function(){
     
     // go to main form
     mainWindow();
+});
+
+Ti.App.addEventListener('close',function(e)
+{
+    if ( oDb ) {
+        oDb.close();
+    }
 });

@@ -135,11 +135,9 @@ var mainWindow = function() {
             if (e.index == 1) {
                 return;
             }
- 
-            var db = boDb.openDB();
-			boDb.deleteAllPurchases(db);
-			db.close();
-
+  
+			boDb.deleteAllPurchases();
+	
         });
  
         alertDialog.show();

@@ -685,8 +685,8 @@ boCodes.Customers.customerForm = function( cust_data ) {
 		}
 		else
 		{
-			c_lat.value = "?????";
-			c_lon.value = "?????";
+			c_lat.value = "0";
+			c_lon.value = "0";
 			c_view_additional.backgroundColor = "red";
 		};
 	});
@@ -767,9 +767,8 @@ boCodes.Customers.newCustomer = function(){
 	
 	frm.addEventListener("close", function() {
 		if(frm.canceled == false && Ti.App.customer_data != null){
-			var main_db = boDb.openDB();
-			boDb.insertIntoCustomers( main_db, Ti.App.customer_data );
-			main_db.close();
+
+			boDb.insertIntoCustomers(Ti.App.customer_data );
 			
 			Ti.App.fireEvent("customerEdited");
 
@@ -792,9 +791,9 @@ boCodes.Customers.editCustomer = function(){
 	frm.addEventListener("close", function() {
 	
 		if(frm.canceled == false && Ti.App.customer_data != null){
-			var main_db = boDb.openDB();
-			boDb.updateCustomers( main_db, Ti.App.customer_data );
-			main_db.close();
+			
+			boDb.updateCustomers(Ti.App.customer_data );
+			
 			
 			Ti.App.fireEvent("customerEdited");
 		};

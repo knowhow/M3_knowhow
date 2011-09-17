@@ -410,7 +410,7 @@ function _refresh_cust_data( c_data, lon, lat ) {
            	color:"#32CD32",
            	top:'45%',
            	left:'80%',
-           	font:{fontSize:'6pt',fontWeight:'bold'},
+           	font:{fontSize:'4pt',fontWeight:'bold'},
            	objIndex:i,
            	objName:"lbl-desc",
            	textAlign:"left",

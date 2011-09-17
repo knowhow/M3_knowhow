@@ -111,8 +111,8 @@ boDb.insertIntoCustomers = function( oDb, cust_data ) {
 		_pcode = cust_data[i].pcode;
 		_tel1 = cust_data[i].tel1;
 		_tel2 = cust_data[i].tel2;
-		_lon = cust_data[i].lon;
-		_lat = cust_data[i].lat;
+		_lon = Number(cust_data[i].lon);
+		_lat = Number(cust_data[i].lat);
 	
 		oDb.execute('INSERT INTO customers (desc, addr, city, postcode, tel1, tel2, lon, lat, user_id) VALUES(?,?,?,?,?,?,?,?,?)', _desc, _addr, _city, _pcode, _tel1, _tel2, _lon, _lat, _user_id );
 	  
@@ -144,8 +144,8 @@ boDb.updateCustomers = function( oDb, cust_data ) {
 		_pcode = cust_data[0].pcode;
 		_tel1 = cust_data[0].tel1;
 		_tel2 = cust_data[0].tel2;
-		_lon = cust_data[0].lon;
-		_lat = cust_data[0].lat;
+		_lon = Number(cust_data[0].lon);
+		_lat = Number(cust_data[0].lat);
 	
 		oDb.execute('UPDATE customers SET desc = ?, addr = ?, city = ?, postcode = ?, tel1 = ?, tel2 = ?, lon = ?, lat = ?, user_id = ? WHERE id = ?', _desc, _addr, _city, _pcode, _tel1, _tel2, _lon, _lat, _user_id, _id );
 	

@@ -11,8 +11,6 @@ boMobileAppLib.Login.LoginForm = function() {
 	if( Ti.App.Properties.hasProperty( "lastLoggedUser") ) {
     	_user_name = Ti.App.Properties.getString("lastLoggedUser");
 	};
-	
-	alert(_user_name);
 		
 	// create login window
 	var login_window = Ti.UI.createWindow({

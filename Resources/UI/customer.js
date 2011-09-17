@@ -9,7 +9,7 @@ boCodes.Customers.customerList = function() {
 	Ti.App.current_longitude = null;
 	Ti.App.current_latitude = null;
 	Ti.App.current_customer_id = null;
-	Ti.App.current_customer_data = [];
+	Ti.App.current_customer_data = null;
 	
 	// open the get customer form
 	var customer_win = boCodes.Customers.getPurchaseCustomer();
@@ -128,7 +128,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		search:searchBar,
 		top:'10%',
 		bottom:'12%',
-		maxRowHeight:120
+		//maxRowHeight:120
 	});
 	
 	// options dialog 
@@ -170,11 +170,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		c_data = boCodes.Customers.getCustomers();
 		cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
 	});
-	
-	// set the table contents, all customers
-	cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
-	
-	
+		
 	cp_top_view.add(cp_lbl_loc);
 
 	cp_bottom_view.add(cp_close_btn);
@@ -329,10 +325,17 @@ boCodes.Customers.getPurchaseCustomer = function(){
 			cp_lbl_loc.text = text;
 			cp_top_view.backgroundColor = "black";
 		};
+		
+		// set the table contents, all customers
+		cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
 			
 	});	
-		
-
+	
+	// set current data array
+	//var st_data = [];
+	//st_data.push(c_data[0]);
+	//Ti.App.current_customer_data = st_data;
+	
 	cp_win.open();
 	
 	return cp_win;
@@ -362,7 +365,6 @@ function _refresh_cust_data( c_data, lon, lat ) {
         	objName:"grid-item",
         	layout: "horizontal",
         	height:boUtil.math.getControlPostitionHeight(11),
-        	color:"transparent",
         	title:c_data[i].desc, 
         	width:Ti.Platform.displayCaps.platformWidth,
         	left:1,
@@ -373,9 +375,10 @@ function _refresh_cust_data( c_data, lon, lat ) {
            	//backgroundColor:"white",
            	top:'.5%',
            	//height:'250%',
+           	backgroundColor:'white',
            	height:boUtil.math.getControlPostitionHeight(11),
            	width:'100%',
-           	left:'.5%',
+           	left:'1%',
            	objIndex:i,
            	objName:"view-desc"
         });
@@ -443,7 +446,7 @@ boCodes.Customers.customerForm = function( cust_data ) {
 	});
 	
 	if(cust_data != null){
-		c_win.title = "Ispravka podataka, partner: " + cust_data[0].id;
+		c_win.title = "Ispravka podataka, partner: " + cust_data[0].id.toString();
 	};
 		
 	// views
@@ -778,6 +781,11 @@ boCodes.Customers.newCustomer = function(){
 
 // edit customer form
 boCodes.Customers.editCustomer = function(){
+	
+	if(Ti.App.current_customer_data == null ){
+		alert("Selektujte partnera u tabeli !");
+		return;
+	};
 	
 	// get current customer
 	var frm = boCodes.Customers.customerForm( Ti.App.current_customer_data );

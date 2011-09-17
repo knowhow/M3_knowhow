@@ -159,8 +159,8 @@ boCodes.Customers.getPurchaseCustomer = function(){
 				break;
 			case 2:
 				// refresh table
-				var curr_data = boCodes.Customers.getCustomers();
-				var tbl_upd = _refresh_cust_data( curr_data, Ti.App.current_longitude, Ti.App.current_latitude );
+				c_data = boCodes.Customers.getCustomers();
+				var tbl_upd = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
 				cp_tbl_view.setData( tbl_upd );
 				break;
 		};
@@ -272,8 +272,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
             	c_data = boCodes.Customers.getCustomersInRadius( Ti.App.current_longitude, Ti.App.current_latitude );
 				var upd_tbl = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
 				cp_tbl_view.setData( upd_tbl );
-				//Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
-            	
+				//Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );          	
 
         	};
         	
@@ -328,15 +327,9 @@ boCodes.Customers.getPurchaseCustomer = function(){
 			cp_lbl_loc.text = text;
 			cp_top_view.backgroundColor = "black";
 		};
-		
-		
+				
 			
 	});	
-	
-	// set current data array
-	//var st_data = [];
-	//st_data.push(c_data[0]);
-	//Ti.App.current_customer_data = st_data;
 	
 	// set the table contents, all customers
 	var upd_tbl = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
@@ -349,18 +342,18 @@ boCodes.Customers.getPurchaseCustomer = function(){
 };
 
 
-function _refresh_cust_data( c_data, lon, lat ) {
+function _refresh_cust_data( tbl_data, lon, lat ) {
 		
-	var tbl_data = [];
+	var ret_data = [];
 	var dst = 0;
 	
-	for(var i=0; i < c_data.length; i++){
+	for(var i=0; i < tbl_data.length; i++){
 		
 		// calculate distance for every customer
 		dst = 0;
-		if( c_data[i].lat != 0 && c_data[i].lat != null && lon != null ){
+		if( tbl_data[i].lat != 0 && tbl_data[i].lat != null && lon != null ){
 			
-			dst = boGeo.calcGeoDistance( c_data[i].lon, c_data[i].lat, lon, lat );
+			dst = boGeo.calcGeoDistance( tbl_data[i].lon, tbl_data[i].lat, lon, lat );
 			dst = Math.round( dst * 1000 ) / 1000;
 			
 		};
@@ -371,7 +364,7 @@ function _refresh_cust_data( c_data, lon, lat ) {
         	objName:"grid-item",
         	layout: "horizontal",
         	height:boUtil.math.getControlPostitionHeight(11),
-        	title:c_data[i].desc, 
+        	title:tbl_data[i].desc, 
         	width:Ti.Platform.displayCaps.platformWidth,
         	left:1,
         	right:1
@@ -398,7 +391,7 @@ function _refresh_cust_data( c_data, lon, lat ) {
            	objIndex:i,
            	objName:"lbl-cust",
            	textAlign:"left",
-           	text:c_data[i].desc,
+           	text:tbl_data[i].desc,
            	touchEnabled:false
         });
 
@@ -411,7 +404,7 @@ function _refresh_cust_data( c_data, lon, lat ) {
            	objIndex:i,
            	objName:"lbl-desc",
            	textAlign:"left",
-           	text:c_data[i].addr + ", " + c_data[i].postcode + " - " + c_data[i].city,
+           	text:tbl_data[i].addr + ", " + tbl_data[i].postcode + " - " + tbl_data[i].city,
            	touchEnabled:false
         });
 
@@ -433,10 +426,10 @@ function _refresh_cust_data( c_data, lon, lat ) {
         thisView.add(thisLabelDist);
         thisRow.add(thisView);	
 		
-		tbl_data.push(thisRow);
+		ret_data.push(thisRow);
 	};
 	
-	return tbl_data;
+	return ret_data;
 };
 
 

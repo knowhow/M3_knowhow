@@ -1,25 +1,18 @@
 // set namespace	
 boMobileAppLib.Login = {};
 	
-// get username from properties
-boMobileAppLib.Login.getUserName = function() {
-	var username = Ti.App.Properties.getString("login_username", "");
-	return username;
-};
-	
-// set username in properties
-boMobileAppLib.Login.setUserName = function( u_name ) {
-	Ti.App.Properties.setString("login_username", u_name );
-};
-	
 // generate login form and check user credentials
 boMobileAppLib.Login.LoginForm = function() {
 		
 	var login = false;
 	// get defined username
-	var user_name = boMobileAppLib.Login.getUserName();
+	var _user_name = "";
 	
-	alert(user_name);
+	if( Ti.App.Properties.hasProperty( "lastLoggedUser") ) {
+    	_user_name = Ti.App.Properties.getString("lastLoggedUser");
+	};
+	
+	alert(_user_name);
 		
 	// create login window
 	var login_window = Ti.UI.createWindow({
@@ -125,8 +118,8 @@ boMobileAppLib.Login.LoginForm = function() {
 	login_window.add(v_version);
 	
 	// if username exist, go to pwd 
-	if(user_name != ''){
-		username.value = user_name;
+	if( _user_name != '' ){
+		username.value = _user_name;
 		username.blur();	
 		password.focus();
 	};
@@ -136,10 +129,9 @@ boMobileAppLib.Login.LoginForm = function() {
 	// username text blur and focus to password
 	username.addEventListener('return', function()
 	{
-		// set username
-  		boMobileAppLib.Login.setUserName( username.value );
   		username.blur();
   		password.focus();
+  		
 	});
 		
 	// password text blur and focus on button
@@ -151,7 +143,7 @@ boMobileAppLib.Login.LoginForm = function() {
 		
 	// when open window go to pwd if username allready exist!
 	login_window.addEventListener('open', function() {
-    	if(user_name != ''){
+    	if(_user_name != ''){
 			username.blur();	
 			password.focus();
 		};
@@ -177,7 +169,9 @@ boMobileAppLib.Login.LoginForm = function() {
     	   			// set global variable...
     	   			Ti.App.current_logged_user = username.value;
     	   			Ti.App.current_logged_user_id = Number(loginJSON.userdata[i].id);
-    	   			
+    	   			Ti.App.Properties.setString("lastLoggedUser", username.value );
+    	   			username.blur();
+    	   			password.blur();
     	   			return;
     	   			
     	   		};

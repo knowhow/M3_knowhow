@@ -70,15 +70,32 @@ var mainWindow = function() {
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}
 	});  
 	
+	// send to server...
+	var close_btn = Titanium.UI.createButton({  
+       	title:'Zatvori',  
+       	left:'2%',
+       	right:'2%',
+       	top:'80%',    
+       	height:'10%',  
+       	borderRadius:1,  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}
+	});  
+	
 	win_main.add(info);
 	win_main.add(customer_list);
 	win_main.add(list_purchase);
 	win_main.add(where_am_i);
 	win_main.add(delete_db);
 	win_main.add(send_db);
+	win_main.add(close_btn);
 	
 	win_main.open();
-		
+			
+	// customer list event handler
+	close_btn.addEventListener('click',function(e){  
+    	win_main.close();
+	});  	
+	
 	// customer list event handler
 	customer_list.addEventListener('click',function(e){  
     	boCodes.Customers.customerList();
@@ -108,11 +125,12 @@ var mainWindow = function() {
         {
             if (e.index == 1) {
                 return;
-            }
+            };
 
-   			var db = boDb.openDB();
-   			db.close();
-   			db.remove();
+   			oDb.close();
+   			oDb.remove();
+   			
+   			oDb.openDB();
    			
    		});
  

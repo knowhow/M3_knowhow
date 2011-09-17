@@ -30,8 +30,7 @@ boDb.getArticlesDataJSON = function() {
 		'{"id":"3076","desc":"Code","price":"18.803","pict":"3076.jpg"},' +
 		'{"id":"3091","desc":"Royal blue","price":"21.368","pict":"3091.jpg"},' +
 		'{"id":"3092","desc":"Royal lights","price":"21.368","pict":"3092.jpg"},' +
-		'{"id":"3095","desc":"Code red","price":"21.368","pict":"3095.jpg"},' +
-		'{"id":"3096","desc":"Code sky","price":"0","pict":"3096.jpg"}]}' );
+		'{"id":"3095","desc":"Code red","price":"21.368","pict":"3095.jpg"}]}' );
 	return art;
 };
 

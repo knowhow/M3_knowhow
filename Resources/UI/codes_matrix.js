@@ -12,8 +12,8 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		// h: 150
 		var cellWidth = boUtil.math.getControlPostitionWidth(25);
 		var cellHeight = boUtil.math.getControlPostitionWidth(30);
-		var xSpacer = boUtil.math.getControlPostitionWidth(5);
-		var ySpacer = boUtil.math.getControlPostitionWidth(5);
+		var xSpacer = boUtil.math.getControlPostitionWidth(4);
+		var ySpacer = boUtil.math.getControlPostitionWidth(4);
 		var xGrid = 3;
 		var yGrid = 100;
 		var currentItem = 0;
@@ -31,10 +31,6 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		var dataIndex = 1;
  
 		for (var y=0; y<yGrid; y++){
-    		
-    		if (dataIndex > m_data.articles.length){
-    				break;
-    		};
     			
     		var thisRow = Ti.UI.createTableViewRow({
         			className: "grid",
@@ -52,8 +48,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
         		var thisView = Ti.UI.createView({
             		objName:"grid-art-view",
             		objIndex:cellIndex.toString(),
-            		focusable:true,
-            		//backgroundFocusedImage:'img/ok_sign.jpg',
+            		//focusable:true,
             		left: ySpacer,
             		height: cellHeight,
             		width: cellWidth
@@ -65,6 +60,10 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
        				
        				//var thisFile = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory + '/img/', m_data.articles[cellIndex].pict);
        				thisView.backgroundImage = 'img/' + m_data.articles[cellIndex].pict;
+       			}
+       			else
+       			{
+       				thisView.backgroundImage = null;
        			};
  
  				// main label - count items
@@ -118,9 +117,14 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
        			
        			//Ti.API.info("dataIndex: " + dataIndex.toString() + " length : " + m_data.articles.length );
             			
-    		}
+    		};
+    		
     		tableData.push(thisRow);
-		}
+    		
+    		if (dataIndex > m_data.articles.length){
+    			break;
+    		};
+		};
 	
 		// table view
 		var tableview = Ti.UI.createTableView({

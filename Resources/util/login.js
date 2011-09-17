@@ -32,14 +32,14 @@ boMobileAppLib.Login.LoginForm = function() {
 		left:'5%',
 		top:'2%'
 	});
-	
+		
 	// create username input
 	var username = Ti.UI.createTextField({  
        	color:'#336699',  
         top:'8%',  
         left:'5%',
         right:'5%',
-        value:"vsasa",  
+        //value:"vsasa",  
         height:'11%',  
         hintText:'...korisničko ime',  
         keyboardType:Ti.UI.KEYBOARD_DEFAULT,  
@@ -63,7 +63,7 @@ boMobileAppLib.Login.LoginForm = function() {
         top:'25%',  
         left:'5%',
         right:'5%', 
-        value:"11", 
+        //value:"11", 
         height:'11%',
         hintText:'...lozinka',  
         passwordMask:true,  
@@ -97,6 +97,32 @@ boMobileAppLib.Login.LoginForm = function() {
 
 	login_window.add(loginBtn);  
 	login_window.add(closeBtn);  
+
+	// view panel version...
+	var v_version = Ti.UI.createView({
+		backgroundColor:'#60a0ff',
+		top:'85%',
+		left:'5%',
+		right:'5%',
+		height:'10%',
+		borderColor:'blue',
+		borderWidth:1,
+		borderRadius:10
+	});
+	
+	// version info
+	var l_version = Ti.UI.createLabel({
+		color:'white',
+		text:'Verzija: ' + Ti.App.version + ', © www.bring.out.ba',
+		left:'5%',
+		top:'30%',
+		font:{fontSize:'6pt',fontWeight:'bold'},
+		opacity:0.2
+	});
+
+	v_version.add(l_version);
+	
+	login_window.add(v_version);
 	
 	// if username exist, go to pwd 
 	if(user_name != ''){
@@ -133,6 +159,7 @@ boMobileAppLib.Login.LoginForm = function() {
 	
 	closeBtn.addEventListener('click',function(){  
    		login_window.close();
+   		Ti.App.fireEvent('logincanceled');
    	});
 	
 				

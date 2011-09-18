@@ -217,7 +217,7 @@ boGeo.showMap = function( lat, lon, customer_lat, customer_lon ){
 		pincolor:"blue",
 		animate:true,
 		//leftButton: '../images/appcelerator_small.png',
-		myid:1 // CUSTOM ATTRIBUTE THAT IS PASSED INTO EVENT OBJECTS
+		myid:2 // CUSTOM ATTRIBUTE THAT IS PASSED INTO EVENT OBJECTS
 	});
 
 	
@@ -233,7 +233,8 @@ boGeo.showMap = function( lat, lon, customer_lat, customer_lon ){
     });
     
     var close_btn = Ti.UI.createButton({
-    	bottom:'3%',
+    	bottom:'1%',
+    	height:'10%',
     	left:'30%',
     	right:'30%',
     	title:'Zatvori'

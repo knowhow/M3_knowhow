@@ -10,7 +10,7 @@ boPurchase.listPurchase = function() {
 	var current_purchase_cust_id = 0;
 	var current_purchase_doc_total = 0;
 	
-	var d_data = boDb.getPurcasesData();
+	var d_data = boDb.getPurcasesData(Ti.App.current_logged_user_id);
 	
 	var p_win = Ti.UI.createWindow({
 		backgroundColor:"#FFFFFF",
@@ -81,7 +81,7 @@ boPurchase.listPurchase = function() {
   			case 1:
   			
   				boDb.cancelPurchase(current_purchase_no);
-  				d_data = boDb.getPurcasesData();
+  				d_data = boDb.getPurcasesData(Ti.App.current_logged_user_id);
   				p_tbl_view.setData(_refresh_purchase_data(d_data));
   				break;
   				
@@ -89,7 +89,7 @@ boPurchase.listPurchase = function() {
   			case 2:
   			
   				boDb.activatePurchase(current_purchase_no);
-  				d_data = boDb.getPurcasesData();
+  				d_data = boDb.getPurcasesData(Ti.App.current_logged_user_id);
   				p_tbl_view.setData(_refresh_purchase_data(d_data));
   				break;
   			
@@ -112,7 +112,7 @@ boPurchase.listPurchase = function() {
 				
 					// delete record from purchases
 					boDb.deleteFromPurchases(current_purchase_no);
-  					d_data = boDb.getPurcasesData();
+  					d_data = boDb.getPurcasesData(Ti.App.current_logged_user_id);
   					p_tbl_view.setData(_refresh_purchase_data(d_data));
   					
   					return;
@@ -264,7 +264,7 @@ boPurchase.newPurchase = function() {
    			boDb.insertIntoPurchases(user_id, cust_id, e.source.accepted, purch_data);
    				
    			if(e.source.accepted == 1){
-   				//alert("Narudzba ažurirana...");	   			
+   				alert("Narudzba uspješno ažurirana!");	   			
    			} 
   			else
    			{

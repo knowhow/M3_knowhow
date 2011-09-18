@@ -22,7 +22,7 @@ boCodes.Customers.customerList = function() {
 // get customer on ordering form
 boCodes.Customers.getPurchaseCustomer = function(){
 		
-	var c_data = boCodes.Customers.getCustomers();
+	var c_data = boCodes.Customers.getCustomers(Ti.App.current_logged_user_id);
 	
 	var cp_win = Ti.UI.createWindow({
 		backgroundColor:"#FFFFFF",
@@ -159,7 +159,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 				break;
 			case 2:
 				// refresh table
-				c_data = boCodes.Customers.getCustomers();
+				c_data = boCodes.Customers.getCustomers(Ti.App.current_logged_user_id);
 				var tbl_upd = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
 				cp_tbl_view.setData( tbl_upd );
 				break;
@@ -169,7 +169,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	
 	// listen for edited event
 	Ti.App.addEventListener("customerEdited", function(){
-		c_data = boCodes.Customers.getCustomers();
+		c_data = boCodes.Customers.getCustomers(Ti.App.current_logged_user_id);
 		var tbl_upd = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
 		cp_tbl_view.setData( tbl_upd );
 	});
@@ -445,7 +445,7 @@ boCodes.Customers.customerForm = function( cust_data ) {
 	});
 	
 	if(cust_data != null){
-		c_win.title = "Ispravka podataka, partner: " + cust_data[0].id.toString();
+		c_win.title = "Ispravka podataka, partner: " + cust_data[0].id.toString() + ', uid: ' + cust_data[0].user_id.toString();
 	};
 		
 	// views

@@ -123,10 +123,11 @@ boDb.updateCustomers = function( cust_data ) {
 
 
 // get customer data from db
-boDb.getCustomerData = function(){
+boDb.getCustomerData = function( _user_id ){
 	//var oDb = boDb.openDB();
+	//alert(_user_id);
 	var aData = [];
-	var rows = oDb.execute('SELECT * FROM customers ORDER BY desc');
+	var rows = oDb.execute('SELECT * FROM customers WHERE user_id = ? ORDER BY desc', _user_id);
 	while (rows.isValidRow()) {
   		aData.push({ 
   			id: rows.fieldByName('id'), 
@@ -175,12 +176,12 @@ boDb.getCustomerArrayById = function( customer_id ){
  */
 
 // get purchases from db
-boDb.getPurcasesData = function(){
+boDb.getPurcasesData = function( _user_id ){
 	//var oDb = boDb.openDB();
 	var aData = [];
 	var rows;
 	
-	rows = oDb.execute('SELECT * FROM docs WHERE cust_id <> 0');		
+	rows = oDb.execute('SELECT * FROM docs WHERE cust_id <> 0 AND user_id = ?', Number(_user_id));		
 	
 	while (rows.isValidRow()) {
   		aData.push({ 
@@ -293,14 +294,14 @@ boDb.insertIntoPurchases = function( user_id, cust_id, d_valid, items_data ) {
     // now insert into purchase_items
     for (var i=0; i < items_data.length; i++) {
     	
-    	// add to item counter
-    	_d_item_no++;
     	_art_id = items_data[i].article_id;
     	_quantity = items_data[i].article_quantity;
     	_total += _quantity;
     	
     	// only if quantity <> 0
     	if(_quantity != 0){
+    		// add to item counter
+    		_d_item_no++;
     		// insert item
 			oDb.execute('INSERT INTO doc_items (doc_no, doc_item_no, art_id, quantity) VALUES(?,?,?,?)', _d_no, _d_item_no, _art_id, _quantity );
 		};

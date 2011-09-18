@@ -38,7 +38,7 @@ boCodes.Articles.getArticleMatrix = function( article_data ) {
 
 // get customers from DB
 boCodes.Customers.getCustomers = function(){
-	var cust_data = boDb.getCustomerData();
+	var cust_data = boDb.getCustomerData( Ti.App.current_logged_user_id );
 	return cust_data;
 };
 

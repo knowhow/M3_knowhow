@@ -687,6 +687,7 @@ boCodes.Customers.customerForm = function( cust_data ) {
 			c_lat.value = Ti.App.current_latitude.toString();
 			c_lon.value = Ti.App.current_longitude.toString();
 			c_view_additional.backgroundColor = '#60a0ff';
+			Ti.Media.vibrate();
 			c_btn_save.focus();
 		}
 		else

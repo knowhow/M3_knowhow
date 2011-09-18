@@ -70,12 +70,23 @@ var mainWindow = function() {
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}
 	});  
 	
+	// preferences...
+	var preferences = Titanium.UI.createButton({  
+       	title:'Postavke',  
+       	width:'30%',
+       	right:'2%',
+       	top:'90%',    
+       	height:'10%',  
+       	borderRadius:1,  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}
+	});  
+	
 	// send to server...
 	var close_btn = Titanium.UI.createButton({  
        	title:'Log out',  
        	left:'2%',
-       	right:'2%',
-       	top:'80%',    
+       	width:'30%',
+       	top:'90%',    
        	height:'10%',  
        	borderRadius:1,  
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}
@@ -87,6 +98,7 @@ var mainWindow = function() {
 	win_main.add(where_am_i);
 	win_main.add(delete_db);
 	win_main.add(send_db);
+	win_main.add(preferences);
 	win_main.add(close_btn);
 	
 	win_main.open();
@@ -109,6 +121,11 @@ var mainWindow = function() {
 	// where am i event handler
 	where_am_i.addEventListener('click',function(e){  
    		boGeo.geoForm();
+	});  
+	
+	// preferences event handler
+	preferences.addEventListener('click',function(e){  
+   		Ti.UI.Android.openPreferences();
 	});  	
 
 	// remove completely db

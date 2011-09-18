@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="radiusNames">
+		<item>100 metara</item>
+		<item>150 metara</item>
+		<item>200 metara</item>
+		<item>250 metara</item>
+		<item>300 metara</item>
+	</string-array>
+	<string-array name="radiusValues">
+		<item>100</item>
+		<item>150</item>
+		<item>200</item>
+		<item>250</item>
+		<item>300</item>
+	</string-array>
+</resources>

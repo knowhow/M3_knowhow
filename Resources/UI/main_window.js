@@ -73,7 +73,7 @@ var mainWindow = function() {
 	// preferences...
 	var preferences = Titanium.UI.createButton({  
        	title:'Postavke',  
-       	width:'30%',
+       	width:'35%',
        	right:'2%',
        	top:'90%',    
        	height:'10%',  
@@ -85,7 +85,7 @@ var mainWindow = function() {
 	var close_btn = Titanium.UI.createButton({  
        	title:'Log out',  
        	left:'2%',
-       	width:'30%',
+       	width:'35%',
        	top:'90%',    
        	height:'10%',  
        	borderRadius:1,  

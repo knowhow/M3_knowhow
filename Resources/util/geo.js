@@ -189,4 +189,67 @@ boGeo.calcGeoDistance = function(lat1, lon1, lat2, lon2, unit) {
 	return dist;
 };
 
+boGeo.showMap = function( lat, lon, customer_lat, customer_lon ){
+	
+	var m_win = Ti.UI.createWindow({
+		backgroundColor:'white',
+		title:'Mapa'
+	});
+	
+	//alert(lat + boUtil.str.newRow() + lon + boUtil.str.newRow() + customer_lat + boUtil.str.newRow() + customer_lan );
+	
+	var my_curr_position = Titanium.Map.createAnnotation({
+		latitude:Number(lat),
+		longitude:Number(lon),
+		title:"Trenutna pozicija",
+		subtitle:'-',
+		pincolor:"orange",
+		animate:true,
+		//leftButton: '../images/appcelerator_small.png',
+		myid:1 // CUSTOM ATTRIBUTE THAT IS PASSED INTO EVENT OBJECTS
+	});
+	
+	var customer_position = Titanium.Map.createAnnotation({
+		latitude:Number(customer_lat),
+		longitude:Number(customer_lon),
+		title:"Pozicija partnera",
+		subtitle:'-',
+		pincolor:"blue",
+		animate:true,
+		//leftButton: '../images/appcelerator_small.png',
+		myid:1 // CUSTOM ATTRIBUTE THAT IS PASSED INTO EVENT OBJECTS
+	});
 
+	
+	var mapview = Titanium.Map.createView({
+        mapType: Titanium.Map.STANDARD_TYPE,
+        region: {latitude: Number(lat), longitude: Number(lon), latitudeDelta:0.01, longitudeDelta:0.01},
+        animate:true,
+        regionFit:true,
+        userLocation:true,
+        top:0,
+		bottom:'12%',
+        annotations:[my_curr_position, customer_position]
+    });
+    
+    var close_btn = Ti.UI.createButton({
+    	bottom:'3%',
+    	left:'30%',
+    	right:'30%',
+    	title:'Zatvori'
+    });
+    
+    m_win.add(close_btn);
+    m_win.add(mapview);
+    mapview.selectAnnotation(my_curr_position);
+
+    
+    close_btn.addEventListener("click", function(){
+    	m_win.close();
+    });
+    
+    m_win.open();
+    
+    return m_win;
+    
+};

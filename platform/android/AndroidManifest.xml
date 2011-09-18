@@ -23,6 +23,11 @@
 		</activity>
 
 		
+		<activity android:configChanges="keyboardHidden" 
+			android:screenOrientation="portrait"
+			android:launchMode="singleTask" 
+			android:name="ti.modules.titanium.map.TiMapActivity"/>
+		<uses-library android:name="com.google.android.maps"/>
 
 		<activity android:name="org.appcelerator.titanium.TiActivity"
 			android:screenOrientation="portrait"

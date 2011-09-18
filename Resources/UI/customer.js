@@ -10,6 +10,8 @@ boCodes.Customers.customerList = function() {
 	Ti.App.current_latitude = null;
 	Ti.App.current_customer_id = null;
 	Ti.App.current_customer_data = null;
+	Ti.App.current_customer_lan = null;
+	Ti.App.current_customer_lon = null;
 	
 	// open the get customer form
 	var customer_win = null;
@@ -134,7 +136,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	
 	// options dialog 
 	var dlg_opt = {
-		options:['Novi partner', 'Ispravi partnera', 'Osvježi tabelu'],
+		options:['Novi partner', 'Ispravi partnera', 'Osvježi tabelu', 'Prikaži na mapi'],
 		destructive:1,
 		cancel:2,
 		title:'Opcije:'
@@ -163,6 +165,11 @@ boCodes.Customers.getPurchaseCustomer = function(){
 				var tbl_upd = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
 				cp_tbl_view.setData( tbl_upd );
 				break;
+			case 3:
+				var map_w = boGeo.showMap( Ti.App.current_latitude, Ti.App.current_longitude, Ti.App.current_customer_lat, Ti.App.current_customer_lon );
+				map_w.addEventListener("close", function(){
+					// ...
+				});
 		};
 	
 	});
@@ -190,7 +197,8 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		if (e.source.objName) {
 			// set current id
 			Ti.App.current_customer_id = c_data[e.source.objIndex].id;
-			
+			Ti.App.current_customer_lat = c_data[e.source.objIndex].lat;
+			Ti.App.current_customer_lon = c_data[e.source.objIndex].lon;			
 			// set current data array
 			var curr_data = [];
 			curr_data.push(c_data[e.source.objIndex]);

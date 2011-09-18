@@ -21,7 +21,12 @@
 			</intent-filter>
 		</activity>
 
-		
+		<activity
+    		android:name="ti.modules.titanium.map.TiMapActivity"
+    		android:configChanges="keyboardHidden|orientation"
+    		android:launchMode="singleTask"
+    	/>
+	<uses-library android:name="com.google.android.maps" />
 
 		<activity android:name="org.appcelerator.titanium.TiActivity"
 			android:configChanges="keyboardHidden|orientation" />

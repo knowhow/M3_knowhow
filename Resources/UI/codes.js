@@ -56,7 +56,7 @@ boCodes.Customers.getCustomersInRadius = function( lon, lat, radius ) {
 	};
 	
 	if(radius==null){
-		radius = 300;
+		radius = 20;
 	};
 	
 	for(var i=0; i < data.length ; i++){

@@ -8,13 +8,18 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 			title:m_title
 		});
 		
-		// w: 130
-		// h: 150
-		var cellWidth = boUtil.math.getControlPostitionWidth(25);
-		var cellHeight = boUtil.math.getControlPostitionWidth(30);
+		var scrl = Ti.UI.createScrollView({
+			top:0,
+			bottom:'12%'
+		});
+		
+		// w: 25
+		// h: 30
+		var cellWidth = boUtil.math.getControlPostitionWidth(40);
+		var cellHeight = boUtil.math.getControlPostitionWidth(45);
 		var xSpacer = boUtil.math.getControlPostitionWidth(1);
-		var ySpacer = boUtil.math.getControlPostitionWidth(1);
-		var xGrid = 3;
+		var ySpacer = boUtil.math.getControlPostitionWidth(5);
+		var xGrid = 2;
 		var yGrid = 100;
 		var currentItem = 0;
  
@@ -26,11 +31,16 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		var purchase_data = [];
 
 		var cellIndex = 0;
+		//var r_height = 0;
 		
 		// count m_data items...
 		var dataIndex = 1;
  
 		for (var y=0; y<yGrid; y++){
+			
+			if (dataIndex > m_data.articles.length){
+    				break;
+    		};	
     			
     		var thisRow = Ti.UI.createTableViewRow({
         			className: "grid",
@@ -40,11 +50,11 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
     		});
     		
     		for (var x=0; x<xGrid; x++){
-        
-        		if (dataIndex > m_data.articles.length){
+		
+				if (dataIndex > m_data.articles.length){
     				break;
     			};
-		
+    			
         		var thisView = Ti.UI.createView({
             		objName:"grid-art-view",
             		objIndex:cellIndex.toString(),
@@ -54,7 +64,6 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
             		width: cellWidth
        			});
        			
-
        			// find background image if exist... 
        			if(m_data.articles[cellIndex].pict != ''){
        				
@@ -109,6 +118,8 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
         		
         		views.push(thisView);
         		
+        		//r_height += thisView.height + 5;
+        		
  				// push article data into data[]
         		data.push( {article_id: m_data.articles[cellIndex].id, article_desc:m_data.articles[cellIndex].desc, article_quantity:0} );
  
@@ -119,6 +130,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
             			
     		};
     		
+    		//thisRow.height = r_height;
     		tableData.push(thisRow);
     		
     		if (dataIndex > m_data.articles.length){
@@ -130,8 +142,11 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		var tableview = Ti.UI.createTableView({
     		data:tableData,
     		top:0,
-    		bottom:'20%'
+    		height:5000,
+    		//bottom:'20%'
 		});
+		
+		scrl.add(tableview);
  		
  		// on click item, set current index of item, show description
 		tableview.addEventListener("click", function(e){
@@ -140,6 +155,8 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 			// show info at the bottom of screen
 			
 			if(e.source.objName){
+				
+				//alert(e.source.objIndex + "-" + labelsDesc.length);
 				
 				var m_ob_desc = m_data.articles[e.source.objIndex].desc;
 				var m_ob_id = m_data.articles[e.source.objIndex].id;
@@ -269,7 +286,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
  		controls_view.add(control_plus_button);
  	
  		// add to m_win (main window)
-		m_win.add(tableview);
+		m_win.add(scrl);
 		m_win.add(desc_view);
 		m_win.add(controls_view);
 		m_win.open();
@@ -310,15 +327,24 @@ boCodes.Matrix.getItemManualValue = function( curr_value ){
 	
 	var btn_ok = Ti.UI.createButton({
 		top:'70%',
-		left:'30%',
-		right:'30%',
+		left:'10%',
+		width:'30%',
 		height:'25%',
 		title:'Uredu'
+	});
+	
+	var btn_cancel = Ti.UI.createButton({
+		top:'70%',
+		right:'10%',
+		width:'30%',
+		height:'25%',
+		title:'Odustani'
 	});
 	
 	mv_win.add(mv_lbl);
 	mv_win.add(mv_text);
 	mv_win.add(btn_ok);
+	mv_win.add(btn_cancel);
 	
 	mv_text.addEventListener("return", function(){
 		mv_text.blur();
@@ -327,7 +353,15 @@ boCodes.Matrix.getItemManualValue = function( curr_value ){
 	
 	btn_ok.addEventListener("click", function(){
 		mv_text.blur();
-		mv_win.item_value = mv_text.value;
+		if(mv_text.value != ''){
+			mv_win.item_value = mv_text.value;
+		};
+		mv_win.close();
+	});
+
+	btn_cancel.addEventListener("click", function(){
+		mv_win.item_value = '0';
+		mv_text.blur();
 		mv_win.close();
 	});
 	

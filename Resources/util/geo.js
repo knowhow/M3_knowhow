@@ -254,3 +254,14 @@ boGeo.showMap = function( lat, lon, customer_lat, customer_lon ){
     return m_win;
     
 };
+
+// turn off gps system
+boGeo.turnOffGps = function() {
+	Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
+};
+
+// turn on gps system
+boGeo.turnOnGps = function() {
+	boGeo.getCurrentLocation();
+	boGeo.getCurrentLocation();
+};

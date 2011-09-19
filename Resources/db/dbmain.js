@@ -11,6 +11,23 @@ boDb.getUsersDataJSON = function() {
 
 
 /*
+ * PARAMS methods
+ */
+boDb.getParamsDataJSON = function() {
+	var par = JSON.parse('{"params":[{"device_id":"1"}]}');
+	return par;
+};
+
+
+// return device id from params
+boDb.getDeviceId = function() {
+	var dev = boDb.getParamsDataJSON();
+	var dev_id = dev.params[0].device_id;
+	return dev_id ;
+};
+
+
+/*
  * ARTICLES DB methods
  */
 

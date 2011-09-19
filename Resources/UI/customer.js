@@ -212,6 +212,8 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	cp_tbl_view.addEventListener("dblclick", function(e){
 		
 		if (e.source.objName) {
+			
+			searchBar.blur();
 			// turn off gps system
 			Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
 			// set global customer data for purchase
@@ -259,8 +261,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		});
 		
 		cp_win.add(pb);
-		
-		
+			
 		var tic = 0;
  
 		var timer = setInterval(function() {
@@ -268,7 +269,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
     		tic++;
     		pb.value = tic;
     			
-    		if( tic == 50 && Ti.App.current_longitude != null ) {
+    		if( tic == 20 && Ti.App.current_longitude != null ) {
         		
 				pb.value = 200;
             	cp_win.remove(pb);
@@ -296,10 +297,11 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	});	
 	
 	// first start service - because of bug!
-	boGeo.getCurrentLocation();
+	//boGeo.getCurrentLocation();
 	// second instance
-	boGeo.getCurrentLocation();
-		
+	//boGeo.getCurrentLocation();
+	boGeo.turnOnGps();
+	
 	var text = "";
 		
 	// listen for coords
@@ -339,9 +341,18 @@ boCodes.Customers.getPurchaseCustomer = function(){
 			
 	});	
 	
-	// set the table contents, all customers
-	var upd_tbl = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
-	cp_tbl_view.setData( upd_tbl );
+	// wait for gps location to refresh database
+	var t_time = 0;
+	var end_time = 50;
+	var upd_timer = setInterval(function() {
+		t_time++;
+		if(t_time == end_time){
+			// set the table contents, all customers
+			clearInterval(upd_timer);
+			var upd_tbl = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
+			cp_tbl_view.setData( upd_tbl );
+		};
+	},end_time);
 	
 	cp_win.open();
 	

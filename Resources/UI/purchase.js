@@ -69,7 +69,7 @@ boPurchase.listPurchase = function() {
 				
 				// open purchase preview form
 				// cust_data, items_data, doc_no, doc_date, doc_valid
-  				var ordForm = boOrder.items.getPurchasePreview(cust_data, items_data, current_purchase_no, current_purchase_date, current_purchase_valid, current_purchase_doc_total );
+  				var ordForm = boOrder.items.getPurchasePreview(cust_data, items_data, current_purchase_no, current_purchase_date, current_purchase_valid, current_purchase_doc_total, current_purchase_notes );
   				
   				ordForm.addEventListener("close", function(){
   					// ...
@@ -131,6 +131,7 @@ boPurchase.listPurchase = function() {
 		current_purchase_valid = d_data[e.source.objIndex].doc_valid;
 		current_purchase_cust_id = d_data[e.source.objIndex].cust_id;
 		current_purchase_doc_total = d_data[e.source.objIndex].doc_total;
+		current_purchase_notes = d_data[e.source.objIndex].doc_notes;
 
 		win_dlg_opt.show();
 	});
@@ -260,8 +261,9 @@ boPurchase.newPurchase = function() {
    			// store to db...
    			var cust_id = Number(_cust_result[0].id);   
    			var user_id = Ti.App.current_logged_user_id;
+   			var doc_notes = detail_win.notes;
    							
-   			boDb.insertIntoPurchases(user_id, cust_id, e.source.accepted, purch_data);
+   			boDb.insertIntoPurchases(user_id, cust_id, e.source.accepted, doc_notes, purch_data);
    				
    			if(e.source.accepted == 1){
    				alert("Narudzba uspješno ažurirana!");	   			

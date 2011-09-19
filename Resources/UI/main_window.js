@@ -146,8 +146,7 @@ var mainWindow = function() {
 
    			oDb.close();
    			oDb.remove();
-   			
-   			oDb.openDB();
+   			oDb = boDb.openDB();
    			
    		});
  

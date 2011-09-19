@@ -2,7 +2,7 @@ var boOrder = {};
 
 boOrder.items = {};
 	
-boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no, doc_date, doc_valid, doc_total ) {
+boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no, doc_date, doc_valid, doc_total, doc_notes ) {
 			
 	// create window
 	var ordWin = Ti.UI.createWindow({
@@ -16,14 +16,14 @@ boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no,
 		maxRowHeight:20,
 		backgroundColor:'#4080c0',
 		font:{fontFamily:'Helvetica',fontWeight:'bold',fontSize:'2pt'},
-		top:'20%',
-		bottom:'20%'
+		top:'5%',
+		height:'15%'
 	});
 		
 	// label document
 	var ord_lbl_document = Ti.UI.createLabel({
 		text:'Dokument: xxxx',
-		top:'2%',
+		top:'1%',
 		left:'2%',
 		color:'black',
 		font:{fontFamily:'Helvetica',fontWeight:'normal',fontSize:'7pt'}
@@ -32,7 +32,7 @@ boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no,
 	// label customer
 	var ord_lbl_customer = Ti.UI.createLabel({
 		text:'Partner: xxxx',
-		top:'8%',
+		top:'3%',
 		left:'2%',
 		color:'black',
 		width:'90%',
@@ -44,13 +44,45 @@ boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no,
         height:boUtil.math.getControlPostitionWidth(9),
         width:boUtil.math.getControlPostitionWidth(9),
         left:'3%',
-        bottom:'13%'
+        top:'20.5%'
    	});
    	
+   	var ord_lbl_notes = Ti.UI.createLabel({
+   		text:'Unesite zabilješke:',
+		top:'23%',
+		left:'5%',
+		color:'black',
+		font:{fontFamily:'Helvetica',fontWeight:'normal',fontSize:'6pt'}
+   	});
+   	
+   	var ord_notes = Ti.UI.createTextArea({
+   		value:'',
+   		height:'20%',
+   		left:'3%',
+   		right:'3%',
+   		top:'25%'
+   	});
+   	
+   	ord_notes.addEventListener("return", function(){
+   		ord_notes.blur();
+   	});
+   	
+   	var ord_scroll = Ti.UI.createScrollView({
+   		top:0,
+   		bottom:'12%'
+   	});
+   	
+   	var ord_view = Ti.UI.createView({
+   		top:0,
+   		height:'2000'
+   	});
 
 	if(document_no != null){
 		ordWin.title = 'Pregled narudžbe broj: ' + document_no;
 		ord_lbl_document.text = 'Dokument: ' + document_no + ', datum: ' + doc_date;
+		ord_notes.value = doc_notes;
+		ord_notes.editable = false;
+		ord_lbl_notes.text = 'Zabilješke:'
 	};
 
 	if(cust_data != null && cust_data[0].id != null){
@@ -113,7 +145,7 @@ boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no,
 	// label total
 	var ord_lbl_doc_total = Ti.UI.createLabel({
 		text:'Total: ' + doc_total,
-		top:'80.5%',
+		top:'20.5%',
 		left:'50%',
 		color:'black',
 		font:{fontFamily:'Helvetica',fontWeight:'bold',fontSize:'10pt'}
@@ -147,24 +179,30 @@ boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no,
         borderRadius:1,  
         font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
  	});
-		
+ 		
 		
 	controls_view.add(ctrl_cancel_button);
 	controls_view.add(ctrl_ok_button);
 	
-	ordWin.add(ord_lbl_customer);
-	ordWin.add(ord_lbl_document);
-	ordWin.add(ord_lbl_doc_total);
-	ordWin.add(ord_image);
+	ord_view.add(ord_lbl_customer);
+	ord_view.add(ord_lbl_document);
+	ord_view.add(ord_lbl_doc_total);
+	ord_view.add(ord_image);
+	ord_view.add(ord_lbl_notes);
+	ord_view.add(ord_notes);
 	
-	ordWin.add(ord_tbl_view);
+	ord_view.add(ord_tbl_view);
+	
+	ord_scroll.add(ord_view);
+	
+	ordWin.add(ord_scroll);
 	
 	ordWin.add(controls_view);
 
 	ordWin.open();
 	
 	if(doc_valid == null){
-   		ordWin.remove(ord_image);
+   		ord_scroll.remove(ord_image);
    	}
    	else{
    		if(doc_valid == 0){
@@ -180,12 +218,14 @@ boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no,
 	// control accept button event
  	ctrl_ok_button.addEventListener('click',function(e){  
     	ordWin.close();
+    	ordWin.notes = ord_notes.value;
     	ordWin.accepted = 1;
 	});
 		
 	// control accept button event
  	ctrl_cancel_button.addEventListener('click',function(e){  
     	ordWin.close();	
+    	ordWin.notes = "";
     	ordWin.accepted = 0;
 	});		
 		

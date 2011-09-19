@@ -142,7 +142,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		var tableview = Ti.UI.createTableView({
     		data:tableData,
     		top:0,
-    		height:5000,
+    		height:2000,
     		//bottom:'20%'
 		});
 		

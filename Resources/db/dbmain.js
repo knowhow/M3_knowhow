@@ -207,7 +207,8 @@ boDb.getPurcasesData = function( _user_id ){
   			cust_id: rows.fieldByName('cust_id'), 
   			user_id: rows.fieldByName('user_id'),
   			items_total: rows.fieldByName('items_total'),
-  			doc_valid: rows.fieldByName('doc_valid')
+  			doc_valid: rows.fieldByName('doc_valid'),
+  			doc_notes: rows.fieldByName('doc_notes')
   			});
 
 		rows.next();
@@ -272,7 +273,7 @@ boDb.deleteAllPurchases = function(){
 
 
 // insert data into purchases
-boDb.insertIntoPurchases = function( user_id, cust_id, d_valid, items_data ) {
+boDb.insertIntoPurchases = function( user_id, cust_id, d_valid, d_notes, items_data ) {
 	
 	//var oDb = boDb.openDB();
 	var tmp_qt = 0;
@@ -291,9 +292,10 @@ boDb.insertIntoPurchases = function( user_id, cust_id, d_valid, items_data ) {
 	var _d_date = Date();
 	var _cust_id = cust_id;
 	var _d_valid = d_valid;
+	var _d_notes = d_notes;
 	var _user_id = user_id;
 	
-	oDb.execute('INSERT INTO docs (doc_date, cust_id, doc_valid, user_id) VALUES(?,?,?,?)', _d_date, _cust_id, _d_valid, _user_id );
+	oDb.execute('INSERT INTO docs (doc_date, cust_id, doc_valid, user_id, doc_notes) VALUES(?,?,?,?,?)', _d_date, _cust_id, _d_valid, _user_id, _d_notes );
  	
  	var d_last = oDb.execute("SELECT * FROM docs ORDER BY doc_no DESC LIMIT 1");
 	
@@ -347,7 +349,7 @@ boDb.openDB = function() {
 	// doc_valid INT
 	// user_id INT
 	// items_total REAL
-	db.execute('CREATE TABLE IF NOT EXISTS docs (doc_no INTEGER PRIMARY KEY, doc_date DATE, cust_id INT, doc_valid INT, items_total REAL, user_id INT)');
+	db.execute('CREATE TABLE IF NOT EXISTS docs (doc_no INTEGER PRIMARY KEY, doc_date DATE, cust_id INT, doc_valid INT, items_total REAL, user_id INT, doc_notes TEXT)');
 	
 	// doc_items
 	// 

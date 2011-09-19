@@ -175,21 +175,32 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
  
  		// double tap - increase amount of items
 		tableview.addEventListener("dblclick", function(e){
-			
-			// increase number
-   			
-   			//labels[e.source.objIndex].text = (parseInt(labels[e.source.objIndex].text) + 1).toString();
-   			//data[e.source.objIndex].article_quantity = parseInt(labels[e.source.objIndex].text);
-		
-			var man = boCodes.Matrix.getItemManualValue();
-			man.addEventListener("close", function(){
+			// doing something on doubel click						
+		});
 				
+		var tStart;
+		tableview.addEventListener('touchstart', function(e) {
+    	//Ti.API.info("touchstart fired");
+    		tStart = new Date();
+		});
+	
+		tableview.addEventListener('touchend', function(e) {
+    		//Ti.API.info("touchend fired");
+    		var tEnd = new Date();
+    		if (tEnd.getTime() - tStart.getTime() > 800) {
+        		// show options dialog
+           		_enter_value_manualy(e);
+    		};
+		});
+  
+  		var _enter_value_manualy = function(e){
+  			var man = boCodes.Matrix.getItemManualValue();
+			man.addEventListener("close", function(){
 				labels[e.source.objIndex].text = man.item_value;
 				data[e.source.objIndex].article_quantity = parseInt(man.item_value);
-			
 			});
-			
-		});
+    		
+  		};
   
   		// description view - show item properties
  		var desc_view = Ti.UI.createView({

@@ -32,35 +32,6 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		title:"Odaberi partnera"
 	});
 	
-	/*
-	 * problem with menu and addEventListener("close") ?????
-	 * because of that I curently turn off this option
-	 */
-	
-	//cp_win.activity.onCreateOptionsMenu = function(e) {
-		//var menu = e.menu;
-		//var m_close = menu.add({ title : 'Vrati se nazad' });
-		//var m_all_cust = menu.add({ title : 'Svi partneri' });
-		
-		//m_close.setIcon(Titanium.Android.R.drawable.ic_menu_close_clear_cancel);
-		//m_all_cust.setIcon(Titanium.Android.R.drawable.btn_star);
-	
-		// close menu option
-		//m_close.addEventListener('click', function(e) {
-			// turn off the GPS system
-			//Titanium.Geolocation.removeEventListener('location', geoLocationCallback);
-			// close window
-
-			//cp_win.close();
-		//});
-		
-		// refresh menu option
-		//m_all_cust.addEventListener('click', function(e) {
-			//cp_tbl_view.setData( _refresh_tbl_data( c_data, longitude, latitude ) );
-		//});
-		
-	//};
-	
 	var cp_top_view = Ti.UI.createView({
 		backgroundColor:"black",
 		top:0,
@@ -135,43 +106,77 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	});
 	
 	// options dialog 
-	var dlg_opt = {
-		options:['Novi partner', 'Ispravi partnera', 'Osvježi tabelu', 'Prikaži na mapi'],
+	var dlg_opt_1 = {
+		options:['Napravi narudžbu','Novi partner', 'Ispravi partnera', 'Osvježi tabelu', 'Prikaži na mapi', 'Otkaži'],
+		destructive:1,
+		cancel:2,
+		title:'Opcije:',
+		e_object:null
+	};
+	
+	// options dialog 2 
+	var dlg_opt_2 = {
+		options:['Novi partner', 'Osvježi tabelu','Otkaži'],
 		destructive:1,
 		cancel:2,
 		title:'Opcije:'
 	};
 
 	// create dialog
-	var win_dlg_opt = Titanium.UI.createOptionDialog(dlg_opt);
-
+	var win_dlg_opt_1 = Titanium.UI.createOptionDialog(dlg_opt_1);
+	var win_dlg_opt_2 = Titanium.UI.createOptionDialog(dlg_opt_2);
+	
 	// add event listener
-	win_dlg_opt.addEventListener('click',function(e)
+	win_dlg_opt_1.addEventListener('click',function(e)
 	{
 		
 		switch(e.index)
 		{
 			case 0:
+				_addNewPurchase( win_dlg_opt.e_object );	
+			case 1:
   				// new customer
   				boCodes.Customers.newCustomer();
   				break;
-			case 1:
+			case 2:
 				// edit customer
 				boCodes.Customers.editCustomer();
 				break;
-			case 2:
+			case 3:
 				// refresh table
 				c_data = boCodes.Customers.getCustomers(Ti.App.current_logged_user_id);
 				var tbl_upd = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
 				cp_tbl_view.setData( tbl_upd );
 				break;
-			case 3:
+			case 4:
 				var map_w = boGeo.showMap( Ti.App.current_latitude, Ti.App.current_longitude, Ti.App.current_customer_lat, Ti.App.current_customer_lon );
 				map_w.addEventListener("close", function(){
 					// ...
 				});
+			case 5:
+				break;
+			
 		};
 	
+	});
+	
+	win_dlg_opt_2.addEventListener('click',function(e)
+	{
+		switch(e.index)
+		{
+			case 0:
+				// new customer
+  				boCodes.Customers.newCustomer();
+  				break;
+			case 1:
+  				// refresh table
+				c_data = boCodes.Customers.getCustomers(Ti.App.current_logged_user_id);
+				var tbl_upd = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
+				cp_tbl_view.setData( tbl_upd );
+				break;
+			case 2:
+				break;
+		};
 	});
 	
 	// listen for edited event
@@ -232,6 +237,46 @@ boCodes.Customers.getPurchaseCustomer = function(){
 			
 		};
 	});
+	
+	var _addNewPurchase = function(e){
+		
+		if (e.source.objName) {
+			
+			searchBar.blur();
+			// turn off gps system
+			Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
+			// set global customer data for purchase
+			var result = [];
+			result.push( c_data[e.source.objIndex] );
+			Ti.App.customer_data = result;
+			// set current id
+			Ti.App.current_customer_id = c_data[e.source.objIndex].id;
+			Ti.App.current_customer_data = result;
+
+			// open purchase
+			boPurchase.newPurchase();
+			
+			// close customer list
+			cp_win.close();
+			
+		};
+	};
+		
+	var tStart;
+	cp_tbl_view.addEventListener('touchstart', function(e) {
+    	//Ti.API.info("touchstart fired");
+    	tStart = new Date();
+	});
+	
+	cp_tbl_view.addEventListener('touchend', function(e) {
+    	//Ti.API.info("touchend fired");
+    	var tEnd = new Date();
+    	if (tEnd.getTime() - tStart.getTime() > 800) {
+        	// show options dialog
+            win_dlg_opt_1.e_object = e;
+            win_dlg_opt_1.show();
+    	};
+	});
 
 	// close btn
 	cp_close_btn.addEventListener("click", function(){
@@ -243,7 +288,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	// options
 	cp_opt_btn.addEventListener("click", function(){
 		// open options
-		win_dlg_opt.show();		
+		win_dlg_opt_2.show();		
 	});
 	
 	cp_gps_btn.addEventListener("click", function(){

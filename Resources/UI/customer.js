@@ -138,10 +138,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 				_addNewPurchase( win_dlg_opt_1.e_object );	
 				break;
 			case 1:
-				if(Ti.App.current_customer_tel_1 != null || Ti.App.current_customer_tel_1 != ''){
-					// call client...
-  					Ti.Platform.openURL('tel:' + Ti.App.current_customer_tel_1);
-				};
+				boCodes.Customers.callCustomer(Ti.App.current_customer_data);
   				break;
 			case 2:
 				// edit customer
@@ -903,3 +900,48 @@ boCodes.Customers.editCustomer = function(){
 	
 };
 
+// call customer
+boCodes.Customers.callCustomer = function( _cust_data ){
+	
+	var telephones = [];
+	var _tel1 = _cust_data[0].tel1;
+	var _tel2 = _cust_data[0].tel2;
+	
+	if(_tel1 != null && _tel1 != ''){
+		telephones.push(_tel1);	
+	};
+	
+	if(_tel2 != null && _tel2 != ''){
+		telephones.push(_tel2);	
+	};
+	
+	if(telephones.length > 0){
+		telephones.push('Odustani');
+	}
+	else
+	{
+		alert('Partner nema niti jednog telefona!');
+		return;	
+	};
+	
+		// options dialog 2 
+	var tel_options = {
+		options:telephones,
+		destructive:1,
+		cancel:2,
+		title:'Pozovi partnera:'
+	};
+
+	// create dialog
+	var win_tel_1 = Titanium.UI.createOptionDialog(tel_options);
+	
+	win_tel_1.addEventListener("click", function(e){
+		if(tel_options.options[e.index] == 'Odustani'){
+			return;
+		};
+		Ti.Platform.openURL('tel:' + tel_options.options[e.index]);
+	});
+		
+	win_tel_1.show();
+	
+};

@@ -12,6 +12,8 @@ boCodes.Customers.customerList = function() {
 	Ti.App.current_customer_data = null;
 	Ti.App.current_customer_lan = null;
 	Ti.App.current_customer_lon = null;
+	Ti.App.current_customer_tel_1 = null;
+	Ti.App.current_customer_tel_2 = null;
 	
 	// open the get customer form
 	var customer_win = null;
@@ -107,7 +109,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	
 	// options dialog 
 	var dlg_opt_1 = {
-		options:['Napravi narudžbu','Novi partner', 'Ispravi partnera', 'Osvježi tabelu', 'Prikaži na mapi', 'Otkaži'],
+		options:['Napravi narudžbu','Pozovi partnera', 'Ispravi partnera', 'Prikaži na mapi', 'Otkaži'],
 		destructive:1,
 		cancel:2,
 		title:'Opcije:',
@@ -136,26 +138,22 @@ boCodes.Customers.getPurchaseCustomer = function(){
 				_addNewPurchase( win_dlg_opt_1.e_object );	
 				break;
 			case 1:
-  				// new customer
-  				boCodes.Customers.newCustomer();
+				if(Ti.App.current_customer_tel_1 != null || Ti.App.current_customer_tel_1 != ''){
+					// call client...
+  					Ti.Platform.openURL('tel:' + Ti.App.current_customer_tel_1);
+				};
   				break;
 			case 2:
 				// edit customer
 				boCodes.Customers.editCustomer();
 				break;
 			case 3:
-				// refresh table
-				c_data = boCodes.Customers.getCustomers(Ti.App.current_logged_user_id);
-				var tbl_upd = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
-				cp_tbl_view.setData( tbl_upd );
-				break;
-			case 4:
 				var map_w = boGeo.showMap( Ti.App.current_latitude, Ti.App.current_longitude, Ti.App.current_customer_lat, Ti.App.current_customer_lon );
 				map_w.addEventListener("close", function(){
 					// ...
 				});
 				break;
-			case 5:
+			case 4:
 				break;
 			
 		};
@@ -205,7 +203,9 @@ boCodes.Customers.getPurchaseCustomer = function(){
 			// set current id
 			Ti.App.current_customer_id = c_data[e.source.objIndex].id;
 			Ti.App.current_customer_lat = c_data[e.source.objIndex].lat;
-			Ti.App.current_customer_lon = c_data[e.source.objIndex].lon;			
+			Ti.App.current_customer_lon = c_data[e.source.objIndex].lon;
+			Ti.App.current_customer_tel_1 = c_data[e.source.objIndex].tel1;
+			Ti.App.current_customer_tel_2 = c_data[e.source.objIndex].tel2;
 			// set current data array
 			var curr_data = [];
 			curr_data.push(c_data[e.source.objIndex]);
@@ -215,6 +215,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		
 	});
 	
+	/*
 	// tbl view dbl click 
 	cp_tbl_view.addEventListener("dblclick", function(e){
 		
@@ -239,6 +240,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 			
 		};
 	});
+	*/
 	
 	var _addNewPurchase = function(e){
 		
@@ -267,7 +269,20 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		
 	var tStart;
 	cp_tbl_view.addEventListener('touchstart', function(e) {
-    	//Ti.API.info("touchstart fired");
+    	
+    	if (e.source.objName) {
+			// set current id
+			Ti.App.current_customer_id = c_data[e.source.objIndex].id;
+			Ti.App.current_customer_lat = c_data[e.source.objIndex].lat;
+			Ti.App.current_customer_lon = c_data[e.source.objIndex].lon;
+			Ti.App.current_customer_tel_1 = c_data[e.source.objIndex].tel1;
+			Ti.App.current_customer_tel_2 = c_data[e.source.objIndex].tel2;
+			// set current data array
+			var curr_data = [];
+			curr_data.push(c_data[e.source.objIndex]);
+			Ti.App.current_customer_data = curr_data;	
+		};
+		
     	tStart = new Date();
 	});
 	

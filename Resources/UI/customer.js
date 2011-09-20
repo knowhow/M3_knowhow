@@ -133,7 +133,8 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		switch(e.index)
 		{
 			case 0:
-				_addNewPurchase( win_dlg_opt.e_object );	
+				_addNewPurchase( win_dlg_opt_1.e_object );	
+				break;
 			case 1:
   				// new customer
   				boCodes.Customers.newCustomer();
@@ -153,6 +154,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 				map_w.addEventListener("close", function(){
 					// ...
 				});
+				break;
 			case 5:
 				break;
 			
@@ -262,6 +264,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		};
 	};
 		
+		
 	var tStart;
 	cp_tbl_view.addEventListener('touchstart', function(e) {
     	//Ti.API.info("touchstart fired");
@@ -277,6 +280,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
             win_dlg_opt_1.show();
     	};
 	});
+	
 
 	// close btn
 	cp_close_btn.addEventListener("click", function(){

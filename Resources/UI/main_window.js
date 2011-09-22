@@ -192,15 +192,16 @@ var mainWindow = function() {
 	
 	get_data.addEventListener("click", function(){
 		
+		var data;
 		var xhr = Ti.Network.createHTTPClient();
 		
 		xhr.onload = function()
 		{		
- 			var data = JSON.parse(this.responseText);	
+ 			data = JSON.parse(this.responseText);	
  			alert(JSON.stringify(data));
    		};
 		
-		xhr.open('GET', 'http://localhost:3002/articles');
+		xhr.open('GET', 'http://192.168.47.119:3002/articles');
 		xhr.send();
 		
 	});

@@ -85,7 +85,7 @@ boDb.getArticleCount = function(){
 };
 
 // get article desc from db
-boDb.getArticleById = function( article_id ){
+boDb.getArticleDescById = function( article_id ){
 	var row = oDb.execute('SELECT * FROM articles WHERE id = ?', article_id);
 	var res = row.fieldByName('desc');
 	return res;

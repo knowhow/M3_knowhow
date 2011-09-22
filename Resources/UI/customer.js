@@ -212,33 +212,6 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		
 	});
 	
-	/*
-	// tbl view dbl click 
-	cp_tbl_view.addEventListener("dblclick", function(e){
-		
-		if (e.source.objName) {
-			
-			searchBar.blur();
-			// turn off gps system
-			Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
-			// set global customer data for purchase
-			var result = [];
-			result.push( c_data[e.source.objIndex] );
-			Ti.App.customer_data = result;
-			// set current id
-			Ti.App.current_customer_id = c_data[e.source.objIndex].id;
-			Ti.App.current_customer_data = result;
-
-			// open purchase
-			boPurchase.newPurchase();
-			
-			// close customer list
-			cp_win.close();
-			
-		};
-	});
-	*/
-	
 	var _addNewPurchase = function(e){
 		
 		if (e.source.objName) {
@@ -286,7 +259,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	cp_tbl_view.addEventListener('touchend', function(e) {
     	//Ti.API.info("touchend fired");
     	var tEnd = new Date();
-    	if (tEnd.getTime() - tStart.getTime() > 800) {
+    	if (tEnd.getTime() - tStart.getTime() > 700) {
         	// show options dialog
             win_dlg_opt_1.e_object = e;
             win_dlg_opt_1.show();
@@ -296,6 +269,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 
 	// close btn
 	cp_close_btn.addEventListener("click", function(){
+		clearInterval(upd_timer);
 		Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
 		Ti.App.removeEventListener("customerEdited", function(){});
 		cp_win.close();

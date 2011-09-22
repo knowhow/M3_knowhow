@@ -70,6 +70,17 @@ var mainWindow = function() {
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}
 	});  
 	
+	// get data from server...
+	var get_data = Titanium.UI.createButton({  
+       	title:'Uzmi podatke sa servera',  
+       	left:'2%',
+       	right:'2%',
+       	top:'56%',    
+       	height:'10%',  
+       	borderRadius:1,  
+       	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}
+	});  
+	
 	// preferences...
 	var preferences = Titanium.UI.createButton({  
        	title:'Postavke',  
@@ -98,6 +109,7 @@ var mainWindow = function() {
 	win_main.add(where_am_i);
 	win_main.add(delete_db);
 	win_main.add(send_db);
+	win_main.add(get_data);
 	win_main.add(preferences);
 	win_main.add(close_btn);
 	
@@ -175,6 +187,21 @@ var mainWindow = function() {
         });
  
         alertDialog.show();
+		
+	});
+	
+	get_data.addEventListener("click", function(){
+		
+		var xhr = Ti.Network.createHTTPClient();
+		
+		xhr.onload = function()
+		{		
+ 			var data = JSON.parse(this.responseText);	
+ 			alert(JSON.stringify(data));
+   		};
+		
+		xhr.open('GET', 'http://localhost:3002/articles');
+		xhr.send();
 		
 	});
 

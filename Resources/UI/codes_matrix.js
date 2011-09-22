@@ -1,4 +1,7 @@
 boCodes.Matrix = {};
+
+var current_item_index = null;
+var last_item_index = null;
 	
 boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		
@@ -26,6 +29,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		var tableData = [];
 		var data = [];
 		var labelsDesc = [];
+		var images = [];
 		var labels = [];
 		var views = [];
 		var purchase_data = [];
@@ -58,22 +62,22 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
         		var thisView = Ti.UI.createView({
             		objName:"grid-art-view",
             		objIndex:cellIndex.toString(),
-            		//focusable:true,
             		left: ySpacer,
             		height: cellHeight,
             		width: cellWidth
        			});
-       			
-       			// find background image if exist... 
-       			if(m_data[cellIndex].pict != ''){
-       				
-       				//var thisFile = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory + '/img/', m_data.articles[cellIndex].pict);
-       				thisView.backgroundImage = 'img/' + m_data[cellIndex].pict;
-       			}
-       			else
-       			{
-       				thisView.backgroundImage = null;
-       			};
+ 
+ 				// image show
+ 				var thisImage = Ti.UI.createImageView({
+ 					image:'img/' + m_data[cellIndex].pict,
+ 					opacity:1.0,
+ 					objIndex:cellIndex.toString(),
+            		objName:"it-img",
+ 					top:'5%',
+ 					left:'48%',
+ 					width:boUtil.math.getControlPostitionWidth(20),
+ 					height:boUtil.math.getControlPostitionHeight(16)
+ 				});
  
  				// main label - count items
         		var thisLabel = Ti.UI.createLabel({
@@ -107,6 +111,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
             		touchEnabled:false
         		});
         		
+        		thisView.add(thisImage);
         		thisView.add(thisLabel);
         		thisView.add(thisLabelDescription);
         		
@@ -117,6 +122,8 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
         		labelsDesc.push(thisLabelDescription);
         		
         		views.push(thisView);
+        		
+        		images.push(thisImage);
         		
         		//r_height += thisView.height + 5;
         		
@@ -164,7 +171,10 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 				// set current item
 				currentItem = e.source.objIndex;
 				
-				item_set_focus( currentItem, labels, labelsDesc );
+				last_item_index = current_item_index;
+				current_item_index = currentItem;
+				
+				item_set_focus( labels, labelsDesc, images );
 				
 				// show item on desc label
 				dv_label.text = m_ob_id + " - " + m_ob_desc;
@@ -243,20 +253,22 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
  		var control_plus_button = Ti.UI.createButton({
  			title:'+',  
        		right:'2%',    
-        	height:'100%',
+        	height:'90%',
         	width:'20%',  
+        	bottom:'5%',
         	borderRadius:1,  
-        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'20pt'}  
+        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'12pt'}  
  		});
  		
  		// minus button
  		var control_minus_button = Ti.UI.createButton({
  			title:'-',  
        		left:'2%',    
-        	height:'100%',
-        	width:'20%',  
+        	height:'90%',
+        	width:'20%',
+        	bottom:'5%',  
         	borderRadius:1,  
-        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'20pt'}  
+        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'12pt'}  
  		});
  	
  	
@@ -384,25 +396,30 @@ boCodes.Matrix.getItemManualValue = function( curr_value ){
 
 
 
-var item_set_focus = function( index, label_qt, label_desc ) {
+// set item focus variables
+var item_set_focus = function( label_qt, label_desc, images_view ) {
 	
-	// set label quantity
-	label_qt[index].font = {fontSize:'16pt',fontWeight:'bold'};
-	label_qt[index].left = '10%';
+	// set focused...
+	label_qt[current_item_index].font = {fontSize:'16pt',fontWeight:'bold'};
+	label_qt[current_item_index].left = '10%';
 	
-	// set label desc
-	label_desc[index].backgroundColor = 'red';
-	label_desc[index].color = 'white';
+	label_desc[current_item_index].backgroundColor = 'red';
+	label_desc[current_item_index].color = 'white';
 	
-	for (var i=0; i < label_qt.length; i++) {
-		if (i != index ){
-			label_qt[i].font = {fontSize:'10pt',fontWeight:'bold'};
-			label_qt[i].left = '10%';
+	images_view[current_item_index].opacity = '0.5';
+	
+	// set defocused...
+	if( last_item_index != null ){
+		
+		label_qt[last_item_index].font = {fontSize:'10pt',fontWeight:'bold'};
+		label_qt[last_item_index].left = '10%';
 			
-			label_desc[i].backgroundColor = 'gray';
-			label_desc[i].color = 'white';
-		};
+		label_desc[last_item_index].backgroundColor = 'gray';
+		label_desc[last_item_index].color = 'white';
+			
+		images_view[last_item_index].opacity = '1.0';
 	};
+
 };
 
 

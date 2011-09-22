@@ -20,6 +20,8 @@ boCodes.Postal.getPostCode = function(city) {
 			return '72000';
 		case 'sarajevo':
 			return '71000';
+		default:
+			return '';
 	
 	};
 		

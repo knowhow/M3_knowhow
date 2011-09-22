@@ -204,10 +204,10 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		});
   
   		var _enter_value_manualy = function(e){
-  			var man = boCodes.Matrix.getItemManualValue();
+  			var man = boCodes.Matrix.getItemManualValue(Number(labels[e.source.objIndex].text));
 			man.addEventListener("close", function(){
 				labels[e.source.objIndex].text = man.item_value;
-				data[e.source.objIndex].article_quantity = parseInt(man.item_value);
+				data[e.source.objIndex].article_quantity = parseFloat(man.item_value);
 			});
     		
   		};
@@ -284,14 +284,14 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		// minus items events
 		control_minus_button.addEventListener('click',function(e){ 
 			if(parseInt(labels[currentItem].text) > 0 ){ 
-    			labels[currentItem].text = (parseInt(labels[currentItem].text) - 1).toString();
+    			labels[currentItem].text = (parseFloat(labels[currentItem].text) - 1).toString();
     			data[currentItem].article_quantity = parseInt(labels[currentItem].text);
     		}
 		});
  		
  		// plus items events
  		control_plus_button.addEventListener('click',function(e){
-    		labels[currentItem].text = (parseInt(labels[currentItem].text) + 1).toString();
+    		labels[currentItem].text = (parseFloat(labels[currentItem].text) + 1).toString();
     		data[currentItem].article_quantity = parseInt(labels[currentItem].text);
 		});
 
@@ -323,7 +323,7 @@ boCodes.Matrix.getItemManualValue = function( curr_value ){
 	
 	var mv_win = Ti.UI.createWindow({
 		backgroundColor:'white',
-		title:'unesi iznos',
+		title:'Unesi iznos',
 		height:'40%',
 		width:'85%',
 		top:'5%',
@@ -341,11 +341,12 @@ boCodes.Matrix.getItemManualValue = function( curr_value ){
 	});
 	
 	var mv_text = Ti.UI.createTextField({
+		value: curr_value.toString(),
 		top:'35%',
 		left:'10%',
 		right:'10%',
-		height:'25%',
-		keyboardType: Titanium.UI.KEYBOARD_NUMBER_PAD
+		height:'25%'
+		//keyboardType: Titanium.UI.KEYBOARD_NUMBER_PAD
 	});
 	
 	var btn_ok = Ti.UI.createButton({

@@ -122,7 +122,7 @@ boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no,
     	_art_desc = items_data[i].article_desc;
     	
     	if(_art_desc == null){
-    		_art_desc = boDb.getArticleDescByIdJSON( _art_id );
+    		_art_desc = boDb.getArticleById( _art_id );
     	};   
     	    
     	//alert(JSON.stringify(items_data));

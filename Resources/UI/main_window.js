@@ -192,17 +192,7 @@ var mainWindow = function() {
 	
 	get_data.addEventListener("click", function(){
 		
-		var data;
-		var xhr = Ti.Network.createHTTPClient();
-		
-		xhr.onload = function()
-		{		
- 			data = JSON.parse(this.responseText);	
- 			alert(JSON.stringify(data));
-   		};
-		
-		xhr.open('GET', 'http://192.168.47.119:3002/articles');
-		xhr.send();
+		boRemote.synchro.synhroArticles();
 		
 	});
 

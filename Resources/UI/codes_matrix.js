@@ -38,7 +38,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
  
 		for (var y=0; y<yGrid; y++){
 			
-			if (dataIndex > m_data.articles.length){
+			if (dataIndex > m_data.length){
     				break;
     		};	
     			
@@ -51,7 +51,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
     		
     		for (var x=0; x<xGrid; x++){
 		
-				if (dataIndex > m_data.articles.length){
+				if (dataIndex > m_data.length){
     				break;
     			};
     			
@@ -65,10 +65,10 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
        			});
        			
        			// find background image if exist... 
-       			if(m_data.articles[cellIndex].pict != ''){
+       			if(m_data[cellIndex].pict != ''){
        				
        				//var thisFile = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory + '/img/', m_data.articles[cellIndex].pict);
-       				thisView.backgroundImage = 'img/' + m_data.articles[cellIndex].pict;
+       				thisView.backgroundImage = 'img/' + m_data[cellIndex].pict;
        			}
        			else
        			{
@@ -85,8 +85,8 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
             		objName:"lbl",
             		textAlign:"left",
             		text:"0",
-            		article_id:m_data.articles[cellIndex].id,
-            		article_desc:m_data.articles[cellIndex].desc,
+            		article_id:m_data[cellIndex].id,
+            		article_desc:m_data[cellIndex].desc,
             		article_quantity:0,		
             		touchEnabled:false
         		});
@@ -103,7 +103,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
             		objIndex:cellIndex.toString(),
             		objName:"lbl-it-desc",
             		textAlign:"left",
-            		text:boUtil.str.rPad( m_data.articles[cellIndex].desc, 20),
+            		text:boUtil.str.rPad( m_data[cellIndex].desc, 20),
             		touchEnabled:false
         		});
         		
@@ -121,19 +121,19 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
         		//r_height += thisView.height + 5;
         		
  				// push article data into data[]
-        		data.push( {article_id: m_data.articles[cellIndex].id, article_desc:m_data.articles[cellIndex].desc, article_quantity:0} );
+        		data.push( {article_id: m_data[cellIndex].id, article_desc:m_data[cellIndex].desc, article_quantity:0} );
  
          		cellIndex++;
         		dataIndex++;
        			
-       			//Ti.API.info("dataIndex: " + dataIndex.toString() + " length : " + m_data.articles.length );
+       			//Ti.API.info("dataIndex: " + dataIndex.toString() + " length : " + m_data.length );
             			
     		};
     		
     		//thisRow.height = r_height;
     		tableData.push(thisRow);
     		
-    		if (dataIndex > m_data.articles.length){
+    		if (dataIndex > m_data.length){
     			break;
     		};
 		};
@@ -158,8 +158,8 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 				
 				//alert(e.source.objIndex + "-" + labelsDesc.length);
 				
-				var m_ob_desc = m_data.articles[e.source.objIndex].desc;
-				var m_ob_id = m_data.articles[e.source.objIndex].id;
+				var m_ob_desc = m_data[e.source.objIndex].desc;
+				var m_ob_id = m_data[e.source.objIndex].id;
 				
 				// set current item
 				currentItem = e.source.objIndex;

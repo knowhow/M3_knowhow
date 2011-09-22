@@ -32,36 +32,85 @@ boDb.getDeviceId = function() {
  */
 
 
-// get articles data JSON
-boDb.getArticlesDataJSON = function() {
-	var art = JSON.parse('{"articles":[{"id":"3013","desc":"Drina MP Sarajevska","price":"18.803","pict":"3013.jpg"},'+
-		'{"id":"3014","desc":"Drina TP lights","price":"21.368","pict":"3014.jpg"},' +
-		'{"id":"3015","desc":"Drina TP jedina","price":"21.368","pict":"3015.jpg"},' +
-		'{"id":"3016","desc":"Drina TP super lights","price":"21.368","pict":"3016.jpg"},' +
-		'{"id":"3017","desc":"Tigra MP soft","price":"18.803","pict":"3017.jpg"},' +
-		'{"id":"3018","desc":"Aura extra","price":"25.641","pict":"3018.jpg"},' +
-		'{"id":"3019","desc":"Aura lights","price":"25.641","pict":"3019.jpg"},' +
-		'{"id":"3024","desc":"Aura super lights","price":"25.641","pict":"3024.jpg"},' +
-		'{"id":"3057","desc":"Osam (8)","price":"21.368","pict":"3057.jpg"},' +
-		'{"id":"3070","desc":"Drina jedina zlatna","price":"21.368","pict":"3070.jpg"},' +
-		'{"id":"3076","desc":"Code","price":"18.803","pict":"3076.jpg"},' +
-		'{"id":"3091","desc":"Royal blue","price":"21.368","pict":"3091.jpg"},' +
-		'{"id":"3092","desc":"Royal lights","price":"21.368","pict":"3092.jpg"},' +
-		'{"id":"3095","desc":"Code red","price":"21.368","pict":"3095.jpg"}]}' );
-	return art;
-};
-
-
-// get article desc from JSON
-boDb.getArticleDescByIdJSON = function( article_id ){
-	var data = boDb.getArticlesDataJSON();
-	for (var i=0; i < data.articles.length; i++) {
-	  if(data.articles[i].id == article_id){
-	  	return data.articles[i].desc;
-	  };
+// insert data into articles
+boDb.insertIntoArticles = function( article_data ) {
+	
+	// insert into table articles
+	var _id;
+	var _desc;
+	var _price;
+	var _pict;
+	
+	for (var i=0; i < article_data.length; i++) {
+		
+		_id = article_data[i].id;
+		_desc = article_data[i].desc;
+		_price = Number(article_data[i].price);
+		_pict = article_data[i].pict;
+	
+		oDb.execute('INSERT INTO articles (id, desc, price, pict) VALUES(?,?,?,?)', _id, _desc, _price, _pict );
+	  
 	};
-	return "";
+     
 };
+
+
+// get article data from db
+boDb.getArticleData = function(){
+	
+	var aData = [];
+	var rows = oDb.execute('SELECT * FROM articles ORDER BY id');
+	
+	while (rows.isValidRow()) {
+  		aData.push({ 
+  			id: rows.fieldByName('id'), 
+  			desc: rows.fieldByName('desc'), 
+  			price: rows.fieldByName('price'), 
+  			pict: rows.fieldByName('pict') 
+  			});
+
+		rows.next();
+	};
+	rows.close();
+	
+	return aData;
+};
+
+
+// get article count
+boDb.getArticleCount = function(){
+	var row = oDb.execute('SELECT COUNT(*) AS cnt FROM articles');
+	var res = row.fieldByName('cnt');
+	return res;
+};
+
+// get article desc from db
+boDb.getArticleById = function( article_id ){
+	var row = oDb.execute('SELECT * FROM articles WHERE id = ?', article_id);
+	var res = row.fieldByName('desc');
+	return res;
+};
+
+
+// get article array from db
+boDb.getArticleArrayById = function( article_id ){
+	var row = oDb.execute('SELECT * FROM articles WHERE id = ?', article_id);
+	var res = [{ id: row.fieldByName('id') ,desc: row.fieldByName('desc'), price: row.fieldByName('price'), pict: row.fieldByName('pict') }];
+	return res;
+};
+
+
+// delete article from db
+boDb.deleteArticleById = function( article_id ){
+	oDb.execute('DELETE FROM articles WHERE id = ?', article_id);
+};
+
+// delete article from db
+boDb.deleteArticles = function(){
+	oDb.execute('DELETE FROM articles');
+};
+
+
 
 /*
  * CUSTOMERS DB methods
@@ -371,6 +420,16 @@ boDb.openDB = function() {
 	// lat REAL
 	// lon REAL
 	db.execute('CREATE TABLE IF NOT EXISTS customers (id INTEGER PRIMARY KEY, desc TEXT, addr TEXT, city TEXT, postcode TEXT, tel1 TEXT, tel2 TEXT, user_id INT, lon REAL, lat REAL)'); 
+	
+	
+	// articles
+	//
+	// id TEXT
+	// desc TEXT
+	// price REAL
+	// pict TEXT
+	// pict_data BLOB
+	db.execute('CREATE TABLE IF NOT EXISTS articles (id TEXT, desc TEXT, price REAL, pict TEXT, pict_data BLOB)'); 
 	
 	return db;
 };

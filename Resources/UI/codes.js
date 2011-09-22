@@ -25,15 +25,15 @@ boCodes.Postal.getPostCode = function(city) {
 		
 };
 
-	
+
 // get articles from db
 boCodes.Articles.getArticles = function() {
-	return boDb.getArticlesDataJSON()
-};		
+	return boDb.getArticleData();
+};	
 	
 // get article matrix based on article JSON data
 boCodes.Articles.getArticleMatrix = function( article_data ) {
-	return boCodes.Matrix.getMatrix( article_data, "artikli" );
+	return boCodes.Matrix.getMatrix( article_data, "Artikli" );
 };
 
 // get customers from DB

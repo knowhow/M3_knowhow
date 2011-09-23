@@ -42,8 +42,27 @@ exports.getArticleById = function(_id, callback) {
 		else
 		{
 			if (!didOne) {
-				util.log(' get article desc by id: ' + _id);
+				util.log(' get article arr by id: ' + _id);
 				callback(null, row);
+				didOne = true;
+			};
+		};
+	});
+};
+
+// get article row by id
+exports.getArticleDescById = function(_id, callback) {
+	var didOne = false;
+	db.each('SELECT desc FROM articles WHERE id = ?', [ _id ], function(err, row) {
+		if (err) {
+			util.log('FAIL to retrieve row ' + err);
+			callback(err, null);
+		}
+		else
+		{
+			if (!didOne) {
+				util.log(' get article desc by id: ' + _id);
+				callback(null, row['desc']);
 				didOne = true;
 			};
 		};
@@ -62,7 +81,7 @@ exports.getArticleImageById = function(_id, callback) {
 		{
 			if (!didOne) {
 				util.log(' get article image data by id: ' + _id);
-				callback(null, row);
+				callback(null, row['image_data']);
 				didOne = true;
 			};
 		};

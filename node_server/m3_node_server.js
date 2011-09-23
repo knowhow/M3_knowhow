@@ -60,6 +60,19 @@ app.get('/articles', function(req, res, next) {
 	});
 });
 
+app.get('/article_description/:article_id', function(req, res, next) {
+	m3_db.getArticleDescById( req.params.article_id, function(err, image_desc){
+		if (err) {
+			util.log('ERROR ' + err);
+			throw err;
+		}
+		else
+		{
+			res.send( image_desc );
+		};
+	});
+});
+
 app.get('/article_image/:article_id', function(req, res, next) {
 	m3_db.getArticleImageById( req.params.article_id, function(err, image_data){
 		if (err) {

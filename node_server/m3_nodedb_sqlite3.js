@@ -42,6 +42,7 @@ exports.getArticleById = function(_id, callback) {
 		else
 		{
 			if (!didOne) {
+				util.log(' get article desc by id: ' + _id);
 				callback(null, row);
 				didOne = true;
 			};
@@ -60,6 +61,7 @@ exports.getArticleImageById = function(_id, callback) {
 		else
 		{
 			if (!didOne) {
+				util.log(' get article image data by id: ' + _id);
 				callback(null, row);
 				didOne = true;
 			};

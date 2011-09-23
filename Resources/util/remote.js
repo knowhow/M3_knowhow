@@ -42,30 +42,30 @@ boRemote.synchro.synhroArticles = function() {
 
 
 // synchronize pictures...
-boRemote.synchro.synhroArticlePictures = function() {
+boRemote.synchro.synhroArticleImages = function() {
 	
 	var data;
 	var art_data = boCodes.Articles.getArticleData();
 	
 	// example: http://localhost:3333/article_pict/3013
-	var url = server_url + '/article_pict/';
+	var url = server_url + '/article_image/';
 	var xhr = Ti.Network.createHTTPClient();
 	var _id;
-	var _pict;
 	
 	// loop through article data
 	for (var i=0; i < art_data.length; i++) {
 		
 		// set variables...
 		_id = art_data[i].id;
-		_pict = art_data[i].pict;
 	
 		// add article id to url
 		var tmp_url = url + _id;	  
 		
 		xhr.onload = function()
 		{		
- 			// save picture to blob or to mobile phone device...   	
+ 			data = this.responseText;
+ 			boDb.updateArticleImage( _id, data ); 
+ 			   	
    		};
 		
 		xhr.open('GET', tmp_url);

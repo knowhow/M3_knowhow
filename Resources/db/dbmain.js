@@ -57,6 +57,12 @@ boDb.insertIntoArticles = function( article_data ) {
 };
 
 
+// update image
+boDb.updateArticleImage = function( _art_id, _image_data ) {
+	oDb.execute('UPDATE articles SET image_data = ? WHERE id = ?', _image_data, _art_id );
+};
+
+
 // get article data from db
 boDb.getArticleData = function(){
 	

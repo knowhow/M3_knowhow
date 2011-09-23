@@ -1,4 +1,4 @@
-article_data = '[{"id":"3013","desc":"Drina MP Sarajevska","price":"18.803","pict":"3013.jpg"},'+
+var article_data_JSON = '[{"id":"3013","desc":"Drina MP Sarajevska","price":"18.803","pict":"3013.jpg"},'+
 	'{"id":"3014","desc":"Drina TP lights","price":"21.368","pict":"3014.jpg"},' +
 	'{"id":"3015","desc":"Drina TP jedina","price":"21.368","pict":"3015.jpg"},' +
 	'{"id":"3016","desc":"Drina TP super lights","price":"21.368","pict":"3016.jpg"},' +
@@ -14,6 +14,10 @@ article_data = '[{"id":"3013","desc":"Drina MP Sarajevska","price":"18.803","pic
 	'{"id":"3095","desc":"Code red","price":"21.368","pict":"3095.jpg"}]';
 
 var express = require('express');
+var nmDbEngine = 'sqlite3';
+var m3_db = require('./m3_nodedb_' + nmDbEngine);
+var util = require('util');
+
 
 var app = express.createServer(
 	// express.logger();
@@ -26,15 +30,35 @@ app.configure(function(){
 	}));
 });
 
+m3_db.connect( function(error) {
+	if (error) throw error;
+});
+
+app.on('close', function(errno) {
+	m3_db.disconnect( function(errno) {});
+});
+
 // example of parameters
 //app.get('/pomnozi/:a/:b', function(req, res, next) {
 	//res.send({ a: req.params.a, b: req.params.b, result: req.params.a * req.params.b });
 //});
 
-app.get('/articles', function(req, res, next) {
-	res.send( article_data );
+app.get('/articlesJSON', function(req, res, next) {
+	res.send( article_data_JSON );
 });
 
+app.get('/articles', function(req, res, next) {
+	m3_db.getArticles(function(err, art_data){
+		if (err) {
+			util.log('ERROR ' + err);
+			throw err;
+		}
+		else
+		{
+			res.send( art_data );
+		};
+	});
+});
 
-app.listen(3333);
+app.listen(8080);
 

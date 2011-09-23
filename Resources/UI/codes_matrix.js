@@ -69,7 +69,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
  
  				// image show
  				var thisImage = Ti.UI.createImageView({
- 					image:'img/' + m_data[cellIndex].pict,
+ 					image:'img/' + m_data[cellIndex].image_name,
  					opacity:1.0,
  					objIndex:cellIndex.toString(),
             		objName:"it-img",

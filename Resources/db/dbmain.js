@@ -39,16 +39,18 @@ boDb.insertIntoArticles = function( article_data ) {
 	var _id;
 	var _desc;
 	var _price;
-	var _pict;
+	var _image_name;
+	var _image_data;
 	
 	for (var i=0; i < article_data.length; i++) {
 		
 		_id = article_data[i].id;
 		_desc = article_data[i].desc;
 		_price = Number(article_data[i].price);
-		_pict = article_data[i].pict;
+		_image_name = article_data[i].image_name;
+		_image_data = article_data[i].image_data;
 	
-		oDb.execute('INSERT INTO articles (id, desc, price, pict) VALUES(?,?,?,?)', _id, _desc, _price, _pict );
+		oDb.execute('INSERT INTO articles (id, desc, price, image_name, image_data) VALUES(?,?,?,?,?)', _id, _desc, _price, _image_name, _image_data );
 	  
 	};
      
@@ -66,7 +68,8 @@ boDb.getArticleData = function(){
   			id: rows.fieldByName('id'), 
   			desc: rows.fieldByName('desc'), 
   			price: rows.fieldByName('price'), 
-  			pict: rows.fieldByName('pict') 
+  			image_name: rows.fieldByName('image_name'), 
+  			image_data: rows.fieldByName('image_data')
   			});
 
 		rows.next();
@@ -86,7 +89,7 @@ boDb.getArticleCount = function(){
 
 // get article desc from db
 boDb.getArticleDescById = function( article_id ){
-	var row = oDb.execute('SELECT * FROM articles WHERE id = ?', article_id);
+	var row = oDb.execute('SELECT desc FROM articles WHERE id = ?', article_id);
 	var res = row.fieldByName('desc');
 	return res;
 };
@@ -95,7 +98,7 @@ boDb.getArticleDescById = function( article_id ){
 // get article array from db
 boDb.getArticleArrayById = function( article_id ){
 	var row = oDb.execute('SELECT * FROM articles WHERE id = ?', article_id);
-	var res = [{ id: row.fieldByName('id') ,desc: row.fieldByName('desc'), price: row.fieldByName('price'), pict: row.fieldByName('pict') }];
+	var res = [{ id: row.fieldByName('id') ,desc: row.fieldByName('desc'), price: row.fieldByName('price'), pict: row.fieldByName('image_name') }];
 	return res;
 };
 
@@ -429,7 +432,7 @@ boDb.openDB = function() {
 	// price REAL
 	// pict TEXT
 	// pict_data BLOB
-	db.execute('CREATE TABLE IF NOT EXISTS articles (id TEXT, desc TEXT, price REAL, pict TEXT, pict_data BLOB)'); 
+	db.execute('CREATE TABLE IF NOT EXISTS articles (id TEXT, desc TEXT, price REAL, image_name TEXT, image_data BLOB)'); 
 	
 	return db;
 };

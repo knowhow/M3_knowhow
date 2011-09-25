@@ -59,6 +59,7 @@ boDb.insertIntoArticles = function( article_data ) {
 
 // update image
 boDb.updateArticleImage = function( _art_id, _image_data ) {
+	//alert(_image_data);
 	oDb.execute('UPDATE articles SET image_data = ? WHERE id = ?', _image_data, _art_id );
 };
 
@@ -105,6 +106,13 @@ boDb.getArticleDescById = function( article_id ){
 boDb.getArticleArrayById = function( article_id ){
 	var row = oDb.execute('SELECT * FROM articles WHERE id = ?', article_id);
 	var res = [{ id: row.fieldByName('id') ,desc: row.fieldByName('desc'), price: row.fieldByName('price'), pict: row.fieldByName('image_name') }];
+	return res;
+};
+
+// get article image_data from db
+boDb.getArticleImageById = function( article_id ){
+	var row = oDb.execute('SELECT image_data FROM articles WHERE id = ?', article_id);
+	var res = row.field(0);
 	return res;
 };
 

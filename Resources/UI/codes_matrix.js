@@ -206,8 +206,10 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
   		var _enter_value_manualy = function(e){
   			var man = boCodes.Matrix.getItemManualValue(Number(labels[e.source.objIndex].text));
 			man.addEventListener("close", function(){
-				labels[e.source.objIndex].text = man.item_value;
-				data[e.source.objIndex].article_quantity = parseFloat(man.item_value);
+				if(man.item_value != null && man.item_value != undefined){
+					labels[e.source.objIndex].text = man.item_value;
+					data[e.source.objIndex].article_quantity = parseFloat(man.item_value);
+				};
 			});
     		
   		};
@@ -377,7 +379,7 @@ boCodes.Matrix.getItemManualValue = function( curr_value ){
 	
 	btn_ok.addEventListener("click", function(){
 		mv_text.blur();
-		if(mv_text.value != ''){
+		if(mv_text.value != '' && boUtil.num.isValidNum(mv_text.value) ){
 			mv_win.item_value = mv_text.value;
 		};
 		mv_win.close();

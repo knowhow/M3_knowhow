@@ -192,8 +192,17 @@ var mainWindow = function() {
 	
 	get_data.addEventListener("click", function(){
 		
+		// first synchronize articles
 		boRemote.synchro.synhroArticles();
 		
+		// listen for event ok
+		Titanium.addEventListener('articlesSynchronized', function(){
+			boRemote.synchro.synhroArticleImages();
+		});
+	
+		Titanium.addEventListener('articleImagesSynchronized', function(){
+			// do something after images synchronized...
+		});
 	});
 
 	

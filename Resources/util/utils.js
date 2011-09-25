@@ -1,5 +1,6 @@
 var boUtil = {};
 	
+boUtil.num = {};
 boUtil.str = {};
 boUtil.date = {};
 boUtil.math = {};
@@ -68,3 +69,39 @@ boUtil.math.getControlPostitionHeight = function( percentage ) {
 	return result;
 };
 
+
+// check for valid num
+boUtil.num.isValidNum = function(val){
+	var found=0;
+  	var i=0;
+  	var allowedChars=".1234567890";
+  
+  	for (i=0;(i<val.length) && (found==0);i++) { 
+    	if (allowedChars.indexOf(val.charAt(i)) == -1) { 
+      	found=1;
+      	alert('Greška:: vrijednost sadrži neke karaktere...');
+      	return false;
+    	};
+  	};
+
+  	var dotCount=0;
+
+  	for(i=0;i<val.length;i++) {
+    	if (val.charAt(i)=='.')
+      		dotCount++;
+  	};
+
+  	if (dotCount >1) {
+    	alert('Vrijednost sadrži više decimalnih mjesta!');
+    	return false;
+  	} else if(dotCount==1) {
+    	// Check for max. precision <=2
+    	// GetIndex of '.'
+    	if ((val.length - val.indexOf('.') ) > 3) {
+      		alert('Limit precision to Max. 2 chars');
+      		return false;
+    	};
+  	};
+
+  	return true;
+};

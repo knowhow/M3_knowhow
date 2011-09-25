@@ -30,6 +30,8 @@ app.configure(function(){
 	}));
 });
 
+app.use(express.bodyParser());
+
 m3_db.connect( function(error) {
 	if (error) throw error;
 });
@@ -85,6 +87,9 @@ app.get('/article_image/:article_id', function(req, res, next) {
 		};
 	});
 });
+
+
+
 
 app.listen(8080);
 

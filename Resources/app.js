@@ -4,12 +4,13 @@ Titanium.UI.setBackgroundColor('#000');
 Ti.App.current_logged_user = "";
 Ti.App.current_logged_user_id = 0;
 Ti.App.current_device_id = 0;
+Ti.App.current_device_id = Ti.Platform.id;
+Ti.App.current_device_maddr = Ti.Platform.macaddress;
+
+//alert(Ti.App.current_device_id + " - " + Ti.App.current_device_maddr);
 
 // include lib 
 Ti.include("lib.js");
-
-// set current device id by params
-Ti.App.current_device_id = boDb.getDeviceId();
 
 oDb = boDb.openDB();
 

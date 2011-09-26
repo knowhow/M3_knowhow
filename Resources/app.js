@@ -2,17 +2,13 @@
 
 Titanium.UI.setBackgroundColor('#000');
 
-// **global variables**
-Ti.App.current_logged_user = "";
-Ti.App.current_logged_user_id = 0;
-Ti.App.current_device_id = 0;
-Ti.App.current_device_id = Ti.Platform.id;
-Ti.App.current_device_maddr = Ti.Platform.macaddress;
-Ti.App.current_images_dir = Ti.Filesystem.applicationDataDirectory;
-
 // include lib 
 Ti.include("lib.js");
 
+// Get params for application
+boParams.getParams();
+
+// open main database and init as oDb object
 oDb = boDb.openDB();
 
 // open login form

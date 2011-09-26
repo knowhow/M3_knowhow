@@ -8,14 +8,195 @@ var boRemote = {};
 boRemote.synchro = {};
 
 
-//var server_url = 'http://192.168.47.119:8080';
-var server_url = 'http://192.168.45.147:8080';
+// open initialization form
+boRemote.formInit = function() {
+	
+	// create window
+	var s_win = Ti.UI.createWindow({
+		title:'Inicijalizacija...',
+		backgroundColor:'black',
+		top:0,
+		bottom:0
+	});
+
+	// create label server 
+	var lbl_server = Ti.UI.createLabel({
+		color:'white',
+		text:'nije podešeno...',
+		left:'25%',
+		top:'3%',
+		font:{fontSize:'6pt'}
+	});
+	
+	// create btn set server
+	var btn_set_server = Ti.UI.createButton({
+		title:'Server',
+		top:'2%',
+		left:'2%',
+		width:'23%',
+		height:'10%'
+	});
+
+	// create btn init...
+	var btn_init = Ti.UI.createButton({
+		title:'Uzmi podatke',
+		top:'12%',
+		left:'2%',
+		width:'40%',
+		height:'10%'
+	});
+	
+	// create label info 
+	var lbl_info = Ti.UI.createLabel({
+		color:'white',
+		text:'Rezultati inicijalizacije:',
+		left:'4%',
+		top:'22%',
+		font:{fontSize:'7pt'}
+	});
+	
+	// create label info 
+	var lbl_i_params = Ti.UI.createLabel({
+		text:"-",
+		color:'white',
+		left:'7%',
+		top:'28%',
+		font:{fontSize:'7pt'}
+	});
+	
+	// create label info 
+	var lbl_i_articles = Ti.UI.createLabel({
+		text:"-",
+		color:'white',
+		left:'7%',
+		top:'33%',
+		font:{fontSize:'7pt'}
+	});
+
+	// create label info 
+	var lbl_i_images = Ti.UI.createLabel({
+		text:"-",
+		color:'white',
+		left:'7%',
+		top:'38%',
+		font:{fontSize:'7pt'}
+	});	
+	
+	// create btn init...
+	var btn_save = Ti.UI.createButton({
+		title:'Snimi',
+		bottom:'1%',
+		right:'2%',
+		width:'35%',
+		height:'10%'
+	});	
+
+	// create btn init...
+	var btn_cancel = Ti.UI.createButton({
+		title:'Odustani',
+		bottom:'1%',
+		left:'2%',
+		width:'35%',
+		height:'10%'
+	});	
+	
+	// read global variables and set to lables...
+	if(Ti.App.current_server_url != undefined && Ti.App.current_server_url != null && Ti.App.current_server_url != ""){
+		lbl_server.text = Ti.App.current_server_url;
+	};
+	
+	// add controls to window 's_win'
+	s_win.add(lbl_server);
+	s_win.add(btn_set_server);
+	s_win.add(lbl_info);
+	s_win.add(lbl_i_articles);
+	s_win.add(lbl_i_params);
+	s_win.add(lbl_i_images);
+	s_win.add(btn_init);
+	s_win.add(btn_save);
+	s_win.add(btn_cancel);
+	
+	// event listeners of 's_win' controls
+	
+	// btn_set_server listener
+	btn_set_server.addEventListener("click", function(){
+		var tmp_frm = boUtilForms.getStrValue();
+		tmp_frm.addEventListener("close", function(){
+			lbl_server.text = tmp_frm.item_value;
+			Ti.App.current_server_url = tmp_frm.item_value;
+			Ti.App.Properties.setString("current_server_url", tmp_frm.item_value);
+		});
+	});
+	
+	// btn_init listener
+	btn_init.addEventListener("click", function(){
+		
+		// synchronize articles
+		boRemote.synchro.synhroArticles();
+		
+		Ti.App.addEventListener("articlesSynchronized", function(e){
+			
+			if(e.result == 0){
+				lbl_i_articles.text = "Sinhronizacija nije uspjela...";
+				return;
+			};
+			
+			// set label value
+			lbl_i_articles.text = "- artikli init ok -> " + e.count;
+		
+			// run synchronize of the images
+			boRemote.synchro.synhroArticleImages();
+			
+			var images_cnt = 0;
+		
+			// listen for event save image
+			Ti.App.addEventListener("articlesImageSaved", function(e){
+				
+				images_cnt = images_cnt + e.count;
+				
+				lbl_i_images.text = "- download slika -> " + images_cnt.toString();
+			
+			});
+			
+		});
+		
+	});
+	
+	// set params
+	btn_save.addEventListener("click", function(){
+		boParams.setParams();
+		s_win.close();
+	});
+	
+	// cancel 
+	btn_cancel.addEventListener("click", function(){
+		s_win.close();
+	});
+	
+	// listen for event ok
+	//Titanium.addEventListener('articlesSynchronized', function(){
+		//boRemote.synchro.synhroArticleImages();
+	//});
+	
+	//Titanium.addEventListener('articleImagesSynchronized', function(){
+		// do something after images synchronized...
+	//});
+	
+	// open 's_win' window
+	s_win.open();
+	
+	// return 's_win' for listening event 'close'
+	return s_win;
+	
+};
+
 
 
 // Synchronize articles, main function 
 boRemote.synchro.synhroArticles = function() {
 	
 	var data;
+	var server_url = Ti.App.current_server_url;
 	// url to send request
 	var url = server_url + '/articles';
 	
@@ -40,14 +221,14 @@ boRemote.synchro.synhroArticles = function() {
 		
 			// DEBUG msg
 			if( cnt == data.length ){
-				alert('Uspješno importovao ' + cnt.toString() + ' zapisa!');
-			};
-			
-			// fire event and run 'boRemote.synchro.synhroArticleImages()'
-			Titanium.fireEvent("articlesSynchronized");
-			
+				// fire event and run 'boRemote.synchro.synhroArticleImages()'
+				Ti.App.fireEvent("articlesSynchronized", { result:1, count:cnt.toString() });
+			}
+			else
+			{
+				Ti.App.fireEvent("articlesSynchronized", { result:0, count:0 });
+			};						
 		};
-   	
    	};
 		
 	xhr.open('GET', url);
@@ -62,6 +243,7 @@ boRemote.synchro.synhroArticleImages = function() {
 	// Get article JSON
 	var art_data = boCodes.Articles.getArticles();
 	
+	var server_url = Ti.App.current_server_url;
 	// per example: http://localhost:3333/article_pict/3013
 	var _url = server_url + '/article_image/';
 	var _srv_url;
@@ -132,6 +314,7 @@ boRemote.synchro.saveImageToDevice = function( _article_id, _url ) {
  			// Create file only if not exist
  			if(!s_file.exist){
  				s_file.write(data);
+ 				Ti.App.fireEvent("articlesImageSaved", { result: 1, count: 1 });
  			};
  			
  			// debug info

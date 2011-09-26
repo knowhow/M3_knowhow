@@ -71,8 +71,8 @@ var mainWindow = function() {
 	});  
 	
 	// get data from server...
-	var get_data = Titanium.UI.createButton({  
-       	title:'Uzmi podatke sa servera',  
+	var data_init = Titanium.UI.createButton({  
+       	title:'Inicijalizacija',  
        	left:'2%',
        	right:'2%',
        	top:'56%',    
@@ -86,7 +86,7 @@ var mainWindow = function() {
        	title:'Postavke',  
        	width:'35%',
        	right:'2%',
-       	top:'76%',    
+       	top:'90%',    
        	height:'10%',  
        	borderRadius:1,  
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}
@@ -109,7 +109,7 @@ var mainWindow = function() {
 	win_main.add(where_am_i);
 	win_main.add(delete_db);
 	win_main.add(send_db);
-	win_main.add(get_data);
+	win_main.add(data_init);
 	win_main.add(preferences);
 	win_main.add(close_btn);
 	
@@ -137,29 +137,7 @@ var mainWindow = function() {
 	
 	// preferences event handler
 	preferences.addEventListener('click',function(e){  
-   		//Ti.UI.Android.openPreferences();
-		var test_win = Ti.UI.createWindow({
-			title:"slika",
-			top:0,
-			bottom:0,
-			backgroundColor:"red"
-		});	
-		
-		var b_field = boDb.getArticleImageById('3013');
-		
-		var test_img = Ti.UI.createImageView({
-			top:0,
-			bottom:50,
-			left:10,
-			right:10
-		});
-		
-		alert(b_field);
-		test_img.image = b_field;
-		
-		test_win.add(test_img);
-		test_win.open();
-	
+   		var par_form = boParams.paramsForm();
 	});  	
 
 	// remove completely db
@@ -212,19 +190,16 @@ var mainWindow = function() {
 		
 	});
 	
-	get_data.addEventListener("click", function(){
+	// initialization btn event listener
+	data_init.addEventListener("click", function(){
 		
-		// first synchronize articles
-		boRemote.synchro.synhroArticles();
+		// open form init 
+		var frm_init = boRemote.formInit();
 		
-		// listen for event ok
-		Titanium.addEventListener('articlesSynchronized', function(){
-			boRemote.synchro.synhroArticleImages();
+		frm_init.addEventListener("close", function(){
+			// on close...
 		});
-	
-		Titanium.addEventListener('articleImagesSynchronized', function(){
-			// do something after images synchronized...
-		});
+		
 	});
 
 	

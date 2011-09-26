@@ -1,13 +1,14 @@
+// Set's the background color
+
 Titanium.UI.setBackgroundColor('#000');
 
-// global variables
+// **global variables**
 Ti.App.current_logged_user = "";
 Ti.App.current_logged_user_id = 0;
 Ti.App.current_device_id = 0;
 Ti.App.current_device_id = Ti.Platform.id;
 Ti.App.current_device_maddr = Ti.Platform.macaddress;
-
-//alert(Ti.App.current_device_id + " - " + Ti.App.current_device_maddr);
+Ti.App.current_images_dir = Ti.Filesystem.applicationDataDirectory;
 
 // include lib 
 Ti.include("lib.js");
@@ -42,3 +43,4 @@ Ti.App.addEventListener('close',function(e)
         oDb.close();
     }
 });
+

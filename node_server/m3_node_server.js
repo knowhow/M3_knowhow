@@ -83,7 +83,9 @@ app.get('/article_image/:article_id', function(req, res, next) {
 		}
 		else
 		{
-			res.send( image_data );
+			res.writeHead(200, {'Content-Type': 'image/jpeg' });	
+			res.end(image_data);
+			//res.send( image_data,  {'Content-Type':'image/jpeg'} );
 		};
 	});
 });

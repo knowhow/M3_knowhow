@@ -86,7 +86,7 @@ var mainWindow = function() {
        	title:'Postavke',  
        	width:'35%',
        	right:'2%',
-       	top:'90%',    
+       	top:'76%',    
        	height:'10%',  
        	borderRadius:1,  
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}
@@ -137,7 +137,29 @@ var mainWindow = function() {
 	
 	// preferences event handler
 	preferences.addEventListener('click',function(e){  
-   		Ti.UI.Android.openPreferences();
+   		//Ti.UI.Android.openPreferences();
+		var test_win = Ti.UI.createWindow({
+			title:"slika",
+			top:0,
+			bottom:0,
+			backgroundColor:"red"
+		});	
+		
+		var b_field = boDb.getArticleImageById('3013');
+		
+		var test_img = Ti.UI.createImageView({
+			top:0,
+			bottom:50,
+			left:10,
+			right:10
+		});
+		
+		alert(b_field);
+		test_img.image = b_field;
+		
+		test_win.add(test_img);
+		test_win.open();
+	
 	});  	
 
 	// remove completely db

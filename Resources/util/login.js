@@ -104,10 +104,10 @@ boMobileAppLib.Login.LoginForm = function() {
 	// view panel version...
 	var v_version = Ti.UI.createView({
 		backgroundColor:'#60a0ff',
-		top:'85%',
+		top:'83%',
 		left:'5%',
 		right:'5%',
-		height:'10%',
+		height:'15%',
 		borderColor:'blue',
 		borderWidth:1,
 		borderRadius:10
@@ -116,9 +116,9 @@ boMobileAppLib.Login.LoginForm = function() {
 	// version info
 	var l_version = Ti.UI.createLabel({
 		color:'white',
-		text:'Verzija: ' + Ti.App.version + ', © www.bring.out.ba',
+		text:'Verzija: ' + Ti.App.version + ', © www.bring.out.ba' + boUtil.str.newRow() + Ti.App.current_device_id + '/' + Ti.App.current_device_maddr,
 		left:'5%',
-		top:'30%',
+		top:'20%',
 		font:{fontSize:'6pt',fontWeight:'bold'},
 		opacity:0.2
 	});

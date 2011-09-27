@@ -184,10 +184,14 @@ boRemote.formInit = function() {
 			// listen for event save image
 			Ti.App.addEventListener("articlesImageSaved", function(e){
 				
-				images_cnt = images_cnt + e.count;
-				
-				lbl_i_images.text = "- download slika -> " + images_cnt.toString();
-			
+				if(e.result == 0){
+					lbl_i_images.text = "- download slika -> već postoje!";
+				}
+				else
+				{
+					images_cnt = images_cnt + e.count;
+					lbl_i_images.text = "- download slika -> " + images_cnt.toString();
+				};
 			});
 			
 		});
@@ -443,15 +447,13 @@ boRemote.put.synhroCustomers = function() {
 	var server_url = Ti.App.par_server_url;
 	// url to send request
 	var url = server_url + '/customers/update';
-	
-	alert(url);
 	// create http client
 	var xhr = Ti.Network.createHTTPClient();
 		
 	xhr.onload = function()
 	{	
-		Ti.App.info(this.readyState);
-    	Ti.App.info(this.responseText);
+		Ti.API.info(this.readyState);
+    	Ti.API.info(this.responseText);
    	};
 		
 	//xhr.setRequestHeader("Content-Type","application/json; charset=utf-8");
@@ -620,7 +622,7 @@ boRemote.get.synhroArticleImages = function() {
 		_srv_url = _url + _id;	  
 		
 		// save image to local storage of the phone
-		boRemote.synchro.saveImageToDevice( _id, _srv_url );
+		boRemote.get.saveImageToDevice( _id, _srv_url );
 	};
 			
 };
@@ -671,9 +673,13 @@ boRemote.get.saveImageToDevice = function( _article_id, _url ) {
  			var s_file = Ti.Filesystem.getFile(Ti.App.current_images_dir, _article_id + '.jpg');
  			
  			// Create file only if not exist
- 			if(!s_file.exist){
+ 			if(!s_file.exists()){
  				s_file.write(data);
  				Ti.App.fireEvent("articlesImageSaved", { result: 1, count: 1 });
+ 			}
+ 			else
+ 			{
+ 				Ti.App.fireEvent("articlesImageSaved", { result: 0, count: 1 });
  			};
  			
  			// debug info

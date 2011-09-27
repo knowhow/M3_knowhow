@@ -105,6 +105,23 @@ app.get('/customers', function(req, res, next) {
 	});
 });
 
+// put data with request
+app.get('/customers/update', function(req, res, next) {
+	util.log(req);
+	//m3_db.putCustomers( req.body, function(err){
+		//if (err) {
+			//util.log('ERROR ' + err);
+			//throw err;
+		//}
+		//else
+		//{
+			//util.log("body " + req.body);
+			//res.writeHead(200, {'Content-Type': 'text/plain' });	
+			//res.end(req.body);
+		//};
+	//});
+});
+
 
 // ## Users
 

@@ -5,7 +5,8 @@
 var boRemote = {};
 
 // Adding synchro into namespace...
-boRemote.synchro = {};
+boRemote.get = {};
+boRemote.put = {};
 
 
 // open initialization form
@@ -153,7 +154,7 @@ boRemote.formInit = function() {
 	btn_init.addEventListener("click", function(){
 		
 		// synchronize articles
-		boRemote.synchro.synhroArticles();
+		boRemote.get.synhroArticles();
 		
 		Ti.App.addEventListener("articlesSynchronized", function(e){
 			
@@ -166,7 +167,7 @@ boRemote.formInit = function() {
 			lbl_i_articles.text = "- artikli init ok -> " + e.count;
 		
 			// run synchronize of the images
-			boRemote.synchro.synhroArticleImages();
+			boRemote.get.synhroArticleImages();
 			
 			var images_cnt = 0;
 		
@@ -183,7 +184,7 @@ boRemote.formInit = function() {
 		
 		
 		// synchronize params
-		boRemote.synchro.synhroParams();
+		boRemote.get.synhroParams();
 		Ti.App.addEventListener("paramsSynchronized", function(e){
 			if(e.result == 0){
 				lbl_i_params.text = "- parametri: nije uspjelo !!!";
@@ -195,7 +196,7 @@ boRemote.formInit = function() {
 		});	
 		
 		// synchronize customers
-		boRemote.synchro.synhroCustomers();
+		boRemote.get.synhroCustomers();
 		Ti.App.addEventListener("customersSynchronized", function(e){
 			if(e.result == 0){
 				lbl_i_cust.text = "- partneri: nije uspjelo !!!";
@@ -207,7 +208,7 @@ boRemote.formInit = function() {
 		});
 		
 		// synchronize customers
-		boRemote.synchro.synhroUsers();
+		boRemote.get.synhroUsers();
 		Ti.App.addEventListener("usersSynchronized", function(e){
 			if(e.result == 0){
 				lbl_i_users.text = "- users: nije uspjelo !!!";
@@ -346,7 +347,7 @@ boRemote.formUsersInit = function() {
 	btn_init.addEventListener("click", function(){
 		
 		// synchronize users
-		boRemote.synchro.synhroUsers();
+		boRemote.get.synhroUsers();
 		Ti.App.addEventListener("usersSynchronized", function(e){
 			if(e.result == 0){
 				lbl_i_users.text = "- users: nije uspjelo !!!";
@@ -381,7 +382,7 @@ boRemote.formUsersInit = function() {
 
 
 // Synchronize users, main function 
-boRemote.synchro.synhroUsers = function() {
+boRemote.get.synhroUsers = function() {
 	
 	var data;
 	var server_url = Ti.App.par_server_url;
@@ -424,8 +425,34 @@ boRemote.synchro.synhroUsers = function() {
 
 };
 
+
 // Synchronize customers, main function 
-boRemote.synchro.synhroCustomers = function() {
+boRemote.put.synhroCustomers = function() {
+	
+	var data = boCodes.Customers.getCustomers();
+	var server_url = Ti.App.par_server_url;
+	// url to send request
+	var url = server_url + '/customers/update';
+	
+	alert(url);
+	// create http client
+	var xhr = Ti.Network.createHTTPClient();
+		
+	xhr.onload = function()
+	{	
+		Ti.App.info(this.readyState);
+    	Ti.App.info(this.responseText);
+   	};
+		
+	//xhr.setRequestHeader("Content-Type","application/json; charset=utf-8");
+	xhr.open('POST', url);
+	xhr.send(data);
+
+};
+
+
+// Synchronize customers, main function 
+boRemote.get.synhroCustomers = function() {
 	
 	var data;
 	var server_url = Ti.App.par_server_url;
@@ -470,7 +497,7 @@ boRemote.synchro.synhroCustomers = function() {
 
 
 // Synchronize customers, main function 
-boRemote.synchro.synhroParams = function() {
+boRemote.get.synhroParams = function() {
 	
 	var data;
 	var server_url = Ti.App.par_server_url;
@@ -515,7 +542,7 @@ boRemote.synchro.synhroParams = function() {
 
 
 // Synchronize articles, main function 
-boRemote.synchro.synhroArticles = function() {
+boRemote.get.synhroArticles = function() {
 	
 	var data;
 	var server_url = Ti.App.par_server_url;
@@ -560,7 +587,7 @@ boRemote.synchro.synhroArticles = function() {
 
 
 // Synchronize images from http server...
-boRemote.synchro.synhroArticleImages = function() {
+boRemote.get.synhroArticleImages = function() {
 	
 	// Get article JSON
 	var art_data = boCodes.Articles.getArticles();
@@ -590,7 +617,7 @@ boRemote.synchro.synhroArticleImages = function() {
 
 
 // Get image from http server and update into local table "articles"
-boRemote.synchro.saveImageIntoTable = function( _article_id, _url ) {
+boRemote.get.saveImageIntoTable = function( _article_id, _url ) {
 
 	// Create http server
 	var xhr = Ti.Network.createHTTPClient();
@@ -618,7 +645,7 @@ boRemote.synchro.saveImageIntoTable = function( _article_id, _url ) {
 
 
 // Get image from http server and save to local storage of android device
-boRemote.synchro.saveImageToDevice = function( _article_id, _url ) {
+boRemote.get.saveImageToDevice = function( _article_id, _url ) {
 
 	// Create http server
 	var xhr = Ti.Network.createHTTPClient();

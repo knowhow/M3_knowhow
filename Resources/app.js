@@ -5,6 +5,10 @@ Titanium.UI.setBackgroundColor('#000');
 // include lib 
 Ti.include("lib.js");
 
+// current user parameters
+Ti.App.current_logged_user = "";
+Ti.App.current_logged_user_id = 0;
+
 // Get params for application
 boParams.getParams();
 

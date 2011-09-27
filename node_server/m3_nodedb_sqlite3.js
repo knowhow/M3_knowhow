@@ -101,11 +101,30 @@ exports.getParamByDeviceId = function( _d_id, callback ) {
 
 // ## Customers
 
-// get articles
+// get customers
 exports.getCustomers = function(callback) {
 	util.log(' get all customers...');
 	db.all('SELECT * FROM customers ORDER BY id', callback);
 };
+
+// put customers
+exports.putCustomers = function(c_data, callback) {
+	for (var i=0; i < c_data.length; i++) {
+		db.run("UPDATE customers SET desc = ?, city = ?, postcode = ?, addr = ?, lon = ?, lat = ? WHERE id = ?", [ c_data[i].desc, c_data[i].city, c_data[i].postcode, c_data[i].addr, c_data[i].lon, c_data[i].lat ], function(err){
+			if (err) {
+	  			util.log("FAILED on updating table " + err);
+	  			callback(err);
+	  		}
+	  		else
+	  		{
+	  			callback(null);
+	  		};
+	  	
+	  	}); 
+	};
+};
+
+
 
 // ## Users
 

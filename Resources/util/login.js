@@ -9,8 +9,8 @@ boMobileAppLib.Login.LoginForm = function() {
 	var _user_name = "";
 	var login_data = boCodes.Users.getUsersData();
 	
-	if( Ti.App.Properties.hasProperty( "lastLoggedUser") ) {
-    	_user_name = Ti.App.Properties.getString("lastLoggedUser");
+	if( Ti.App.Properties.hasProperty("par_last_logged_user") ) {
+    	_user_name = Ti.App.Properties.getString("par_last_logged_user");
 	};
 		
 	// create login window
@@ -166,7 +166,7 @@ boMobileAppLib.Login.LoginForm = function() {
     	   			// set global variable...
     	   			Ti.App.current_logged_user = username.value;
     	   			Ti.App.current_logged_user_id = Number(login_data[i].id);
-    	   			Ti.App.Properties.setString("lastLoggedUser", username.value );
+    	   			Ti.App.Properties.setString("par_last_logged_user", username.value );
     	   			username.blur();
     	   			password.blur();
     	   			return;

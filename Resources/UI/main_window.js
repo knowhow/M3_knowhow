@@ -181,8 +181,10 @@ var mainWindow = function() {
             if (e.index == 1) {
                 return;
             }
+  			
+  			boRemote.put.synhroCustomers();
   
-			boDb.deleteAllPurchases();
+			//boDb.deleteAllPurchases();
 	
         });
  

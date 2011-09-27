@@ -4,8 +4,6 @@ var boParams = {};
 boParams.getParams = function() {
 	
 	// **global params read from params db**
-	Ti.App.current_logged_user = "";
-	Ti.App.current_logged_user_id = 0;
 	
 	Ti.App.par_server_url = Ti.App.Properties.getString("par_server_url");
 	Ti.App.par_default_radius = Ti.App.Properties.getDouble('par_default_radius');

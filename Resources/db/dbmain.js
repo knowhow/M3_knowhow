@@ -4,27 +4,148 @@ var boDb = {};
  * USERS DB methods
  */
 	
-boDb.getUsersDataJSON = function() {
-	var acc = JSON.parse('{"userdata":[{"id":"1","name":"vsasa","pwd":"11"},{"id":"2","name":"bjasko","pwd":"22"},{"id":"3","name":"hernad","pwd":"33"}]}');
-	return acc;
+// insert data into users
+boDb.insertIntoUsers = function( u_data ) {
+	
+	// insert into table articles
+	var _name;
+	var _pwd;
+	
+	for (var i=0; i < u_data.length; i++) {
+		
+		_name = u_data[i].name;
+		_pwd = u_data[i].pwd;
+		
+		oDb.execute('INSERT INTO users (name, pwd) VALUES(?,?)', _name, _pwd );
+	  
+	};
+     
 };
+
+// get users data from db
+boDb.getUsersData = function(){
+	
+	var aData = [];
+	var rows = oDb.execute('SELECT * FROM users ORDER BY id');
+	
+	while (rows.isValidRow()) {
+  		aData.push({ 
+  			id: rows.fieldByName('id'), 
+  			name: rows.fieldByName('name'), 
+  			pwd: rows.fieldByName('pwd') 
+  			});
+
+		rows.next();
+	};
+	rows.close();
+	
+	return aData;
+};
+
+
+// get article count
+boDb.getUsersCount = function(){
+	var row = oDb.execute('SELECT COUNT(*) AS cnt FROM users');
+	var res = row.fieldByName('cnt');
+	return res;
+};
+
+
+// get user name from db
+boDb.getUserNameById = function( u_id ){
+	var row = oDb.execute('SELECT name FROM users WHERE id = ?', u_id);
+	var res = row.fieldByName('name');
+	return res;
+};
+
+
+// get users array from db
+boDb.getUserArrayById = function( u_id ){
+	var row = oDb.execute('SELECT * FROM users WHERE id = ?', u_id);
+	var res = [{ id: row.fieldByName('id'), name: row.fieldByName('name'), pwd: row.fieldByName('pwd') }];
+	return res;
+};
+
+// delete user by id from db
+boDb.deleteUserById = function( u_id ){
+	oDb.execute('DELETE FROM users WHERE id = ?', u_id);
+};
+
+// delete article from db
+boDb.deleteUsers = function(){
+	oDb.execute('DELETE FROM users');
+};
+
 
 
 /*
  * PARAMS methods
  */
-boDb.getParamsDataJSON = function() {
-	var par = JSON.parse('{"params":[{"device_id":"1"}]}');
-	return par;
+
+// insert data into params
+boDb.insertIntoParams = function( p_data ) {
+	
+	// insert into table articles
+	var _device_id;
+	var _param_name;
+	var _param_value;
+	
+	for (var i=0; i < p_data.length; i++) {
+		
+		_device_id = p_data[i].device_id;
+		_param_name = p_data[i].param_name;
+		_param_value = p_data[i].param_value;
+		
+		oDb.execute('INSERT INTO params (device_id, param_name, param_value) VALUES(?,?,?)', _device_id, _param_name, _param_value );
+	  
+	};
+     
 };
 
 
-// return device id from params
-boDb.getDeviceId = function() {
-	var dev = boDb.getParamsDataJSON();
-	var dev_id = dev.params[0].device_id;
-	return dev_id ;
+// get params data from db
+boDb.geParamsData = function(){
+	
+	var aData = [];
+	var rows = oDb.execute('SELECT * FROM params ORDER BY id');
+	
+	while (rows.isValidRow()) {
+  		aData.push({ 
+  			device_id: rows.fieldByName('device_id'), 
+  			param_name: rows.fieldByName('param_name'), 
+  			param_value: rows.fieldByName('param_value') 
+  			});
+
+		rows.next();
+	};
+	rows.close();
+	
+	return aData;
 };
+
+
+// get params count
+boDb.getParamsCount = function(){
+	var row = oDb.execute('SELECT COUNT(*) AS cnt FROM params');
+	var res = row.fieldByName('cnt');
+	return res;
+};
+
+
+// get param value from db
+boDb.getParamValueById = function( dev_id, p_name ){
+	var row = oDb.execute('SELECT param_value FROM params WHERE device_id = ? AND param_name = ?', dev_id, p_name);
+	var res = row.fieldByName('param_value');
+	return res;
+};
+
+
+// delete params from db
+boDb.deleteParams = function(){
+	oDb.execute('DELETE FROM params');
+};
+
+
 
 
 /*
@@ -255,6 +376,22 @@ boDb.getCustomerArrayById = function( customer_id ){
 };
 
 
+// get customers count
+boDb.getCustomersCount = function(){
+	var row = oDb.execute('SELECT COUNT(*) AS cnt FROM customers');
+	var res = row.fieldByName('cnt');
+	return res;
+};
+
+
+// delete customers from db
+boDb.deleteCustomers = function(){
+	oDb.execute('DELETE FROM customers');
+};
+
+
+
+
 /*
  * PURCHASE DB methods
  */
@@ -448,6 +585,12 @@ boDb.openDB = function() {
 	// pict TEXT
 	// pict_data BLOB
 	db.execute('CREATE TABLE IF NOT EXISTS articles (id TEXT, desc TEXT, price REAL, image_name TEXT, image_data BLOB)'); 
+	
+	
+	db.execute('CREATE TABLE IF NOT EXISTS params (id INTEGER PRIMARY KEY, device_id TEXT, param_name TEXT, param_value TEXT)'); 
+	db.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, pwd TEXT)'); 
+
+
 	
 	return db;
 };

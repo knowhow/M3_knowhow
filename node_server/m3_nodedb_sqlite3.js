@@ -24,6 +24,8 @@ exports.disconnect = function(callback) {
 	callback(null);
 };
 
+// ## Articles
+
 // get articles
 exports.getArticles = function(callback) {
 	util.log(' get all articles...');
@@ -88,4 +90,28 @@ exports.getArticleImageById = function(_id, callback) {
 	});
 };
 
+// ## get params
+
+// get params row by id
+exports.getParamByDeviceId = function( _d_id, callback ) {
+	util.log(' get all params...');
+	db.all('SELECT * FROM params WHERE device_id = ? ORDER BY id', [_d_id], callback);
+};
+
+
+// ## Customers
+
+// get articles
+exports.getCustomers = function(callback) {
+	util.log(' get all customers...');
+	db.all('SELECT * FROM customers ORDER BY id', callback);
+};
+
+// ## Users
+
+// get users
+exports.getUsers = function(callback) {
+	util.log(' get all users...');
+	db.all('SELECT * FROM users ORDER BY id', callback);
+};
 

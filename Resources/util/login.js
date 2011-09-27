@@ -7,6 +7,7 @@ boMobileAppLib.Login.LoginForm = function() {
 	var login = false;
 	// get defined username
 	var _user_name = "";
+	var login_data = boCodes.Users.getUsersData();
 	
 	if( Ti.App.Properties.hasProperty( "lastLoggedUser") ) {
     	_user_name = Ti.App.Properties.getString("lastLoggedUser");
@@ -156,17 +157,15 @@ boMobileAppLib.Login.LoginForm = function() {
 	loginBtn.addEventListener('click',function(e){  
     		
     	if (username.value != '' && password.value != ''){  
-        		
-        	var loginJSON = boCodes.Users.getUsersData();
         
-        	for(var i=0; i < loginJSON.userdata.length; i++){
+        	for(var i=0; i < login_data.length; i++){
     	    
-    	   		if ( loginJSON.userdata[i].name == username.value && loginJSON.userdata[i].pwd == password.value) { 
+    	   		if ( login_data[i].name == username.value && login_data[i].pwd == password.value) { 
     	   				
     	   			Ti.App.fireEvent('loggedin');
     	   			// set global variable...
     	   			Ti.App.current_logged_user = username.value;
-    	   			Ti.App.current_logged_user_id = Number(loginJSON.userdata[i].id);
+    	   			Ti.App.current_logged_user_id = Number(login_data[i].id);
     	   			Ti.App.Properties.setString("lastLoggedUser", username.value );
     	   			username.blur();
     	   			password.blur();
@@ -184,7 +183,17 @@ boMobileAppLib.Login.LoginForm = function() {
         	Ti.App.fireEvent('loggedout');
         	return;
     	}  
-	});  	
+	}); 
+	
+	var u_cnt = boDb.getUsersCount();
+	// check if login_data empty
+	if ( u_cnt == 0 ) {
+		// init users
+		var u_init = boRemote.formUsersInit();
+		u_init.addEventListener("close", function(){
+			login_data = boCodes.Users.getUsersData();
+		});
+	}; 	
 		
 };
 		    

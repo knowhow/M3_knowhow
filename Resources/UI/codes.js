@@ -86,7 +86,7 @@ boCodes.Customers.getCustomerForm = function() {
 
 // get users data...
 boCodes.Users.getUsersData = function() {
-	return boDb.getUsersDataJSON();
+	return boDb.getUsersData();
 };
 
 

@@ -31,9 +31,9 @@ INSERT INTO "users" (name, pwd)  VALUES('semir', '44');
 
 DROP TABLE IF EXISTS "params";
 CREATE TABLE "params" (id INTEGER PRIMARY KEY, device_id TEXT, param_name TEXT, param_value TEXT);
-INSERT INTO "params" (device_id, param_name, param_value) VALUES('1', 'radius', '30');
-INSERT INTO "params" (device_id, param_name, param_value) VALUES('1', 'gps_use', '1');
-INSERT INTO "params" (device_id, param_name, param_value) VALUES('2', 'radius', '30');
-INSERT INTO "params" (device_id, param_name, param_value) VALUES('2', 'gps_use', '1');
+INSERT INTO "params" (device_id, param_name, param_value) VALUES('1', 'par_default_radius', '30');
+INSERT INTO "params" (device_id, param_name, param_value) VALUES('1', 'par_use_gps', '1');
+INSERT INTO "params" (device_id, param_name, param_value) VALUES('2', 'par_default_radius', '30');
+INSERT INTO "params" (device_id, param_name, param_value) VALUES('2', 'par_use_gps', '1');
 
 

@@ -58,7 +58,7 @@ boCodes.Customers.getCustomersInRadius = function( lon, lat, radius ) {
 	};
 	
 	if(radius==null){
-		radius = 20;
+		radius = Ti.App.par_default_radius;
 	};
 	
 	for(var i=0; i < data.length ; i++){

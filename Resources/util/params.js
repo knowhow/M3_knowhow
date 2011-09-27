@@ -3,23 +3,51 @@ var boParams = {};
 
 boParams.getParams = function() {
 	
-	// **global variables**
+	// **global params read from params db**
 	Ti.App.current_logged_user = "";
 	Ti.App.current_logged_user_id = 0;
-	Ti.App.current_device_id = 0;
+	
+	Ti.App.par_server_url = Ti.App.Properties.getString("par_server_url");
+	Ti.App.par_default_radius = Ti.App.Properties.getDouble('par_default_radius');
+	Ti.App.par_use_radius = Ti.App.Properties.getString('par_use_gps');
+	
+	// global params for device
 	Ti.App.current_device_id = Ti.Platform.id;
 	Ti.App.current_device_maddr = Ti.Platform.macaddress;
 	Ti.App.current_images_dir = Ti.Filesystem.applicationDataDirectory;
-	
-	Ti.App.current_server_url = Ti.App.Properties.getString("current_server_url");
 	
 };
 
 
 boParams.setParams = function() {
 	
-	Ti.App.Properties.setString("current_server_url", Ti.App.current_server_url );
-
+	var par_data = boDb.getParamsData();
+	var _par_name;
+	var _par_value;
+	
+	// check params by params_data
+	for (var i=0; i < par_data.length; i++) {
+		
+		_par_name = par_data[i].param_name;
+		_par_value = par_data[i].param_value;
+		
+		switch (_par_name)
+		{
+			// check and set params
+			case 'par_default_radius':
+				Ti.App.par_default_radius = Number(_par_value);
+				Ti.App.Properties.setDouble('par_default_radius', Number(_par_value));
+				break;
+			case 'par_use_gps':
+				Ti.App.par_use_radius = _par_value;
+				Ti.App.Properties.setString('par_use_gps', _par_value);
+				break;
+		};  
+	};
+	
+	// device params
+	Ti.App.Properties.setString("par_server_url", Ti.App.par_server_url );
+	
 };
 
 // open params form
@@ -50,7 +78,8 @@ boParams.paramsForm = function() {
 	var lbl_params = Ti.UI.createLabel({
 		color:'white',
 		text:'-',
-		left:'10%',
+		left:'7%',
+		width:'100%',
 		top:'10%',
 		font:{fontSize:'6pt'}
 	});
@@ -64,7 +93,14 @@ boParams.paramsForm = function() {
 		height:'10%'
 	});	
 	
-	lbl_params.text = "par 1: 11111111111" + boUtil.str.newRow(2) + "par 2: 2222222222222" + boUtil.str.newRow(2) + "par 3: 3333333333333" + boUtil.str.newRow(2);
+	var par_data = boDb.getParamsData();
+	var _txt = ""; 
+	
+	for (var i=0; i < par_data.length; i++) {
+		_txt += 'Ti.App.' + par_data[i].param_name + ' : ' + par_data[i].param_value + boUtil.str.newRow();
+	};
+	
+	lbl_params.text = _txt;
 	
 	// add controls to window 's_win'
 	scrl.add(lbl_params);

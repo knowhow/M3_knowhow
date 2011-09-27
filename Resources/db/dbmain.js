@@ -104,7 +104,7 @@ boDb.insertIntoParams = function( p_data ) {
 
 
 // get params data from db
-boDb.geParamsData = function(){
+boDb.getParamsData = function(){
 	
 	var aData = [];
 	var rows = oDb.execute('SELECT * FROM params ORDER BY id');

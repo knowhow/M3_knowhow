@@ -120,8 +120,8 @@ boRemote.formInit = function() {
 	});	
 	
 	// read global variables and set to lables...
-	if(Ti.App.current_server_url != undefined && Ti.App.current_server_url != null && Ti.App.current_server_url != ""){
-		lbl_server.text = Ti.App.current_server_url;
+	if(Ti.App.par_server_url != undefined && Ti.App.par_server_url != null && Ti.App.par_server_url != ""){
+		lbl_server.text = Ti.App.par_server_url;
 	};
 	
 	// add controls to window 's_win'
@@ -144,8 +144,8 @@ boRemote.formInit = function() {
 		var tmp_frm = boUtilForms.getStrValue();
 		tmp_frm.addEventListener("close", function(){
 			lbl_server.text = tmp_frm.item_value;
-			Ti.App.current_server_url = tmp_frm.item_value;
-			Ti.App.Properties.setString("current_server_url", tmp_frm.item_value);
+			Ti.App.par_server_url = tmp_frm.item_value;
+			Ti.App.Properties.setString("par_server_url", tmp_frm.item_value);
 		});
 	});
 	
@@ -232,15 +232,6 @@ boRemote.formInit = function() {
 		s_win.close();
 	});
 	
-	// listen for event ok
-	//Titanium.addEventListener('articlesSynchronized', function(){
-		//boRemote.synchro.synhroArticleImages();
-	//});
-	
-	//Titanium.addEventListener('articleImagesSynchronized', function(){
-		// do something after images synchronized...
-	//});
-	
 	// open 's_win' window
 	s_win.open();
 	
@@ -326,8 +317,8 @@ boRemote.formUsersInit = function() {
 	});	
 	
 	// read global variables and set to lables...
-	if(Ti.App.current_server_url != undefined && Ti.App.current_server_url != null && Ti.App.current_server_url != ""){
-		lbl_server.text = Ti.App.current_server_url;
+	if(Ti.App.par_server_url != undefined && Ti.App.par_server_url != null && Ti.App.par_server_url != ""){
+		lbl_server.text = Ti.App.par_server_url;
 	};
 	
 	// add controls to window 's_win'
@@ -346,8 +337,8 @@ boRemote.formUsersInit = function() {
 		var tmp_frm = boUtilForms.getStrValue();
 		tmp_frm.addEventListener("close", function(){
 			lbl_server.text = tmp_frm.item_value;
-			Ti.App.current_server_url = tmp_frm.item_value;
-			Ti.App.Properties.setString("current_server_url", tmp_frm.item_value);
+			Ti.App.par_server_url = tmp_frm.item_value;
+			Ti.App.Properties.setString("par_server_url", tmp_frm.item_value);
 		});
 	});
 	
@@ -393,7 +384,7 @@ boRemote.formUsersInit = function() {
 boRemote.synchro.synhroUsers = function() {
 	
 	var data;
-	var server_url = Ti.App.current_server_url;
+	var server_url = Ti.App.par_server_url;
 	// url to send request
 	var url = server_url + '/users';
 	
@@ -437,7 +428,7 @@ boRemote.synchro.synhroUsers = function() {
 boRemote.synchro.synhroCustomers = function() {
 	
 	var data;
-	var server_url = Ti.App.current_server_url;
+	var server_url = Ti.App.par_server_url;
 	// url to send request
 	var url = server_url + '/customers';
 	
@@ -482,7 +473,7 @@ boRemote.synchro.synhroCustomers = function() {
 boRemote.synchro.synhroParams = function() {
 	
 	var data;
-	var server_url = Ti.App.current_server_url;
+	var server_url = Ti.App.par_server_url;
 	// url to send request
 	var url = server_url + '/params/1';
 	
@@ -527,7 +518,7 @@ boRemote.synchro.synhroParams = function() {
 boRemote.synchro.synhroArticles = function() {
 	
 	var data;
-	var server_url = Ti.App.current_server_url;
+	var server_url = Ti.App.par_server_url;
 	// url to send request
 	var url = server_url + '/articles';
 	
@@ -574,7 +565,7 @@ boRemote.synchro.synhroArticleImages = function() {
 	// Get article JSON
 	var art_data = boCodes.Articles.getArticles();
 	
-	var server_url = Ti.App.current_server_url;
+	var server_url = Ti.App.par_server_url;
 	// per example: http://localhost:3333/article_pict/3013
 	var _url = server_url + '/article_image/';
 	var _srv_url;

@@ -443,9 +443,12 @@ boRemote.get.synhroUsers = function() {
 // Synchronize customers, main function 
 boRemote.put.synhroCustomers = function() {
 	
-	var data = boCodes.Customers.getCustomers();
+	var data = JSON.stringify(boCodes.Customers.getCustomers());
+	//data = JSON.parse(data);
+	
 	var server_url = Ti.App.par_server_url;
 	// url to send request
+
 	var url = server_url + '/customers/update';
 	// create http client
 	var xhr = Ti.Network.createHTTPClient();
@@ -458,6 +461,7 @@ boRemote.put.synhroCustomers = function() {
 		
 	//xhr.setRequestHeader("Content-Type","application/json; charset=utf-8");
 	xhr.open('POST', url);
+	xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
 	xhr.send(data);
 
 };

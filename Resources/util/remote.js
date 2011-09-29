@@ -440,6 +440,33 @@ boRemote.get.synhroUsers = function() {
 };
 
 
+// Synchronize purchases, main function 
+boRemote.put.synhroPurchases = function() {
+	
+	var data = JSON.stringify(boDb.getPurcasesData(Ti.App.current_logged_user_id));
+	//data = JSON.parse(data);
+	var server_url = Ti.App.par_server_url;
+	// url to send request
+
+	var url = server_url + '/purchases/update';
+	// create http client
+	var xhr = Ti.Network.createHTTPClient();
+		
+	xhr.onload = function()
+	{	
+		Ti.App.fireEvent("purchasePosted", { result:1, count:data.length });
+		Ti.API.info(this.readyState);
+    	Ti.API.info(this.responseText);
+   	};
+		
+	//xhr.setRequestHeader("Content-Type","application/json; charset=utf-8");
+	xhr.open('POST', url);
+	xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+	xhr.send(data);
+
+};
+
+
 // Synchronize customers, main function 
 boRemote.put.synhroCustomers = function() {
 	
@@ -455,6 +482,7 @@ boRemote.put.synhroCustomers = function() {
 		
 	xhr.onload = function()
 	{	
+		Ti.App.fireEvent("customersPosted", { result:1, count:data.length });
 		Ti.API.info(this.readyState);
     	Ti.API.info(this.responseText);
    	};
@@ -518,7 +546,7 @@ boRemote.get.synhroParams = function() {
 	var data;
 	var server_url = Ti.App.par_server_url;
 	// url to send request
-	var url = server_url + '/params/1';
+	var url = server_url + '/params/' + Ti.App.current_device_id;
 	
 	// create http client
 	var xhr = Ti.Network.createHTTPClient();

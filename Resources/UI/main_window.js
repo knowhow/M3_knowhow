@@ -182,7 +182,7 @@ var mainWindow = function() {
 		
 		var alertDialog = Ti.UI.createAlertDialog({
             title:'Pitanje',
-            message:'Da li zaista želite izbrisati podatke ?',
+            message:'Da li zaista želite poslati podatke ?',
             buttonNames:['Da','Ne'],
             cancel:1
         });
@@ -194,7 +194,19 @@ var mainWindow = function() {
             }
   			
   			boRemote.put.synhroCustomers();
+  			
+  			Ti.App.addEventListener("customersPosted", function(e){
+  			
+  				Ti.App.removeEventListener("customersPosted");
+  				
+  				boRemote.put.synhroPurchases();
   
+  				Ti.App.addEventListener("purchasePosted", function(e){
+  					Ti.App.removeEventListener("purchasePosted");
+  				});
+  				
+  			});
+  			
 			//boDb.deleteAllPurchases();
 	
         });

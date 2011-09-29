@@ -423,7 +423,8 @@ boDb.getPurcasesData = function( _user_id ){
   			user_id: rows.fieldByName('user_id'),
   			items_total: rows.fieldByName('items_total'),
   			doc_valid: rows.fieldByName('doc_valid'),
-  			doc_notes: rows.fieldByName('doc_notes')
+  			doc_notes: rows.fieldByName('doc_notes'),
+  			items: boDb.getPurchaseItemsData(rows.fieldByName('doc_no'))
   			});
 
 		rows.next();
@@ -442,6 +443,7 @@ boDb.getPurchaseItemsData = function( purchase_no ){
 	var rows = oDb.execute('SELECT * FROM doc_items WHERE doc_no = ?', purchase_no);
 	while (rows.isValidRow()) {
   		aData.push({ 
+  			doc_no: rows.fieldByName('doc_no'),
   			doc_item_no: rows.fieldByName('doc_item_no'), 
   			article_id: rows.fieldByName('art_id'), 
   			article_quantity: rows.fieldByName('quantity') 

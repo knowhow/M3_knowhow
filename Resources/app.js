@@ -60,7 +60,7 @@ Ti.App.addEventListener('loggedin',function(){
     M3.Main.mainWindow();
 });
 
-// ## Listen to other events
+// ## Listen for other events
 //
 // Listen for eventListener `logincanceled`.
 // When we fireup this event app tend to close. But, currently, this function not work correcty yet.

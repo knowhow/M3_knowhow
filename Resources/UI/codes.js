@@ -9,10 +9,10 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-// ## Main codes module
+// ## Code's module
 
 
-// Set's the global namespace used in this module
+// Set the global namespace for this module
 M3.Codes = {};
 
 // Set's articles namespace

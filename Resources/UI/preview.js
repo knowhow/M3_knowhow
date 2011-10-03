@@ -9,7 +9,7 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-// ## Main preview module
+// ## Preview module
 
 // create global namespace for this module
 M3.Preview = {};
@@ -28,13 +28,11 @@ M3.Preview.PO = {};
 
 M3.Preview.PO.getPurchaseOrderPreview = function( cust_data, items_data, document_no, doc_date, doc_valid, doc_total, doc_notes ) {
 			
-	// create window
 	var ordWin = Ti.UI.createWindow({
 		backgroundColor:"white",
 		title:"Pregled narudžbe"
 	});		
 	
-	// create table view to show data
 	var ord_tbl_view = Ti.UI.createTableView({
 		headerTitle:'Lista artikala:',
 		maxRowHeight:20,
@@ -44,7 +42,6 @@ M3.Preview.PO.getPurchaseOrderPreview = function( cust_data, items_data, documen
 		height:'15%'
 	});
 		
-	// label document
 	var ord_lbl_document = Ti.UI.createLabel({
 		text:'Dokument: xxxx',
 		top:'1%',
@@ -53,7 +50,6 @@ M3.Preview.PO.getPurchaseOrderPreview = function( cust_data, items_data, documen
 		font:{fontFamily:'Helvetica',fontWeight:'normal',fontSize:'7pt'}
 	});
 	
-	// label customer
 	var ord_lbl_customer = Ti.UI.createLabel({
 		text:'Partner: xxxx',
 		top:'3%',
@@ -112,15 +108,7 @@ M3.Preview.PO.getPurchaseOrderPreview = function( cust_data, items_data, documen
 	if(cust_data != null && cust_data[0].id != null){
 		ord_lbl_customer.text = 'Partner: ' + cust_data[0].id + ' - ' + cust_data[0].desc + ', ' + cust_data[0].addr;
 	};
-	
-	
-	// show items on orders window
 		
-	// data: items_data
-	// items_data.article_id
-	// items_data.article_desc
-	// items_data.article_quantity
-	
 	var tbl_data = [];
 	var countItems = 1;
 	var totalQt = 0;
@@ -166,7 +154,6 @@ M3.Preview.PO.getPurchaseOrderPreview = function( cust_data, items_data, documen
 		doc_total = totalQt;
 	};
 	
-	// label total
 	var ord_lbl_doc_total = Ti.UI.createLabel({
 		text:'Total: ' + doc_total,
 		top:'20.5%',
@@ -175,14 +162,12 @@ M3.Preview.PO.getPurchaseOrderPreview = function( cust_data, items_data, documen
 		font:{fontFamily:'Helvetica',fontWeight:'bold',fontSize:'10pt'}
 	});
 	
-	// controls view - button controls, plus, minus, accept
   	var controls_view = Ti.UI.createView({
  		bottom:0,
  		height:'12%',
  		backgroundColor:"black"
  	});
 
-	// accept button
  	var ctrl_ok_button = Ti.UI.createButton({
  		title:'Potvrdi',  
      	right:'2%',
@@ -193,7 +178,6 @@ M3.Preview.PO.getPurchaseOrderPreview = function( cust_data, items_data, documen
         font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
  	});
 		
-	// accept button
  	var ctrl_cancel_button = Ti.UI.createButton({
  		title:'< Ponisti',  
     	left:'2%',
@@ -239,14 +223,12 @@ M3.Preview.PO.getPurchaseOrderPreview = function( cust_data, items_data, documen
 		ctrl_cancel_button.title = "<";
 	};
 	
-	// control accept button event
  	ctrl_ok_button.addEventListener('click',function(e){  
     	ordWin.close();
     	ordWin.notes = ord_notes.value;
     	ordWin.accepted = 1;
 	});
 		
-	// control accept button event
  	ctrl_cancel_button.addEventListener('click',function(e){  
     	ordWin.close();	
     	ordWin.notes = "";

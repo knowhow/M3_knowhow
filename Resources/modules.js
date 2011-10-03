@@ -9,9 +9,8 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-// ## Central place to load all modules of app
+// ## Central place to load all individual module's
 
-// load other modules
 Ti.include("db/dbmain.js");
 
 Ti.include("util/forms.js");

@@ -9,7 +9,7 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-// ## The main customers module
+// ## Customer's module
 
 
 // set's the global space for this module
@@ -32,7 +32,7 @@ M3.Customers.customerList = function() {
 	Ti.App.current_customer_tel_1 = null;
 	Ti.App.current_customer_tel_2 = null;
 	
-	// open the customer form
+	// open the customer window
 	var customer_win = null;
 	customer_win = M3.Customers.customersForm();
 			
@@ -43,6 +43,7 @@ M3.Customers.customerList = function() {
 // Open's the main customer form with active customers.
 // Activate the GPS system for searching.
 // Set's the main options for new Purchase, editing etc...
+
 M3.Customers.customersForm = function(){
 		
 	// get customers data

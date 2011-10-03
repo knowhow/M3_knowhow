@@ -9,18 +9,26 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-// ## Main util module of app
+// ## Util's module
+// This module have basic routines for strings, num's, math, etc...
 
-// set's the global namespace
+
+// Set the global namespace for this module
 M3.Util = {};
 	
-
+// Crate specific namespaces
 M3.Util.Num = {};
 M3.Util.Str = {};
 M3.Util.DateT = {};
 M3.Util.MathModule = {};
 	
+// ## String methods
+
 // rPad string
+// * input_string - string to input
+// * length - lenght for padding
+// * padding_character - which character will be used for padding, default is EMPTY
+
 M3.Util.Str.rPad = function( input_string, length, padding_character ) {
 	var s = input_string;
 	if(padding_character == null){
@@ -33,6 +41,10 @@ M3.Util.Str.rPad = function( input_string, length, padding_character ) {
 };
 
 // lPad string
+// * input_string - string to input
+// * length - lenght for padding
+// * padding_character - which character will be used for padding, default is EMPTY
+
 M3.Util.Str.lPad = function( input_string, length, padding_character ) {
 	var s = input_string;
 	if(padding_character == null){
@@ -44,7 +56,9 @@ M3.Util.Str.lPad = function( input_string, length, padding_character ) {
     return s;
 }
 
-// returns new row 
+// Return's new row code
+// If `count` is represent, this function will generate count rows, eg: **newRow(5)** will generate five new rows.
+ 
 M3.Util.Str.newRow = function(count){
 	var s = "";
 	if(count == null){
@@ -56,6 +70,11 @@ M3.Util.Str.newRow = function(count){
 	return s;
 };
 	
+
+// ## Date-Time method's
+
+// Return's current date in human readable format 
+//		day.month.year
 	
 M3.Util.DateT.getCurrentDate = function () {
 		
@@ -68,7 +87,11 @@ M3.Util.DateT.getCurrentDate = function () {
  
 };
 
-// get ctrl position based on device screen proportion
+// ## Math method's
+
+
+// Get control position based on device screen proportion
+
 M3.Util.MathModule.getControlPostitionWidth = function( percentage ) {
 	// standard device proportions
 	var dev_widht = Ti.Platform.displayCaps.platformWidth;
@@ -76,7 +99,8 @@ M3.Util.MathModule.getControlPostitionWidth = function( percentage ) {
 	return result;
 };
 
-// get ctrl position based on device screen proportion
+// Get ctrl position based on device screen proportion
+
 M3.Util.MathModule.getControlPostitionHeight = function( percentage ) {
 	// standard device proportions
 	var dev_height = Ti.Platform.displayCaps.platformHeight;
@@ -85,7 +109,9 @@ M3.Util.MathModule.getControlPostitionHeight = function( percentage ) {
 };
 
 
-// check for valid num
+// ## Number method's
+
+// This function check for valud numeric
 M3.Util.Num.isValidNum = function(val){
 	var found=0;
   	var i=0;
@@ -120,3 +146,4 @@ M3.Util.Num.isValidNum = function(val){
 
   	return true;
 };
+

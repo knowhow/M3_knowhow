@@ -1,4 +1,4 @@
-Mobilni klijent za izdavanje narudžbi knowhow ERP
+Mobile client for tracking purchase orders.
 
-Pogledaj dokumentaciju:
+Complete documentation is here:
 http://knowhow.github.com/M3_knowhow

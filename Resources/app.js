@@ -9,7 +9,7 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-// #### Starting point of application
+// ## Starting point of application
 // 
 // In this module global variables are set, main db is opened and we opening Login form.
 // If user enter name and pwd correctly we going to main form.
@@ -19,12 +19,16 @@
 Titanium.UI.setBackgroundColor('#000');
 
 // Create main namespace. The M3 will be used for every module in app.
-// Like M3.Remote, M3.DB, M3.Util, etc...
+// 		M3.Remote
+// 		M3.DB
+// 		M3.Util
+// 		etc...
+// See other modules for examples of usage.
 var M3 = {};
 
 // Including modules.js. 
 // In modules.js we call other modules and their js files.
-// See *modules.js* for details. 
+// See `modules.js` source for details. 
 Ti.include("modules.js");
 
 // Set's the current user parameters.
@@ -33,7 +37,7 @@ Ti.App.current_logged_user = "";
 Ti.App.current_logged_user_id = 0;
 
 // Get global params of application. 
-// See *params.js* for details.
+// See `params.js` source for details.
 M3.Params.getParams();
 
 // Open main database. 
@@ -44,25 +48,29 @@ oDb = M3.DB.openDB();
 // Open's the main login form before of any using of app
 M3.Login.loginForm();
 
-// Listen to eventListener 'loggedout', if this event fire's login form open's again
+// Listen to eventListener `loggedout`.
+// When we fireup this event through the loginForm it will execute code bellow and we will bring loginForm again
 Ti.App.addEventListener('loggedout',function(){
    M3.Login.loginForm();
 });
 
-// Listen for eventListener 'loggedin', if this event fire's main windos show's
+// Listen for eventListener `loggedin`. 
+// When we fireup this event through the loginForm it will execute code bellow and we call the mainWindow of the application.
 Ti.App.addEventListener('loggedin',function(){
-    // open's the main form of the app
     M3.Main.mainWindow();
 });
 
-// listen to other event's : to do
+// ## Listen to other events
+//
+// Listen for eventListener `logincanceled`.
+// When we fireup this event app tend to close. But, currently, this function not work correcty yet.
 Ti.App.addEventListener('logincanceled',function(){
 });
 
-// listen for app close event
+// listen for eventListener `close`.
+// If app close, then we closes main db too.
 Ti.App.addEventListener('close',function(e)
 {
-    // if app close, close the db
     if ( oDb ) {
         oDb.close();
     }

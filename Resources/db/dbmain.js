@@ -9,18 +9,107 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-// ## This is the main db module of app
+// ## Main database module of the app.
+// This mobile app currently work with sqlite db. 
 
-
-// Set's the global namespace for db module
+// We will set **M3.DB** as global namespace for this database module.
 M3.DB = {};	
 
-/*
- * USERS DB methods
- */
+
+// ## Main db method's
+
+// Create db `purchase` and open database.
+// This method return's opened database.
+// 
+// Because, db is opened at the app start (look at `app.js`) we use db methods like this:
+// 		oDb.execute(sql_query);
+// and so...
+
+M3.DB.openDB = function() {
 	
-// insert data into table 'users'
-// 'u_data' is JSON object or array object
+	// This will open database `purchase` if exist.
+	// If not exist database will be created and opened.
+	
+	var db = Titanium.Database.open('purchase');
+	
+	// Create table `docs`
+	//
+	// * **doc_no** : document number (auto increment field)
+	// * **doc_date** : document date 
+	// * **cust_id** : customer id, from table **customers**
+	// * **doc_valid** : document valid, **0** not valid **1** valid
+	// * **items_total** : total amount of items quantity from the table **doc_items**
+	// * **user_id** : user id based on current logged user id
+	// * **doc_notes** : document note's
+	 
+	db.execute('CREATE TABLE IF NOT EXISTS docs (doc_no INTEGER PRIMARY KEY, doc_date DATE, cust_id INT, doc_valid INT, items_total REAL, user_id INT, doc_notes TEXT)');
+	
+	// Create table `doc_items`
+	// 
+	// * **doc_no** : document number, link with table **docs**
+	// * **doc_item_no** : document item number
+	// * **art_id** : article id, from table **articles**
+	// * **quantity** : article quantity
+	
+	db.execute('CREATE TABLE IF NOT EXISTS doc_items (doc_no INT, doc_item_no INT, art_id TEXT, quantity REAL)');
+	
+	// Create table `customers`
+	//
+	// * **id** : customer id (auto increment field)
+	// * **desc** : customer description
+	// * **addr** : customer address
+	// * **city** : customer city
+	// * **postcode** : postal code of customer
+	// * **tel1** : telephone number 1
+	// * **tel2** : telephone number 2
+	// * **user_id** : user id, every customer has unique user
+	// * **lon** : longitude position of customer
+	// * **lat** : latitude position of customer 
+	
+	db.execute('CREATE TABLE IF NOT EXISTS customers (id INTEGER PRIMARY KEY, desc TEXT, addr TEXT, city TEXT, postcode TEXT, tel1 TEXT, tel2 TEXT, user_id INT, lon REAL, lat REAL)'); 
+	
+	// Create table `articles`
+	//
+	// * **id** : article id
+	// * **desc** : article description
+	// * **price** : price of the article
+	// * **image_name** : image file name
+	// * **image_data** : binary data of article image
+	
+	db.execute('CREATE TABLE IF NOT EXISTS articles (id TEXT, desc TEXT, price REAL, image_name TEXT, image_data BLOB)'); 
+	
+	// Create table `params`
+	//
+	// * **id** : param id (auto increment field)
+	// * **device_id** : every param will be set for specific device_id
+	// * **param_name** : name, eg: par_radius
+	// * **param_value** : value, eg: 300
+	
+	db.execute('CREATE TABLE IF NOT EXISTS params (id INTEGER PRIMARY KEY, device_id TEXT, param_name TEXT, param_value TEXT)'); 
+	
+	// Create table `params`
+	// 
+	// * **id** : user id (auto increment field)
+	// * **name** : user name to use in app
+	// * **pwd** : user password to use in app
+	
+	db.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, pwd TEXT)'); 
+
+	return db;
+};
+
+
+// Alter DB method, currently not implemented
+M3.DB.alterDB = function(oDb){
+	return null;
+};
+
+
+// ## Users DB methods:
+	
+// Insert data into table **users**
+// **u_data** is JSON object or array object
+
 M3.DB.insertIntoUsers = function( u_data ) {
 	
 	var _name;
@@ -37,7 +126,8 @@ M3.DB.insertIntoUsers = function( u_data ) {
      
 };
 
-// get all users data from db into JSON object
+// Get all users data from table **users** into JSON object
+
 M3.DB.getUsersData = function(){
 	
 	var aData = [];
@@ -58,7 +148,8 @@ M3.DB.getUsersData = function(){
 };
 
 
-// get users count 
+// Get users count 
+
 M3.DB.getUsersCount = function(){
 	var row = oDb.execute('SELECT COUNT(*) AS cnt FROM users');
 	var res = row.fieldByName('cnt');
@@ -66,7 +157,8 @@ M3.DB.getUsersCount = function(){
 };
 
 
-// get user name from table 'users' by given 'u_id'
+// Get user name from table **users** by given **u_id** (user id)
+
 M3.DB.getUserNameById = function( u_id ){
 	var row = oDb.execute('SELECT name FROM users WHERE id = ?', u_id);
 	var res = row.fieldByName('name');
@@ -74,31 +166,33 @@ M3.DB.getUserNameById = function( u_id ){
 };
 
 
-// get users array from table 'users' by given 'u_id'
+// Get users from table **users** by given **u_id** into array
+
 M3.DB.getUserArrayById = function( u_id ){
 	var row = oDb.execute('SELECT * FROM users WHERE id = ?', u_id);
 	var res = [{ id: row.fieldByName('id'), name: row.fieldByName('name'), pwd: row.fieldByName('pwd') }];
 	return res;
 };
 
-// delete user by 'u_id' from table 'users'
+// Delete user by **u_id** from table **users**
+
 M3.DB.deleteUserById = function( u_id ){
 	oDb.execute('DELETE FROM users WHERE id = ?', u_id);
 };
 
-// delete all users from table 'users'
+// Delete all users from table **users**
+
 M3.DB.deleteUsers = function(){
 	oDb.execute('DELETE FROM users');
 };
 
 
 
-/*
- * PARAMS methods
- */
+// ## Params DB methods:
 
-// insert data into tale 'params'
-// 'p_data' is JSON object or array object
+// Insert data into table **params**.
+// **p_data** is JSON object or array object.
+
 M3.DB.insertIntoParams = function( p_data ) {
 	
 	var _device_id;
@@ -118,8 +212,9 @@ M3.DB.insertIntoParams = function( p_data ) {
 };
 
 
-// Get all params data from table 'params'
+// Get all params data from table **params**
 // The result aData is JSON object
+
 M3.DB.getParamsData = function(){
 	
 	var aData = [];
@@ -141,6 +236,7 @@ M3.DB.getParamsData = function(){
 
 
 // Get params count
+
 M3.DB.getParamsCount = function(){
 	var row = oDb.execute('SELECT COUNT(*) AS cnt FROM params');
 	var res = row.fieldByName('cnt');
@@ -148,7 +244,8 @@ M3.DB.getParamsCount = function(){
 };
 
 
-// Get param value from table 'params' by given 'dev_id' (device id) and 'p_name' (param name)
+// Get param value from table **params** by given **dev_id** (device id) and **p_name** (param name)
+
 M3.DB.getParamValueById = function( dev_id, p_name ){
 	var row = oDb.execute('SELECT param_value FROM params WHERE device_id = ? AND param_name = ?', dev_id, p_name);
 	var res = row.fieldByName('param_value');
@@ -156,18 +253,18 @@ M3.DB.getParamValueById = function( dev_id, p_name ){
 };
 
 
-// Delete all params from table 'params'
+// Delete all params from table **params**
+
 M3.DB.deleteParams = function(){
 	oDb.execute('DELETE FROM params');
 };
 
 
-/*
- * ARTICLES DB methods
- */
+// ## Articles DB methods
 
-// Insert data into table 'articles'
-// 'article_data' is JSON object or array object
+// Insert data into table **articles**
+// **article_data** is JSON object or array object
+
 M3.DB.insertIntoArticles = function( article_data ) {
 	
 	var _id;
@@ -191,15 +288,16 @@ M3.DB.insertIntoArticles = function( article_data ) {
 };
 
 
-// Update article image by given '_art_id' (article id) and '_image_data' (binary data of the image)
+// Update article image by given **_art_id** (article id) and **_image_data** (binary data of the image)
+
 M3.DB.updateArticleImage = function( _art_id, _image_data ) {
-	//alert(_image_data);
-	//_image_data = "X'" + _image_data + "'";
 	oDb.execute('UPDATE articles SET image_data = ? WHERE id = ?', _image_data, _art_id );
 };
 
 
-// Get article's data from table 'articles' ordered by field ID
+// Get article data from table **articles** ordered by field id
+// **aData** will be JSON object.
+
 M3.DB.getArticleData = function(){
 	
 	var aData = [];
@@ -223,6 +321,7 @@ M3.DB.getArticleData = function(){
 
 
 // Get article's count
+
 M3.DB.getArticleCount = function(){
 	var row = oDb.execute('SELECT COUNT(*) AS cnt FROM articles');
 	var res = row.fieldByName('cnt');
@@ -230,47 +329,50 @@ M3.DB.getArticleCount = function(){
 };
 
 
-// Get article desc from table 'articles' by given 'article_id'
-M3.DB.getArticleDescById = function( article_id ){
-	var row = oDb.execute('SELECT desc FROM articles WHERE id = ?', article_id);
+// Get article description from table **articles** by given **_art_id**
+
+M3.DB.getArticleDescById = function( _art_id ){
+	var row = oDb.execute('SELECT desc FROM articles WHERE id = ?', _art_id);
 	var res = row.fieldByName('desc');
 	return res;
 };
 
 
-// Get article array from table 'articles' by given 'article_id'
-M3.DB.getArticleArrayById = function( article_id ){
-	var row = oDb.execute('SELECT * FROM articles WHERE id = ?', article_id);
+// Get article data from table **articles** by given '_art_id' into array
+
+M3.DB.getArticleArrayById = function( _art_id ){
+	var row = oDb.execute('SELECT * FROM articles WHERE id = ?', _art_id);
 	var res = [{ id: row.fieldByName('id') ,desc: row.fieldByName('desc'), price: row.fieldByName('price'), pict: row.fieldByName('image_name') }];
 	return res;
 };
 
-// Get article field 'image_data' from table 'articles' by given 'article_id' 
-M3.DB.getArticleImageById = function( article_id ){
-	var row = oDb.execute('SELECT image_data FROM articles WHERE id = ?', article_id);
+// Get article field **image_data** from table **articles** by given **_art_id**
+ 
+M3.DB.getArticleImageById = function( _art_id ){
+	var row = oDb.execute('SELECT image_data FROM articles WHERE id = ?', _art_id);
 	var res = row.field(0);
 	return res;
 };
 
 
-// Delete article from table 'articles' by given 'article_id'
-M3.DB.deleteArticleById = function( article_id ){
-	oDb.execute('DELETE FROM articles WHERE id = ?', article_id);
+// Delete article from table **articles** by given **_art_id**
+
+M3.DB.deleteArticleById = function( _art_id ){
+	oDb.execute('DELETE FROM articles WHERE id = ?', _art_id);
 };
 
-// Delete all article's from table 'articles'
+// Delete all article's from table **articles**
+
 M3.DB.deleteArticles = function(){
 	oDb.execute('DELETE FROM articles');
 };
 
 
 
-/*
- * CUSTOMERS DB methods
- */
+// Customer's DB method's:
 
-// Insert data into customers.
-// 'cust_data' is JSON object or array object
+// Insert data into table **customers**.
+// **cust_data** is JSON object or array object
 M3.DB.insertIntoCustomers = function( cust_data ) {
 	
 	var _desc;
@@ -281,7 +383,8 @@ M3.DB.insertIntoCustomers = function( cust_data ) {
 	var _tel2;
 	var _lon;
 	var _lat;
-	// get the 'id' of the last logged user
+	
+	// Get the **id** of the last logged user variable
 	var _user_id = Ti.App.current_logged_user_id;
 	
 	for (var i=0; i < cust_data.length; i++) {
@@ -302,8 +405,8 @@ M3.DB.insertIntoCustomers = function( cust_data ) {
 };
 
 
-// Update table 'customers' by given 'cust_data'.
-// 'cust_data' is JSON object or array object
+// Update table **customers** by given **cust_data**.
+// **cust_data** is JSON object or array object
 M3.DB.updateCustomers = function( cust_data ) {
 
 	var _desc;
@@ -314,7 +417,8 @@ M3.DB.updateCustomers = function( cust_data ) {
 	var _tel2;
 	var _lon;
 	var _lat;
-	// get the 'user_id' by the last logged user
+	
+	// Get the **id** of the last logged user variable
 	var _user_id = Ti.App.current_logged_user_id;
 	
 	for (var i=0; i < cust_data.length; i++) {
@@ -336,8 +440,9 @@ M3.DB.updateCustomers = function( cust_data ) {
 };
 
 
-// Get customer data from table 'customers' by given '_user_id'
-// 'aData' is JSON object
+// Get all customers data from table **customers** by given **_user_id**
+// **aData** is JSON object
+
 M3.DB.getCustomerData = function( _user_id ){
 	
 	var aData = [];
@@ -364,7 +469,8 @@ M3.DB.getCustomerData = function( _user_id ){
 };
 
 
-// Get customer desc from table 'customers' by given '_cust_id'
+// Get customer description from table **customers** by given **_cust_id**.
+
 M3.DB.getCustomerById = function( _cust_id ){
 	var row = oDb.execute('SELECT * FROM customers WHERE id = ?', _cust_id);
 	var res = row.fieldByName('desc');
@@ -372,7 +478,8 @@ M3.DB.getCustomerById = function( _cust_id ){
 };
 
 
-// Get customer array from table 'customers' by given '_cust_id'
+// Get customer data from table **customers** by given **_cust_id** into array.
+
 M3.DB.getCustomerArrayById = function( _cust_id ){
 	var row = oDb.execute('SELECT * FROM customers WHERE id = ?', _cust_id);
 	var res = [{ id: row.fieldByName('id') ,desc: row.fieldByName('desc'), city: row.fieldByName('city'), postcode: row.fieldByName('postcode'), addr: row.fieldByName('addr'), lat: row.fieldByName('lat'), lon: row.fieldByName('lon') }];
@@ -381,6 +488,7 @@ M3.DB.getCustomerArrayById = function( _cust_id ){
 
 
 // Get customers count
+
 M3.DB.getCustomersCount = function(){
 	var row = oDb.execute('SELECT COUNT(*) AS cnt FROM customers');
 	var res = row.fieldByName('cnt');
@@ -388,18 +496,17 @@ M3.DB.getCustomersCount = function(){
 };
 
 
-// Delete all customers from table 'customers'
+// Delete all customers from table **customers**
+
 M3.DB.deleteCustomers = function(){
 	oDb.execute('DELETE FROM customers');
 };
 
 
-/*
- * PURCHASE DB methods
- */
+// ## Purchase's DB method's:
 
-// Get doc's data from table 'docs' by given '_user_id' (all doc's for the user)
-// 'aData' is JSON object
+// Get document's data from table **docs** by given **_user_id** (all document's for the user)
+// **aData** is JSON object
 M3.DB.getPurchasesData = function( _user_id ){
 	
 	var aData = [];
@@ -428,8 +535,9 @@ M3.DB.getPurchasesData = function( _user_id ){
 };
 
 
-// Get purchase items data from table 'doc_items' by given '_doc_no' (doc_no)
-// 'aData' is JSON object
+// Get purchase items data from table **doc_items** by given **_doc_no** (document number)
+// **aData** is JSON object
+
 M3.DB.getPurchaseItemsData = function( _doc_no ){
 	
 	var aData = [];
@@ -449,66 +557,77 @@ M3.DB.getPurchaseItemsData = function( _doc_no ){
 };
 
 
-// Cancel document procedure, set's the status of document to 'doc_valid = 0' where doc_no is '_doc_no' 
+// Cancel document procedure, set's the status of document to **doc_valid = 0** where document number is **_doc_no** 
+
 M3.DB.cancelPurchase = function( _doc_no ){
 	oDb.execute('UPDATE docs SET doc_valid = 0 WHERE doc_no = ?', _doc_no);
 };
 
-// Activate document procedure, set's the status of document to 'doc_valid = 1' where doc_no is '_doc_no' 
+// Activate document procedure, set's the status of document to **doc_valid = 1** where document number is **_doc_no**
+ 
 M3.DB.activatePurchase = function( _doc_no ){
 	oDb.execute('UPDATE docs SET doc_valid = 1 WHERE doc_no = ?', _doc_no);
 };
 
 
-// Delete document from table's 'docs' and 'doc_items' by given '_doc_no'
+// Delete document from table's: 
+// * **docs**
+// * **doc_items** 
+// by given **_doc_no**
+
 M3.DB.deleteFromPurchases = function( _doc_no ){
 	oDb.execute('DELETE FROM docs WHERE doc_no = ?', _doc_no);
 	oDb.execute('DELETE FROM doc_items WHERE doc_no = ?', _doc_no);	
 };
 
-// Delete all data from tables 'docs' and 'doc_items'
+// Delete all data from table's: 
+// * **docs**
+// * **doc_items**
+
 M3.DB.deleteAllPurchases = function(){
 	oDb.execute('DELETE FROM docs');
 	oDb.execute('DELETE FROM doc_items');	
 };
 
 
-// Insert data into tables 'docs' and 'doc_items'
-// * 'user_id' last logged user id
-// * 'cust_id' customer id
-// * 'd_valid' document valid 0 or 1
-// * 'd_notes' document notes
-// * 'items_data' JSON object of article items
+// Insert data into tables **docs** and **doc_items**
+// * 'user_id' : last logged user id
+// * 'cust_id' : customer id
+// * 'd_valid' : document valid 0 or 1
+// * 'd_notes' : document notes
+// * 'items_data' : JSON object of article items
+
 M3.DB.insertIntoPurchases = function( user_id, cust_id, d_valid, d_notes, items_data ) {
 	
 	var tmp_qt = 0;
 	
-	// First check data
+	// First check data in `items_data` JSON object
 	for (var x=0; x < items_data.length; x++) {
 		tmp_qt += items_data[x].article_quantity;
 	};
 	
-	// If there is no data in items, no need to insert data into tables 'docs' and 'doc_items'
+	// If there is no data, no need to run insert procedures into tables **docs** and **doc_items**
 	if(tmp_qt == 0){
 		alert("Nema stavki za ažuriranje!");
 		return;
 	};
 	
-	// 'doc_date' will be current date
+	// **doc_date** will be current date
 	var _d_date = Date();
+	
 	var _cust_id = cust_id;
 	var _d_valid = d_valid;
 	var _d_notes = d_notes;
 	var _user_id = user_id;
 	
-	// insert data into main table 'docs'
+	// Insert data into main table 'docs'
 	oDb.execute('INSERT INTO docs (doc_date, cust_id, doc_valid, user_id, doc_notes) VALUES(?,?,?,?,?)', _d_date, _cust_id, _d_valid, _user_id, _d_notes );
  	
- 	// return the 'doc_no' value because of PRIMARY KEY
+ 	// return the **doc_no** value because of it's PRIMARY KEY
  	var d_last = oDb.execute("SELECT * FROM docs ORDER BY doc_no DESC LIMIT 1");
 	var _d_no = Number( d_last.fieldByName('doc_no')); 
 	
-	// close queries
+	// close query
 	d_last.close();
 	
 	var _d_item_no = 0;
@@ -516,7 +635,7 @@ M3.DB.insertIntoPurchases = function( user_id, cust_id, d_valid, d_notes, items_
 	var _quantity = 0;
 	var _total = 0;
 	
-    // now insert into doc_items, loop through the 'items_data'
+    // now insert into **doc_items**, loop through the **items_data**
     for (var i=0; i < items_data.length; i++) {
     	
     	_art_id = items_data[i].article_id;
@@ -525,53 +644,13 @@ M3.DB.insertIntoPurchases = function( user_id, cust_id, d_valid, d_notes, items_
     	
     	// only if quantity <> 0
     	if(_quantity != 0){
-    		// add to item counter
     		_d_item_no++;
-    		// insert item data
-			oDb.execute('INSERT INTO doc_items (doc_no, doc_item_no, art_id, quantity) VALUES(?,?,?,?)', _d_no, _d_item_no, _art_id, _quantity );
+    		oDb.execute('INSERT INTO doc_items (doc_no, doc_item_no, art_id, quantity) VALUES(?,?,?,?)', _d_no, _d_item_no, _art_id, _quantity );
 		};
     }; 
     
-    // update total in table 'docs'
+    // update total in table **docs**
     oDb.execute('UPDATE docs SET items_total = ? WHERE doc_no = ?', _total, _d_no);
  
 };
-
-
-/*
- * MAIN DB methods
- */
-
-// create and open db
-M3.DB.openDB = function() {
-	
-	var db = Titanium.Database.open('purchase');
-	
-	// table 'docs'
-	db.execute('CREATE TABLE IF NOT EXISTS docs (doc_no INTEGER PRIMARY KEY, doc_date DATE, cust_id INT, doc_valid INT, items_total REAL, user_id INT, doc_notes TEXT)');
-	
-	// table 'doc_items'
-	db.execute('CREATE TABLE IF NOT EXISTS doc_items (doc_no INT, doc_item_no INT, art_id TEXT, quantity REAL)');
-	
-	// table 'customers'
-	db.execute('CREATE TABLE IF NOT EXISTS customers (id INTEGER PRIMARY KEY, desc TEXT, addr TEXT, city TEXT, postcode TEXT, tel1 TEXT, tel2 TEXT, user_id INT, lon REAL, lat REAL)'); 
-	
-	// table 'articles'
-	db.execute('CREATE TABLE IF NOT EXISTS articles (id TEXT, desc TEXT, price REAL, image_name TEXT, image_data BLOB)'); 
-	
-	// table 'params'
-	db.execute('CREATE TABLE IF NOT EXISTS params (id INTEGER PRIMARY KEY, device_id TEXT, param_name TEXT, param_value TEXT)'); 
-	
-	// table 'params'
-	db.execute('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, pwd TEXT)'); 
-
-	return db;
-};
-
-
-// alter main db
-M3.DB.alterDB = function(oDb){
-	return null;
-};
-
 

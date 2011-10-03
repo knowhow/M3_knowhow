@@ -9,28 +9,35 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-// Main remote methode's. Here are the logic of http request's, send's, etc...
+// ## Remote's module
+// In this module we will use remote control of the app with http method's, send's, request's, post's, etc...
 
-// This is the unique namespace for remote method's
+
+// Set the global namespace for this module.
 M3.Remote = {};
 
-// Adding synchro into namespace...
+// Set additional namespace based on functionality.
+// * Get will be methods for getting data from http
+// * Post will be methods for posting data to http
+
 M3.Remote.Get = {};
 M3.Remote.Post = {};
 
 
-// open main initialization form
+// Main initialisation function.
+// Open's the form with basic initialisation functionality.
+// First, we must to setup server location and then get the initialisation process.
+
 M3.Remote.formInit = function() {
 	
-	// create window
+	// create components
 	var s_win = Ti.UI.createWindow({
 		title:'Inicijalizacija...',
 		backgroundColor:'black',
 		top:0,
 		bottom:0
 	});
-
-	// create label server 
+	
 	var lbl_server = Ti.UI.createLabel({
 		color:'white',
 		text:'nije podešeno...',
@@ -39,7 +46,6 @@ M3.Remote.formInit = function() {
 		font:{fontSize:'6pt'}
 	});
 	
-	// create btn set server
 	var btn_set_server = Ti.UI.createButton({
 		title:'Server',
 		top:'2%',
@@ -48,7 +54,6 @@ M3.Remote.formInit = function() {
 		height:'10%'
 	});
 
-	// create btn init...
 	var btn_init = Ti.UI.createButton({
 		title:'Uzmi podatke',
 		top:'12%',
@@ -57,7 +62,6 @@ M3.Remote.formInit = function() {
 		height:'10%'
 	});
 	
-	// create label info 
 	var lbl_info = Ti.UI.createLabel({
 		color:'white',
 		text:'Rezultati inicijalizacije:',
@@ -66,7 +70,6 @@ M3.Remote.formInit = function() {
 		font:{fontSize:'7pt'}
 	});
 		
-	// create label info 
 	var lbl_i_params = Ti.UI.createLabel({
 		text:"-",
 		color:'white',
@@ -75,7 +78,6 @@ M3.Remote.formInit = function() {
 		font:{fontSize:'7pt'}
 	});
 	
-	// create label info 
 	var lbl_i_articles = Ti.UI.createLabel({
 		text:"-",
 		color:'white',
@@ -84,7 +86,6 @@ M3.Remote.formInit = function() {
 		font:{fontSize:'7pt'}
 	});
 
-	// create label info 
 	var lbl_i_images = Ti.UI.createLabel({
 		text:"-",
 		color:'white',
@@ -93,7 +94,6 @@ M3.Remote.formInit = function() {
 		font:{fontSize:'7pt'}
 	});	
 
-	// create label customers 
 	var lbl_i_cust = Ti.UI.createLabel({
 		text:"-",
 		color:'white',
@@ -102,7 +102,6 @@ M3.Remote.formInit = function() {
 		font:{fontSize:'7pt'}
 	});	
 	
-	// create label customers 
 	var lbl_i_users = Ti.UI.createLabel({
 		text:"-",
 		color:'white',
@@ -111,8 +110,6 @@ M3.Remote.formInit = function() {
 		font:{fontSize:'7pt'}
 	});	
 
-	
-	// create btn init...
 	var btn_save = Ti.UI.createButton({
 		title:'Snimi',
 		bottom:'1%',
@@ -121,7 +118,6 @@ M3.Remote.formInit = function() {
 		height:'10%'
 	});	
 
-	// create btn init...
 	var btn_cancel = Ti.UI.createButton({
 		title:'Odustani',
 		bottom:'1%',
@@ -130,7 +126,7 @@ M3.Remote.formInit = function() {
 		height:'10%'
 	});	
 	
-	// read global variables and set to lables...
+	// read global variables and set to label components...
 	if(Ti.App.par_server_url != undefined && Ti.App.par_server_url != null && Ti.App.par_server_url != ""){
 		lbl_server.text = Ti.App.par_server_url;
 	};
@@ -148,35 +144,37 @@ M3.Remote.formInit = function() {
 	s_win.add(btn_save);
 	s_win.add(btn_cancel);
 	
-	// event listeners of 's_win' controls
+	// Event listeners of 's_win' controls
 	
-	// btn_set_server listener
 	btn_set_server.addEventListener("click", function(){
+		// get the server location and save to params
 		var tmp_frm = M3.StdForms.getStrValue();
+		
 		tmp_frm.addEventListener("close", function(){
+			
 			lbl_server.text = tmp_frm.item_value;
 			Ti.App.par_server_url = tmp_frm.item_value;
 			Ti.App.Properties.setString("par_server_url", tmp_frm.item_value);
+		
 		});
 	});
 	
-	// btn_init listener
 	btn_init.addEventListener("click", function(){
 		
-		// synchronize articles
+		// First run syncro of article data and add eventListener
 		M3.Remote.Get.synhroArticles();
 		
 		Ti.App.addEventListener("articlesSynchronized", function(e){
 			
+			// check for result's
 			if(e.result == 0){
 				lbl_i_articles.text = "- artikli : nije uspjelo !!!";
 				return;
 			};
 			
-			// set label value
 			lbl_i_articles.text = "- artikli init ok -> " + e.count;
 		
-			// run synchronize of the images
+			// Now, when we have articles run synchro of the article images and add eventListener
 			M3.Remote.Get.synhroArticleImages();
 			
 			var images_cnt = 0;
@@ -184,6 +182,7 @@ M3.Remote.formInit = function() {
 			// listen for event save image
 			Ti.App.addEventListener("articlesImageSaved", function(e){
 				
+				// check for result's
 				if(e.result == 0){
 					lbl_i_images.text = "- download slika -> već postoje!";
 				}
@@ -197,77 +196,73 @@ M3.Remote.formInit = function() {
 		});
 		
 		
-		// synchronize params
+		// Run synchro of the params data and add eventListener
 		M3.Remote.Get.synhroParams();
 		Ti.App.addEventListener("paramsSynchronized", function(e){
 			if(e.result == 0){
 				lbl_i_params.text = "- parametri: nije uspjelo !!!";
 				return;
 			};
-			
-			// set label value
 			lbl_i_params.text = "- parametri init ok -> " + e.count;
 		});	
 		
-		// synchronize customers
+		// Run synchro of the customer data and add eventListener
 		M3.Remote.Get.synhroCustomers();
 		Ti.App.addEventListener("customersSynchronized", function(e){
+			// check for result's
 			if(e.result == 0){
 				lbl_i_cust.text = "- partneri: nije uspjelo !!!";
 				return;
 			};
-			
-			// set label value
 			lbl_i_cust.text = "- partneri init ok -> " + e.count;
 		});
 		
-		// synchronize customers
+		// Run synchro of the user's data and add eventListener
 		M3.Remote.Get.synhroUsers();
 		Ti.App.addEventListener("usersSynchronized", function(e){
+			// check for result's
 			if(e.result == 0){
 				lbl_i_users.text = "- users: nije uspjelo !!!";
 				return;
 			};
-			
-			// set label value
 			lbl_i_users.text = "- users init ok -> " + e.count;
 		});
 		
 		
 	});
 	
-	// set params
 	btn_save.addEventListener("click", function(){
+		// save params
 		M3.Params.setParams();
+		// close init window
 		s_win.close();
 	});
 	
-	// cancel 
 	btn_cancel.addEventListener("click", function(){
+		// only closes the init window
 		s_win.close();
 	});
 	
-	// open 's_win' window
 	s_win.open();
 	
-	// return 's_win' for listening event 'close'
 	return s_win;
 	
 };
 
 
-// open initialization form
+// Open's the initialisation of user's form.
+// This form is basicaly clone of the main init form explained at the top.
+
 M3.Remote.formUsersInit = function() {
 	
-	// create window
+	// create components
 	var s_win = Ti.UI.createWindow({
 		title:'Inicijalizacija...',
 		backgroundColor:'black',
 		top:0,
 		bottom:0
 	});
-
-	// create label server 
+	
 	var lbl_server = Ti.UI.createLabel({
 		color:'white',
 		text:'nije podešeno...',
@@ -276,7 +271,6 @@ M3.Remote.formUsersInit = function() {
 		font:{fontSize:'6pt'}
 	});
 	
-	// create btn set server
 	var btn_set_server = Ti.UI.createButton({
 		title:'Server',
 		top:'2%',
@@ -285,7 +279,6 @@ M3.Remote.formUsersInit = function() {
 		height:'10%'
 	});
 
-	// create btn init...
 	var btn_init = Ti.UI.createButton({
 		title:'Uzmi podatke',
 		top:'12%',
@@ -294,7 +287,6 @@ M3.Remote.formUsersInit = function() {
 		height:'10%'
 	});
 	
-	// create label info 
 	var lbl_info = Ti.UI.createLabel({
 		color:'white',
 		text:'Rezultati inicijalizacije:',
@@ -303,7 +295,6 @@ M3.Remote.formUsersInit = function() {
 		font:{fontSize:'7pt'}
 	});
 			
-	// create label customers 
 	var lbl_i_users = Ti.UI.createLabel({
 		text:"-",
 		color:'white',
@@ -312,8 +303,6 @@ M3.Remote.formUsersInit = function() {
 		font:{fontSize:'7pt'}
 	});	
 
-	
-	// create btn init...
 	var btn_save = Ti.UI.createButton({
 		title:'Snimi',
 		bottom:'1%',
@@ -322,7 +311,6 @@ M3.Remote.formUsersInit = function() {
 		height:'10%'
 	});	
 
-	// create btn init...
 	var btn_cancel = Ti.UI.createButton({
 		title:'Odustani',
 		bottom:'1%',
@@ -331,7 +319,7 @@ M3.Remote.formUsersInit = function() {
 		height:'10%'
 	});	
 	
-	// read global variables and set to lables...
+	// read global variables and set to label values...
 	if(Ti.App.par_server_url != undefined && Ti.App.par_server_url != null && Ti.App.par_server_url != ""){
 		lbl_server.text = Ti.App.par_server_url;
 	};
@@ -345,57 +333,53 @@ M3.Remote.formUsersInit = function() {
 	s_win.add(btn_save);
 	s_win.add(btn_cancel);
 	
-	// event listeners of 's_win' controls
-	
-	// btn_set_server listener
 	btn_set_server.addEventListener("click", function(){
+		// get server location and save to parameters
 		var tmp_frm = M3.StdForms.getStrValue();
 		tmp_frm.addEventListener("close", function(){
+			
 			lbl_server.text = tmp_frm.item_value;
 			Ti.App.par_server_url = tmp_frm.item_value;
 			Ti.App.Properties.setString("par_server_url", tmp_frm.item_value);
+		
 		});
 	});
-	
-	// btn_init listener
+
 	btn_init.addEventListener("click", function(){
 		
-		// synchronize users
+		// Run synchro of users data and add eventListener
 		M3.Remote.Get.synhroUsers();
 		Ti.App.addEventListener("usersSynchronized", function(e){
+			// check for result's
 			if(e.result == 0){
 				lbl_i_users.text = "- users: nije uspjelo !!!";
 				return;
 			};
-			
-			// set label value
 			lbl_i_users.text = "- users init ok -> " + e.count;
 		});
 		
 	});
 	
-	// set params
 	btn_save.addEventListener("click", function(){
+		// save to params
 		M3.Params.setParams();
+		// and close init window
 		s_win.close();
 	});
 	
-	// cancel 
 	btn_cancel.addEventListener("click", function(){
+		// only closes the window
 		s_win.close();
 	});
 	
-	// open 's_win' window
 	s_win.open();
 	
-	// return 's_win' for listening event 'close'
 	return s_win;
-	
 };
 
 
 
-// Synchronize users, main function 
+// Synchro user's
 M3.Remote.Get.synhroUsers = function() {
 	
 	var data;
@@ -459,7 +443,6 @@ M3.Remote.Post.synhroPurchases = function() {
     	Ti.API.info(this.responseText);
    	};
 		
-	//xhr.setRequestHeader("Content-Type","application/json; charset=utf-8");
 	xhr.open('POST', url);
 	xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
 	xhr.send(data);
@@ -486,8 +469,7 @@ M3.Remote.Post.synhroCustomers = function() {
 		Ti.API.info(this.readyState);
     	Ti.API.info(this.responseText);
    	};
-		
-	//xhr.setRequestHeader("Content-Type","application/json; charset=utf-8");
+
 	xhr.open('POST', url);
 	xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
 	xhr.send(data);
@@ -672,9 +654,6 @@ M3.Remote.Get.saveImageIntoTable = function( _article_id, _url ) {
  		// Retrieve data from http server
  		data = this.responseData;
  			
- 		// Debug info
- 		//Ti.API.info("->" + _article_id + " data: " + Ti.Utils.base64encode(data));
- 			
  		if (data != null) {
  			// Update data into blob field of local table "articles"
  			M3.DB.updateArticleImage( _article_id, data ); 
@@ -714,9 +693,6 @@ M3.Remote.Get.saveImageToDevice = function( _article_id, _url ) {
  				Ti.App.fireEvent("articlesImageSaved", { result: 0, count: 1 });
  			};
  			
- 			// debug info
- 			//Ti.API.info("->" + _article_id + " data: " + data + " size: " + s_file.size );
-  
  		};					
    	};
 		

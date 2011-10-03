@@ -9,9 +9,9 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-//## Main params module
+//## Param's module
 
-// Set's the main namespace for params module
+// Set global namespace for this module
 M3.Params = {};
 
 // Get params function
@@ -66,6 +66,7 @@ M3.Params.setParams = function() {
 
 // Param's form
 // Open's the form and show available params
+
 M3.Params.paramsForm = function() {
 		
 	// Create window

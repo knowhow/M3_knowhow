@@ -9,14 +9,30 @@
  * By using this software, you agree to be bound by its terms.
  */
 
+// ## Main GEO module
+// In this module we use special Titanium GPS method's for Android app.
+
+// Set the global namespace for this module.
 M3.Geo = {};
 
+// Global GPS module variables
 var location_data;
 var location_error = "";
 var location_added = false;
 
+// Open's the form with test geolocation functions.
+// This form is used for testing GPS functinality.
+// It uses main GPS method's as we used in **customes.js**
+//
+// Example of GPS usage:
+// 		var frm = M3.Geo.geoForm();
+// 		frm.addEventListener("close", function(){
+//			M3.Geo.turnOffGps();
+//		})
+
 M3.Geo.geoForm = function() {
 		
+	// Create controls
 	var g_win = Ti.UI.createWindow({
 		backgroundColor:"#FFFFFF",
 		title:"trenutna lokacija"
@@ -47,38 +63,35 @@ M3.Geo.geoForm = function() {
 		bottom:5
 	});
 		
+	// and add controls to the **g_win**
 	g_win.add(g_lbl);
 	g_win.add(g_l_btn);
 	g_win.add(g_c_btn);
-		
-	// android back function
-	g_win.addEventListener('android:back',function(e){
-    	g_win.close();
- 	});
- 			
+		 			
 	g_c_btn.addEventListener("click", function(){
-		Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
+		// turn off the gps system
+		M3.Geo.turnOffGps();
+		// close the window
 		g_win.close();
 	});
 		
+	
 	g_l_btn.addEventListener("click", function(){
 		
-		// first start service - because of bug!
-		M3.Geo.getCurrentLocation();
-		// second instance
-		M3.Geo.getCurrentLocation();
+		// turn on the gps system
+		M3.Geo.turnOnGps();
 		
 		var text = "";
 		
-		//
-		//ZENICA
-		//Latitude : 43.915886 North
-		//Longitude : 17.679076 East
+		// testing location
+		//		ZENICA coordinates:
+		//		Latitude : 43.915886 North
+		//		Longitude : 17.679076 East
 		
 		var zenica_lat = 44.204231500625;
 		var zenica_lon = 17.905032634735;
+		
 		// listen for coords
-		// we have: e.coords
 		Ti.App.addEventListener("get_geo_coordinates_ready",function(e){
 			
 			if (!e.success || e.error){
@@ -114,24 +127,22 @@ M3.Geo.geoForm = function() {
 };
 	
 // geo callback function
-// force update e
 var geoLocationCallback = function(cb){	
-	//if (!cb.success || cb.error){
-		//Ti.App.fireEvent("get_geo_coordinates_error", cb);
-		//return;
-	//};
 	Ti.App.fireEvent("get_geo_coordinates_ready", cb);
 };
 	
 	
-// get current location based on geolocation
+// Get current location based on geolocation
+
 M3.Geo.getCurrentLocation = function() {
       	
+    // Check if service enabled first
     if(Ti.Geolocation.locationServicesEnabled == false){
     	alert("Geo services are turned off !");
     	return;
     };
     	
+    // Set's the main parameters
     Ti.Geolocation.preferredProvider = "gps";
     Ti.Geolocation.accuracy = Titanium.Geolocation.ACCURACY_BEST;
     Ti.Geolocation.distanceFilter = 10;
@@ -169,11 +180,12 @@ M3.Geo.getCurrentLocation = function() {
 
 };
 	 	
-// calculate distance between two long and latitude variables
-// return value is in kilometers "K"
-// what is "N" ?
-// return value must be rounded because is eg. 50.231322213
+// Calculate distance between two 'lon' and 'lat' variables
+// Return value is in kilometers "K"
+
 M3.Geo.calcGeoDistance = function(lat1, lon1, lat2, lon2, unit) {
+	
+	// this is the part of special formula for calculating distance based on earth diameter etc...
 	var radlat1 = Math.PI * lat1/180;
   	var radlat2 = Math.PI * lat2/180;
   	var radlon1 = Math.PI * lon1/180;
@@ -186,6 +198,7 @@ M3.Geo.calcGeoDistance = function(lat1, lon1, lat2, lon2, unit) {
   	dist = dist * 180/Math.PI;
   	dist = dist * 60 * 1.1515;
   
+  	// default unit will be "K" - kilometers
   	if(unit == null){
   		unit = "K";
   	};
@@ -194,6 +207,7 @@ M3.Geo.calcGeoDistance = function(lat1, lon1, lat2, lon2, unit) {
      dist = dist * 1.609344;
     };
     
+    // I have no idea what is "N" (I grabbed this function from titanium comunity)
   	if(unit == "N") {
     	dist = dist * 0.8684;
     };
@@ -201,14 +215,16 @@ M3.Geo.calcGeoDistance = function(lat1, lon1, lat2, lon2, unit) {
 	return dist;
 };
 
+// Show the MAP based on current user location and customer location
+// This function uses Google-API
+
 M3.Geo.showMap = function( lat, lon, customer_lat, customer_lon ){
 	
+	// create components
 	var m_win = Ti.UI.createWindow({
 		backgroundColor:'white',
 		title:'Mapa'
 	});
-	
-	//alert(lat + M3.Util.Str.newRow() + lon + M3.Util.Str.newRow() + customer_lat + M3.Util.Str.newRow() + customer_lan );
 	
 	var my_curr_position = Titanium.Map.createAnnotation({
 		latitude:Number(lat),
@@ -217,8 +233,7 @@ M3.Geo.showMap = function( lat, lon, customer_lat, customer_lon ){
 		subtitle:'-',
 		pincolor:"orange",
 		animate:true,
-		//leftButton: '../images/appcelerator_small.png',
-		myid:1 // CUSTOM ATTRIBUTE THAT IS PASSED INTO EVENT OBJECTS
+		myid:1 
 	});
 	
 	var customer_position = Titanium.Map.createAnnotation({
@@ -228,8 +243,7 @@ M3.Geo.showMap = function( lat, lon, customer_lat, customer_lon ){
 		subtitle:'-',
 		pincolor:"blue",
 		animate:true,
-		//leftButton: '../images/appcelerator_small.png',
-		myid:2 // CUSTOM ATTRIBUTE THAT IS PASSED INTO EVENT OBJECTS
+		myid:2 
 	});
 
 	
@@ -251,7 +265,8 @@ M3.Geo.showMap = function( lat, lon, customer_lat, customer_lon ){
     	right:'30%',
     	title:'Zatvori'
     });
-    
+	
+	// add components to the current window    
     m_win.add(close_btn);
     m_win.add(mapview);
     mapview.selectAnnotation(my_curr_position);
@@ -267,12 +282,15 @@ M3.Geo.showMap = function( lat, lon, customer_lat, customer_lon ){
     
 };
 
-// turn off gps system
+// Turn off gps system
+
 M3.Geo.turnOffGps = function() {
 	Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
 };
 
-// turn on gps system
+// Turn on gps system
+// Because of bug with GPS functions in Android, this function must be called twice
+
 M3.Geo.turnOnGps = function() {
 	M3.Geo.getCurrentLocation();
 	M3.Geo.getCurrentLocation();

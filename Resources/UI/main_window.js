@@ -9,9 +9,15 @@
  * By using this software, you agree to be bound by its terms.
  */
 
+// ## Main module
+
+// Set the global namespace for this module.
+
 M3.Main = {};
 
-// main window of application
+// Main window of application.
+// Open's the window with all options of the app.
+
 M3.Main.mainWindow = function() {
 		
 	var win_main = Ti.UI.createWindow({
@@ -28,7 +34,6 @@ M3.Main.mainWindow = function() {
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'6pt'}  
 	});  
 		
-	// btn new... 
 	var customer_list = Titanium.UI.createButton({  
        	title:'Partneri',  
        	left:'2%',
@@ -39,7 +44,6 @@ M3.Main.mainWindow = function() {
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
 	});  
 
-	// btn list...
 	var list_purchase = Titanium.UI.createButton({  
        	title:'Lista narudzbi',  
        	left:'2%',
@@ -50,7 +54,6 @@ M3.Main.mainWindow = function() {
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
 	});  
 		
-	// btn geo...
 	var where_am_i = Titanium.UI.createButton({  
        	title:'Gdje sam ja ?',  
        	left:'2%',
@@ -61,7 +64,6 @@ M3.Main.mainWindow = function() {
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
 	});  
 	
-	// btn geo...
 	var delete_db = Titanium.UI.createButton({  
        	title:'Obrisi db (debug)',  
        	left:'2%',
@@ -72,7 +74,6 @@ M3.Main.mainWindow = function() {
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
 	});  
 	
-	// send to server...
 	var send_db = Titanium.UI.createButton({  
        	title:'Pošalji podatke na server',  
        	left:'2%',
@@ -83,7 +84,6 @@ M3.Main.mainWindow = function() {
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}
 	});  
 	
-	// get data from server...
 	var data_init = Titanium.UI.createButton({  
        	title:'Inicijalizacija',  
        	left:'2%',
@@ -94,7 +94,6 @@ M3.Main.mainWindow = function() {
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}
 	});  
 	
-	// preferences...
 	var preferences = Titanium.UI.createButton({  
        	title:'Postavke',  
        	width:'35%',
@@ -105,7 +104,6 @@ M3.Main.mainWindow = function() {
        	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}
 	});  
 	
-	// send to server...
 	var close_btn = Titanium.UI.createButton({  
        	title:'Log out',  
        	left:'2%',
@@ -128,34 +126,34 @@ M3.Main.mainWindow = function() {
 	
 	win_main.open();
 			
-	// customer list event handler
 	close_btn.addEventListener('click',function(e){  
     	win_main.close();
 	});  	
 	
-	// customer list event handler
 	customer_list.addEventListener('click',function(e){  
+    	// get the customer's list
     	M3.Customers.customerList();
 	});  	
 	
-	// list purchase event handler
 	list_purchase.addEventListener('click',function(e){  
+    	// get the purchase list
     	M3.Purchase.listPurchase();
 	});
 		
-	// where am i event handler
 	where_am_i.addEventListener('click',function(e){  
+   		// this is for GPS testing purpose...
    		M3.Geo.geoForm();
 	});  
 	
-	// preferences event handler
 	preferences.addEventListener('click',function(e){  
+   		// open params form
    		var par_form = M3.Params.paramsForm();
 	});  	
 
-	// remove completely db
 	delete_db.addEventListener('click',function(e){  
-   		
+		
+		// delete database...
+		   		
    		var alertDialog = Ti.UI.createAlertDialog({
             title:'Pitanje',
             message:'Da li zaista želite ukloniti bazu ?',
@@ -179,8 +177,10 @@ M3.Main.mainWindow = function() {
 
 	});  	
 	
-	// currently delete all purchases
 	send_db.addEventListener("click", function(){
+		
+		// synchro data with A4 server
+		// send data to server
 		
 		var alertDialog = Ti.UI.createAlertDialog({
             title:'Pitanje',
@@ -209,22 +209,21 @@ M3.Main.mainWindow = function() {
   				
   			});
   			
-			//M3.DB.deleteAllPurchases();
-	
         });
  
         alertDialog.show();
 		
 	});
 	
-	// initialization btn event listener
+	
 	data_init.addEventListener("click", function(){
 		
-		// open form init 
+		// synchro data with A4 server
+		// recieve data from server
+		 
 		var frm_init = M3.Remote.formInit();
 		
 		frm_init.addEventListener("close", function(){
-			// on close...
 		});
 		
 	});

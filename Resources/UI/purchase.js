@@ -9,6 +9,10 @@
  * By using this software, you agree to be bound by its terms.
  */
 
+// ## Purchase module
+
+// Set global namespace for this module.
+
 M3.Purchase = {};
 
 
@@ -66,10 +70,8 @@ M3.Purchase.listPurchase = function() {
 		title:'Opcije:'
 	};
 
-	// create dialog
 	var win_dlg_opt = Titanium.UI.createOptionDialog(dlg_opt);
 
-	// add event listener
 	win_dlg_opt.addEventListener('click',function(e)
 	{
 		
@@ -88,7 +90,6 @@ M3.Purchase.listPurchase = function() {
   				var prevForm = M3.Preview.PO.getPurchaseOrderPreview(cust_data, items_data, current_purchase_no, current_purchase_date, current_purchase_valid, current_purchase_doc_total, current_purchase_notes );
   				
   				prevForm.addEventListener("close", function(){
-  					// ...
   				});
   				
   				break;

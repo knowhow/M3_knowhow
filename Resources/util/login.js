@@ -9,7 +9,7 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-// ## Main login module...
+// ## Login module
 
 // Set the global namespace for this module	
 M3.Login = {};

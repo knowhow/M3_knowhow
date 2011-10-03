@@ -9,16 +9,25 @@
  * By using this software, you agree to be bound by its terms.
  */
 
+// ## Code's matrix module
+// This module has basic method's for representing data into matrix form in tableView component. 
+
+// Set the global namespace for this module.
+
 M3.Codes.Matrix = {};
 
+// Module specific global variables
 var current_item_index = null;
 var last_item_index = null;
 	
+// Open's the form with matrix look of the tableView component
+// * **m_data** - matrix data
+// * **m_title** - title for this window
+
 M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
 		
 		var m_win = Ti.UI.createWindow({
 			backgroundColor:"white",
-			//modal:true,
 			title:m_title
 		});
 		
@@ -26,9 +35,7 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
 			top:0,
 			bottom:'12%'
 		});
-		
-		// w: 25
-		// h: 30
+
 		var cellWidth = M3.Util.MathModule.getControlPostitionWidth(40);
 		var cellHeight = M3.Util.MathModule.getControlPostitionWidth(45);
 		var xSpacer = M3.Util.MathModule.getControlPostitionWidth(1);
@@ -44,11 +51,7 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
 		var labels = [];
 		var views = [];
 		var purchase_data = [];
-
 		var cellIndex = 0;
-		//var r_height = 0;
-		
-		// count m_data items...
 		var dataIndex = 1;
  
 		for (var y=0; y<yGrid; y++){
@@ -78,9 +81,9 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
             		width: cellWidth
        			});
  
- 				// image show
+ 				// create component's for the matrix view
+ 				
  				var thisImage = Ti.UI.createImageView({
- 					//image:'img/' + m_data[cellIndex].image_name,
  					image:Ti.App.current_images_dir + m_data[cellIndex].image_name,
  					opacity:1.0,
  					objIndex:cellIndex.toString(),
@@ -91,8 +94,10 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
  					height:M3.Util.MathModule.getControlPostitionHeight(16)
  				});
  
- 				// main label - count items
-        		var thisLabel = Ti.UI.createLabel({
+ 				// Main label, contain's main variables such as `article_id` or `article_quantity` etc...
+ 				// This variables will be used later in code.
+ 				
+ 				var thisLabel = Ti.UI.createLabel({
             		color:"red",
             		top:'5%',
             		left:'10%',
@@ -107,7 +112,6 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
             		touchEnabled:false
         		});
         		
-				// description item label into view 
         		var thisLabelDescription = Ti.UI.createLabel({
             		color:"white",
             		top:'75%',
@@ -123,33 +127,24 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
             		touchEnabled:false
         		});
         		
+        		// add components to the Row
         		thisView.add(thisImage);
         		thisView.add(thisLabel);
         		thisView.add(thisLabelDescription);
-        		
         		thisRow.add(thisView);
     
-    			// push label info into labels[]
-        		labels.push(thisLabel);	
+    			// push data for later use of cell's
+    			labels.push(thisLabel);	
         		labelsDesc.push(thisLabelDescription);
-        		
         		views.push(thisView);
-        		
         		images.push(thisImage);
-        		
-        		//r_height += thisView.height + 5;
-        		
- 				// push article data into data[]
-        		data.push( {article_id: m_data[cellIndex].id, article_desc:m_data[cellIndex].desc, article_quantity:0} );
+ 				data.push( {article_id: m_data[cellIndex].id, article_desc:m_data[cellIndex].desc, article_quantity:0} );
  
          		cellIndex++;
         		dataIndex++;
-       			
-       			//Ti.API.info("dataIndex: " + dataIndex.toString() + " length : " + m_data.length );
-            			
+       						
     		};
     		
-    		//thisRow.height = r_height;
     		tableData.push(thisRow);
     		
     		if (dataIndex > m_data.length){
@@ -157,12 +152,12 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
     		};
 		};
 	
-		// table view
+		// create table view
 		var tableview = Ti.UI.createTableView({
     		data:tableData,
     		top:0,
-    		height:2000,
-    		//bottom:'20%'
+    		// I set the height to 2000 because of scroll component
+    		height:2000
 		});
 		
 		scrl.add(tableview);
@@ -175,12 +170,9 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
 			
 			if(e.source.objName){
 				
-				//alert(e.source.objIndex + "-" + labelsDesc.length);
-				
 				var m_ob_desc = m_data[e.source.objIndex].desc;
 				var m_ob_id = m_data[e.source.objIndex].id;
 				
-				// set current item
 				currentItem = e.source.objIndex;
 				
 				last_item_index = current_item_index;
@@ -188,29 +180,20 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
 				
 				item_set_focus( labels, labelsDesc, images );
 				
-				// show item on desc label
 				dv_label.text = m_ob_id + " - " + m_ob_desc;
 				
 			};
 			
 		});
- 
- 		// double tap - increase amount of items
-		tableview.addEventListener("dblclick", function(e){
-			// doing something on doubel click						
-		});
-				
+ 				
 		var tStart;
 		tableview.addEventListener('touchstart', function(e) {
-    	//Ti.API.info("touchstart fired");
     		tStart = new Date();
 		});
 	
 		tableview.addEventListener('touchend', function(e) {
-    		//Ti.API.info("touchend fired");
     		var tEnd = new Date();
     		if (tEnd.getTime() - tStart.getTime() > 800) {
-        		// show options dialog
            		_enter_value_manualy(e);
     		};
 		});
@@ -226,14 +209,12 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
     		
   		};
   
-  		// description view - show item properties
  		var desc_view = Ti.UI.createView({
  			height:'8%',
  			bottom:'12%',
  			backgroundColor:"black"
  		});
  
-		// description view description label
 		var dv_label = Ti.UI.createLabel({
 			text:"kliknite na jedan od artikala",
 			textAlign:"left",
@@ -245,14 +226,12 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
             touchEnabled:false
 		});
 
-		// controls view - button controls, plus, minus, accept
   		var controls_view = Ti.UI.createView({
  			bottom:0,
  			height:'12%',
  			backgroundColor:"black"
  		});
 
-		// accept button
  		var control_button = Ti.UI.createButton({
  			title:'Potvrdi',  
        		left:'30%',    
@@ -263,7 +242,6 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
         	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'8pt'}  
  		});
  	
- 		// plus button
  		var control_plus_button = Ti.UI.createButton({
  			title:'+',  
        		right:'2%',    
@@ -274,7 +252,6 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
         	font:{fontFamily:'Arial',fontWeight:'bold',fontSize:'12pt'}  
  		});
  		
- 		// minus button
  		var control_minus_button = Ti.UI.createButton({
  			title:'-',  
        		left:'2%',    
@@ -286,16 +263,13 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
  		});
  	
  	
- 		// control accept button event
  		control_button.addEventListener('click',function(e){  
     		Ti.App.fireEvent('purchaseAccept');
-    		// set global variable purchased data...
     		Ti.App.purchased_data = data;
     		m_win.close();
     		return m_win;
 		});
 		
-		// minus items events
 		control_minus_button.addEventListener('click',function(e){ 
 			if(parseInt(labels[currentItem].text) > 0 ){ 
     			labels[currentItem].text = (parseFloat(labels[currentItem].text) - 1).toString();
@@ -303,27 +277,18 @@ M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
     		}
 		});
  		
- 		// plus items events
  		control_plus_button.addEventListener('click',function(e){
     		labels[currentItem].text = (parseFloat(labels[currentItem].text) + 1).toString();
     		data[currentItem].article_quantity = parseInt(labels[currentItem].text);
 		});
 
-		// android back function
-		m_win.addEventListener('android:back',function(e){
-    		m_win.close();
- 		});
- 		
- 		// add to desc view...
  		desc_view.add(dv_label);
  		
- 		// add to bottom view
  		controls_view.add(control_button);
  		controls_view.add(control_minus_button);
  		controls_view.add(control_plus_button);
  	
- 		// add to m_win (main window)
-		m_win.add(scrl);
+ 		m_win.add(scrl);
 		m_win.add(desc_view);
 		m_win.add(controls_view);
 		m_win.open();

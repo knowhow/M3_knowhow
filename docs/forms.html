@@ -1,0 +1,113 @@
+<!DOCTYPE html>  <html> <head>   <title>forms.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="forms.html">                 forms.js               </a>                                           <a class="source" href="geo.html">                 geo.js               </a>                                           <a class="source" href="login.html">                 login.js               </a>                                           <a class="source" href="params.html">                 params.js               </a>                                           <a class="source" href="remote.html">                 remote.js               </a>                                           <a class="source" href="utils.html">                 utils.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               forms.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/* </span>
+<span class="cm"> * This file is part of the knowhow ERP, a free and open source </span>
+<span class="cm"> * Enterprise Resource Planning software suite,</span>
+<span class="cm"> * Copyright (c) 2010-2011 by bring.out doo Sarajevo.</span>
+<span class="cm"> * It is licensed to you under the Common Public Attribution License</span>
+<span class="cm"> * version 1.0, the full text of which (including knowhow-specific Exhibits)</span>
+<span class="cm"> * is available in the file LICENSE_CPAL_bring.out_knowhow.md located at the </span>
+<span class="cm"> * root directory of this source code archive.</span>
+<span class="cm"> * By using this software, you agree to be bound by its terms.</span>
+<span class="cm"> */</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>The main Forms module</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>create global namespace</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">StdForms</span> <span class="o">=</span> <span class="p">{};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>create std Form for getting numeric value</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">StdForms</span><span class="p">.</span><span class="nx">getNumValue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">curr_value</span><span class="p">){</span>
+	<span class="k">return</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">StdForms</span><span class="p">.</span><span class="nx">getValue</span><span class="p">(</span><span class="nx">curr_value</span><span class="p">,</span> <span class="s1">&#39;NUM&#39;</span><span class="p">);</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>create std Form for getting string value</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">StdForms</span><span class="p">.</span><span class="nx">getStrValue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">curr_value</span><span class="p">){</span>
+	<span class="k">return</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">StdForms</span><span class="p">.</span><span class="nx">getValue</span><span class="p">(</span><span class="nx">curr_value</span><span class="p">,</span> <span class="s1">&#39;STR&#39;</span><span class="p">);</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Opens std Form with any of given data
+Type must be 'STR' or 'NUM'</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">StdForms</span><span class="p">.</span><span class="nx">getValue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">curr_value</span><span class="p">,</span> <span class="nx">type</span><span class="p">){</span>
+	
+	<span class="kd">var</span> <span class="nx">mv_win</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createWindow</span><span class="p">({</span>
+		<span class="nx">backgroundColor</span><span class="o">:</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;40%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;85%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;5%&#39;</span><span class="p">,</span>
+		<span class="nx">borderRadius</span><span class="o">:</span><span class="mi">10</span><span class="p">,</span>
+		<span class="nx">borderColor</span><span class="o">:</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span>
+		<span class="nx">borderWidth</span><span class="o">:</span><span class="mi">5</span>
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">mv_lbl</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createLabel</span><span class="p">({</span>
+		<span class="nx">text</span><span class="o">:</span><span class="s1">&#39;Unesi željenu vrijednost:&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;12%&#39;</span><span class="p">,</span>
+		<span class="nx">color</span><span class="o">:</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;12%&#39;</span><span class="p">,</span>
+		<span class="nx">font</span><span class="o">:</span><span class="p">{</span><span class="nx">fontSize</span><span class="o">:</span><span class="s1">&#39;8pt&#39;</span><span class="p">,</span> <span class="nx">fontWeight</span><span class="o">:</span><span class="s1">&#39;bold&#39;</span><span class="p">}</span>	
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">mv_text</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createTextField</span><span class="p">({</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;35%&#39;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;10%&#39;</span><span class="p">,</span>
+		<span class="nx">right</span><span class="o">:</span><span class="s1">&#39;10%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;25%&#39;</span>
+	<span class="p">});</span>
+	
+	
+	<span class="k">if</span> <span class="p">(</span><span class="nx">curr_value</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">mv_text</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">curr_value</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span>
+	<span class="p">};</span>
+	
+	<span class="kd">var</span> <span class="nx">btn_ok</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createButton</span><span class="p">({</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;70%&#39;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;10%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;30%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;25%&#39;</span><span class="p">,</span>
+		<span class="nx">title</span><span class="o">:</span><span class="s1">&#39;Uredu&#39;</span>
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">btn_cancel</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createButton</span><span class="p">({</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;70%&#39;</span><span class="p">,</span>
+		<span class="nx">right</span><span class="o">:</span><span class="s1">&#39;10%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;30%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;25%&#39;</span><span class="p">,</span>
+		<span class="nx">title</span><span class="o">:</span><span class="s1">&#39;Odustani&#39;</span>
+	<span class="p">});</span>
+	
+	<span class="nx">mv_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">mv_lbl</span><span class="p">);</span>
+	<span class="nx">mv_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">mv_text</span><span class="p">);</span>
+	<span class="nx">mv_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">btn_ok</span><span class="p">);</span>
+	<span class="nx">mv_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">btn_cancel</span><span class="p">);</span>
+	
+	<span class="nx">mv_text</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		<span class="nx">mv_text</span><span class="p">.</span><span class="nx">blur</span><span class="p">();</span>
+		<span class="nx">btn_ok</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+	<span class="p">});</span>
+	
+	<span class="nx">btn_ok</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		
+		<span class="nx">mv_text</span><span class="p">.</span><span class="nx">blur</span><span class="p">();</span>
+		
+		<span class="k">switch</span> <span class="p">(</span><span class="nx">type</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">case</span> <span class="s2">&quot;NUM&quot;</span><span class="o">:</span>
+				
+				<span class="k">if</span><span class="p">(</span><span class="nx">mv_text</span><span class="p">.</span><span class="nx">value</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">Num</span><span class="p">.</span><span class="nx">isValidNum</span><span class="p">(</span><span class="nx">mv_text</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span> <span class="p">){</span>
+					<span class="nx">mv_win</span><span class="p">.</span><span class="nx">item_value</span> <span class="o">=</span> <span class="nx">mv_text</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+				<span class="p">};</span>
+				<span class="nx">mv_win</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+				<span class="k">break</span><span class="p">;</span>
+			
+			<span class="k">case</span> <span class="s2">&quot;STR&quot;</span><span class="o">:</span>
+				
+				<span class="k">if</span><span class="p">(</span><span class="nx">mv_text</span><span class="p">.</span><span class="nx">value</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">){</span>
+					<span class="nx">mv_win</span><span class="p">.</span><span class="nx">item_value</span> <span class="o">=</span> <span class="nx">mv_text</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+				<span class="p">};</span>
+				<span class="nx">mv_win</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+				<span class="k">break</span><span class="p">;</span>
+		<span class="p">};</span>
+		
+	<span class="p">});</span>
+
+	<span class="nx">btn_cancel</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		
+		<span class="nx">mv_win</span><span class="p">.</span><span class="nx">item_value</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="p">;</span>
+		
+		<span class="nx">mv_text</span><span class="p">.</span><span class="nx">blur</span><span class="p">();</span>
+		<span class="nx">mv_win</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+	<span class="p">});</span>
+	
+	<span class="nx">mv_text</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+	<span class="nx">mv_win</span><span class="p">.</span><span class="nx">open</span><span class="p">();</span>
+	
+	<span class="k">return</span> <span class="nx">mv_win</span><span class="p">;</span>
+
+<span class="p">};</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

@@ -1,0 +1,748 @@
+<!DOCTYPE html>  <html> <head>   <title>customer.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="codes.html">                 codes.js               </a>                                           <a class="source" href="codes_matrix.html">                 codes_matrix.js               </a>                                           <a class="source" href="customer.html">                 customer.js               </a>                                           <a class="source" href="main_window.html">                 main_window.js               </a>                                           <a class="source" href="preview.html">                 preview.js               </a>                                           <a class="source" href="purchase.html">                 purchase.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               customer.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/* </span>
+<span class="cm"> * This file is part of the knowhow ERP, a free and open source </span>
+<span class="cm"> * Enterprise Resource Planning software suite,</span>
+<span class="cm"> * Copyright (c) 2010-2011 by bring.out doo Sarajevo.</span>
+<span class="cm"> * It is licensed to you under the Common Public Attribution License</span>
+<span class="cm"> * version 1.0, the full text of which (including knowhow-specific Exhibits)</span>
+<span class="cm"> * is available in the file LICENSE_CPAL_bring.out_knowhow.md located at the </span>
+<span class="cm"> * root directory of this source code archive.</span>
+<span class="cm"> * By using this software, you agree to be bound by its terms.</span>
+<span class="cm"> */</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>The main customers module</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>set's the global space for this module</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">Customers</span> <span class="o">=</span> <span class="p">{};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Get customer list</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">customerList</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+		</pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>reset global data</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">purchased_data</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+	<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">document_data</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+	<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">customer_data</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+	<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_longitude</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+	<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_latitude</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+	<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_id</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+	<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_data</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+	<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_lan</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+	<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_lon</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+	<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_tel_1</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+	<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_tel_2</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>open the customer form</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">customer_win</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+	<span class="nx">customer_win</span> <span class="o">=</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">customersForm</span><span class="p">();</span>
+			
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Open's the main customer form with active customers.
+Activate the GPS system for searching.
+Set's the main options for new Purchase, editing etc...</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">customersForm</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+		</pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>get customers data</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">c_data</span> <span class="o">=</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">getCustomers</span><span class="p">(</span><span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_logged_user_id</span><span class="p">);</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>create window and other components</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">cp_win</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createWindow</span><span class="p">({</span>
+		<span class="nx">backgroundColor</span><span class="o">:</span><span class="s2">&quot;#FFFFFF&quot;</span><span class="p">,</span>
+		<span class="nx">title</span><span class="o">:</span><span class="s2">&quot;Odaberi partnera&quot;</span>
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">cp_top_view</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createView</span><span class="p">({</span>
+		<span class="nx">backgroundColor</span><span class="o">:</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;10%&#39;</span>
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">cp_bottom_view</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createView</span><span class="p">({</span>
+		<span class="nx">backgroundColor</span><span class="o">:</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+		<span class="nx">bottom</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;12%&#39;</span>
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">cp_lbl_loc</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createLabel</span><span class="p">({</span>
+		<span class="nx">text</span><span class="o">:</span><span class="s2">&quot;gps lokacija...&quot;</span><span class="p">,</span>
+		<span class="nx">color</span><span class="o">:</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+		<span class="nx">borderRadius</span><span class="o">:</span><span class="mi">5</span><span class="p">,</span>
+		<span class="nx">font</span><span class="o">:</span><span class="p">{</span><span class="nx">fontFamily</span><span class="o">:</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span><span class="nx">fontWeight</span><span class="o">:</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span><span class="nx">fontSize</span><span class="o">:</span><span class="s1">&#39;4pt&#39;</span><span class="p">},</span>
+		<span class="nx">textAlign</span><span class="o">:</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;1%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;1.5%&#39;</span>
+	<span class="p">});</span>
+
+	<span class="kd">var</span> <span class="nx">cp_close_btn</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createButton</span><span class="p">({</span>
+		<span class="nx">title</span><span class="o">:</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;1%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;15%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;80%&#39;</span><span class="p">,</span>
+		<span class="nx">font</span><span class="o">:</span><span class="p">{</span><span class="nx">fontFamily</span><span class="o">:</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span><span class="nx">fontWeight</span><span class="o">:</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span><span class="nx">fontSize</span><span class="o">:</span><span class="s1">&#39;10pt&#39;</span><span class="p">},</span>
+		<span class="nx">bottom</span><span class="o">:</span><span class="s1">&#39;5%&#39;</span>
+	<span class="p">});</span>
+
+	<span class="kd">var</span> <span class="nx">cp_gps_btn</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createButton</span><span class="p">({</span>
+		<span class="nx">title</span><span class="o">:</span><span class="s2">&quot;GPS...&quot;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;35%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;30%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;80%&#39;</span><span class="p">,</span>
+		<span class="nx">font</span><span class="o">:</span><span class="p">{</span><span class="nx">fontFamily</span><span class="o">:</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span><span class="nx">fontWeight</span><span class="o">:</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span><span class="nx">fontSize</span><span class="o">:</span><span class="s1">&#39;8pt&#39;</span><span class="p">},</span>
+		<span class="nx">bottom</span><span class="o">:</span><span class="s1">&#39;5%&#39;</span>
+	<span class="p">});</span>
+
+	<span class="kd">var</span> <span class="nx">cp_opt_btn</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createButton</span><span class="p">({</span>
+		<span class="nx">title</span><span class="o">:</span><span class="s2">&quot;Opcije&quot;</span><span class="p">,</span>
+		<span class="nx">right</span><span class="o">:</span><span class="s1">&#39;1%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;30%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;80%&#39;</span><span class="p">,</span>
+		<span class="nx">font</span><span class="o">:</span><span class="p">{</span><span class="nx">fontFamily</span><span class="o">:</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span><span class="nx">fontWeight</span><span class="o">:</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span><span class="nx">fontSize</span><span class="o">:</span><span class="s1">&#39;8pt&#39;</span><span class="p">},</span>
+		<span class="nx">bottom</span><span class="o">:</span><span class="s1">&#39;5%&#39;</span>
+	<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>sarch box of the table component</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">searchBar</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createSearchBar</span><span class="p">({</span>
+		<span class="nx">value</span><span class="o">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;1%&#39;</span>
+	<span class="p">});</span>	
+	</pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>when we call return in search box close the keyboard if it's up</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">searchBar</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		<span class="nx">searchBar</span><span class="p">.</span><span class="nx">blur</span><span class="p">();</span>
+	<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>main table view of this window</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">cp_tbl_view</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createTableView</span><span class="p">({</span>
+		<span class="nx">headerTitle</span><span class="o">:</span><span class="s2">&quot;Lista partnera za &#39;&quot;</span> <span class="o">+</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_logged_user</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">,</span>
+		<span class="nx">backgroundColor</span><span class="o">:</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>
+		<span class="nx">allowsSelection</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
+		<span class="nx">search</span><span class="o">:</span><span class="nx">searchBar</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;10%&#39;</span><span class="p">,</span>
+		<span class="nx">bottom</span><span class="o">:</span><span class="s1">&#39;12%&#39;</span>
+	<span class="p">});</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>main options dialog </p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">dlg_opt_1</span> <span class="o">=</span> <span class="p">{</span>
+		<span class="nx">options</span><span class="o">:</span><span class="p">[</span><span class="s1">&#39;Napravi narudžbu&#39;</span><span class="p">,</span><span class="s1">&#39;Pozovi partnera&#39;</span><span class="p">,</span> <span class="s1">&#39;Ispravi partnera&#39;</span><span class="p">,</span> <span class="s1">&#39;Prikaži na mapi&#39;</span><span class="p">,</span> <span class="s1">&#39;Otkaži&#39;</span><span class="p">],</span>
+		<span class="nx">destructive</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span>
+		<span class="nx">cancel</span><span class="o">:</span><span class="mi">2</span><span class="p">,</span>
+		<span class="nx">title</span><span class="o">:</span><span class="s1">&#39;Opcije:&#39;</span><span class="p">,</span>
+		<span class="nx">e_object</span><span class="o">:</span><span class="kc">null</span>
+	<span class="p">};</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>additional options dialog</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">dlg_opt_2</span> <span class="o">=</span> <span class="p">{</span>
+		<span class="nx">options</span><span class="o">:</span><span class="p">[</span><span class="s1">&#39;Novi partner&#39;</span><span class="p">,</span> <span class="s1">&#39;Osvježi tabelu&#39;</span><span class="p">,</span><span class="s1">&#39;Otkaži&#39;</span><span class="p">],</span>
+		<span class="nx">destructive</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span>
+		<span class="nx">cancel</span><span class="o">:</span><span class="mi">2</span><span class="p">,</span>
+		<span class="nx">title</span><span class="o">:</span><span class="s1">&#39;Opcije:&#39;</span>
+	<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>create dialog's</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">win_dlg_opt_1</span> <span class="o">=</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createOptionDialog</span><span class="p">(</span><span class="nx">dlg_opt_1</span><span class="p">);</span>
+	<span class="kd">var</span> <span class="nx">win_dlg_opt_2</span> <span class="o">=</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createOptionDialog</span><span class="p">(</span><span class="nx">dlg_opt_2</span><span class="p">);</span>
+	
+	</pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>add event listener for main dialog</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">win_dlg_opt_1</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+	<span class="p">{</span>
+		
+		<span class="k">switch</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">index</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">case</span> <span class="mi">0</span><span class="o">:</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>add new purchase order</p>             </td>             <td class="code">               <div class="highlight"><pre>				<span class="nx">_addNewPurchaseOrder</span><span class="p">(</span> <span class="nx">win_dlg_opt_1</span><span class="p">.</span><span class="nx">e_object</span> <span class="p">);</span>	
+				<span class="k">break</span><span class="p">;</span>
+			<span class="k">case</span> <span class="mi">1</span><span class="o">:</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>call the customer</p>             </td>             <td class="code">               <div class="highlight"><pre>				<span class="nx">M3</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">callCustomer</span><span class="p">(</span><span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_data</span><span class="p">);</span>
+  				<span class="k">break</span><span class="p">;</span>
+			<span class="k">case</span> <span class="mi">2</span><span class="o">:</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>edit customer</p>             </td>             <td class="code">               <div class="highlight"><pre>				<span class="nx">M3</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">editCustomer</span><span class="p">();</span>
+				<span class="k">break</span><span class="p">;</span>
+			<span class="k">case</span> <span class="mi">3</span><span class="o">:</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>show the map</p>             </td>             <td class="code">               <div class="highlight"><pre>				<span class="kd">var</span> <span class="nx">map_w</span> <span class="o">=</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">showMap</span><span class="p">(</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_latitude</span><span class="p">,</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_longitude</span><span class="p">,</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_lat</span><span class="p">,</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_lon</span> <span class="p">);</span>
+				<span class="nx">map_w</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+				<span class="p">});</span>
+				<span class="k">break</span><span class="p">;</span>
+			<span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+				<span class="k">break</span><span class="p">;</span>
+			
+		<span class="p">};</span>
+	
+	<span class="p">});</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>add event listener for second dialog</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">win_dlg_opt_2</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">switch</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">index</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">case</span> <span class="mi">0</span><span class="o">:</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>add new customer</p>             </td>             <td class="code">               <div class="highlight"><pre>  				<span class="nx">M3</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">newCustomer</span><span class="p">();</span>
+  				<span class="k">break</span><span class="p">;</span>
+			<span class="k">case</span> <span class="mi">1</span><span class="o">:</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>refresh table view component
+set 'c_data' again from table</p>             </td>             <td class="code">               <div class="highlight"><pre>				<span class="nx">c_data</span> <span class="o">=</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">getCustomers</span><span class="p">(</span><span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_logged_user_id</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>refresh tableview component with new data</p>             </td>             <td class="code">               <div class="highlight"><pre>				<span class="nx">cp_tbl_view</span><span class="p">.</span><span class="nx">setData</span><span class="p">(</span> <span class="nx">_refresh_cust_data</span><span class="p">(</span> <span class="nx">c_data</span><span class="p">,</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_longitude</span><span class="p">,</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_latitude</span> <span class="p">)</span> <span class="p">);</span>
+				<span class="k">break</span><span class="p">;</span>
+			<span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+				<span class="k">break</span><span class="p">;</span>
+		<span class="p">};</span>
+	<span class="p">});</span>
+	
+	</pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>listen for edited event</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;customerEdited&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>get customer data again</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="nx">c_data</span> <span class="o">=</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">getCustomers</span><span class="p">(</span><span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_logged_user_id</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>refresh tableview component with new data</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="nx">cp_tbl_view</span><span class="p">.</span><span class="nx">setData</span><span class="p">(</span> <span class="nx">_refresh_cust_data</span><span class="p">(</span> <span class="nx">c_data</span><span class="p">,</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_longitude</span><span class="p">,</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_latitude</span> <span class="p">)</span> <span class="p">);</span>
+	<span class="p">});</span>
+		</pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>add controls to view and window</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">cp_top_view</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">cp_lbl_loc</span><span class="p">);</span>
+	<span class="nx">cp_bottom_view</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">cp_close_btn</span><span class="p">);</span>
+	<span class="nx">cp_bottom_view</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">cp_gps_btn</span><span class="p">);</span>
+	<span class="nx">cp_bottom_view</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">cp_opt_btn</span><span class="p">);</span>
+	<span class="nx">cp_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">cp_top_view</span><span class="p">);</span>
+	<span class="nx">cp_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">cp_tbl_view</span><span class="p">);</span>
+	<span class="nx">cp_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">cp_bottom_view</span><span class="p">);</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <p>click on table</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">cp_tbl_view</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+		
+		<span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objName</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <p>set current id, lot, lat, tel's...</p>             </td>             <td class="code">               <div class="highlight"><pre>			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_id</span> <span class="o">=</span> <span class="nx">c_data</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objIndex</span><span class="p">].</span><span class="nx">id</span><span class="p">;</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_lat</span> <span class="o">=</span> <span class="nx">c_data</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objIndex</span><span class="p">].</span><span class="nx">lat</span><span class="p">;</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_lon</span> <span class="o">=</span> <span class="nx">c_data</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objIndex</span><span class="p">].</span><span class="nx">lon</span><span class="p">;</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_tel_1</span> <span class="o">=</span> <span class="nx">c_data</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objIndex</span><span class="p">].</span><span class="nx">tel1</span><span class="p">;</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_tel_2</span> <span class="o">=</span> <span class="nx">c_data</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objIndex</span><span class="p">].</span><span class="nx">tel2</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>set current customer data into array
+this array will be used later in app</p>             </td>             <td class="code">               <div class="highlight"><pre>			<span class="kd">var</span> <span class="nx">curr_data</span> <span class="o">=</span> <span class="p">[];</span>
+			<span class="nx">curr_data</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c_data</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objIndex</span><span class="p">]);</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_data</span> <span class="o">=</span> <span class="nx">curr_data</span><span class="p">;</span>
+			
+		<span class="p">};</span>
+		
+	<span class="p">});</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <p>local function for adding new purchase</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">_addNewPurchaseOrder</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+		
+		<span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objName</span><span class="p">)</span> <span class="p">{</span>
+			</pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <p>close the keyboard if it's up</p>             </td>             <td class="code">               <div class="highlight"><pre>			<span class="nx">searchBar</span><span class="p">.</span><span class="nx">blur</span><span class="p">();</span>
+			</pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <p>turn off gps system</p>             </td>             <td class="code">               <div class="highlight"><pre>			<span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">turnOffGps</span><span class="p">();</span>
+			</pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <p>set global customer data for purchase</p>             </td>             <td class="code">               <div class="highlight"><pre>			<span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[];</span>
+			<span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span> <span class="nx">c_data</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objIndex</span><span class="p">]</span> <span class="p">);</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">customer_data</span> <span class="o">=</span> <span class="nx">result</span><span class="p">;</span>
+			</pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <p>set current customer id</p>             </td>             <td class="code">               <div class="highlight"><pre>			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_id</span> <span class="o">=</span> <span class="nx">c_data</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objIndex</span><span class="p">].</span><span class="nx">id</span><span class="p">;</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_data</span> <span class="o">=</span> <span class="nx">result</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <p>open new purchase form</p>             </td>             <td class="code">               <div class="highlight"><pre>			<span class="nx">M3</span><span class="p">.</span><span class="nx">Purchase</span><span class="p">.</span><span class="nx">newPurchaseOrder</span><span class="p">();</span>
+			</pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <p>close customer list</p>             </td>             <td class="code">               <div class="highlight"><pre>			<span class="nx">cp_win</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+			
+		<span class="p">};</span>
+	<span class="p">};</span>
+		
+	</pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <p>add touchstart and touchend eventlistener</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">tStart</span><span class="p">;</span>
+	<span class="nx">cp_tbl_view</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;touchstart&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    	
+    	<span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objName</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-40">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>               <p>set current id</p>             </td>             <td class="code">               <div class="highlight"><pre>			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_id</span> <span class="o">=</span> <span class="nx">c_data</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objIndex</span><span class="p">].</span><span class="nx">id</span><span class="p">;</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_lat</span> <span class="o">=</span> <span class="nx">c_data</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objIndex</span><span class="p">].</span><span class="nx">lat</span><span class="p">;</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_lon</span> <span class="o">=</span> <span class="nx">c_data</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objIndex</span><span class="p">].</span><span class="nx">lon</span><span class="p">;</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_tel_1</span> <span class="o">=</span> <span class="nx">c_data</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objIndex</span><span class="p">].</span><span class="nx">tel1</span><span class="p">;</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_tel_2</span> <span class="o">=</span> <span class="nx">c_data</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objIndex</span><span class="p">].</span><span class="nx">tel2</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-41">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-41">&#182;</a>               </div>               <p>set current data array</p>             </td>             <td class="code">               <div class="highlight"><pre>			<span class="kd">var</span> <span class="nx">curr_data</span> <span class="o">=</span> <span class="p">[];</span>
+			<span class="nx">curr_data</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">c_data</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">source</span><span class="p">.</span><span class="nx">objIndex</span><span class="p">]);</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_data</span> <span class="o">=</span> <span class="nx">curr_data</span><span class="p">;</span>	
+		<span class="p">};</span>
+		
+    	<span class="nx">tStart</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+	<span class="p">});</span>
+	
+	<span class="nx">cp_tbl_view</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;touchend&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-42">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-42">&#182;</a>               </div>               <p>Ti.API.info("touchend fired");</p>             </td>             <td class="code">               <div class="highlight"><pre>    	<span class="kd">var</span> <span class="nx">tEnd</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+    	<span class="k">if</span> <span class="p">(</span><span class="nx">tEnd</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()</span> <span class="o">-</span> <span class="nx">tStart</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">700</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-43">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>               <p>show options dialog</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="nx">win_dlg_opt_1</span><span class="p">.</span><span class="nx">e_object</span> <span class="o">=</span> <span class="nx">e</span><span class="p">;</span>
+            <span class="nx">win_dlg_opt_1</span><span class="p">.</span><span class="nx">show</span><span class="p">();</span>
+    	<span class="p">};</span>
+	<span class="p">});</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-44">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>               <p>close button event listener</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">cp_close_btn</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		<span class="nx">clearInterval</span><span class="p">(</span><span class="nx">upd_timer</span><span class="p">);</span>
+		<span class="nx">Ti</span><span class="p">.</span><span class="nx">Geolocation</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span> <span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="nx">geoLocationCallback</span> <span class="p">);</span>
+		<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="s2">&quot;customerEdited&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){});</span>
+		<span class="nx">cp_win</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+	<span class="p">});</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-45">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-45">&#182;</a>               </div>               <p>options dialog event listener</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">cp_opt_btn</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span></pre></div>             </td>           </tr>                               <tr id="section-46">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-46">&#182;</a>               </div>               <p>open options</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="nx">win_dlg_opt_2</span><span class="p">.</span><span class="nx">show</span><span class="p">();</span>		
+	<span class="p">});</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-47">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-47">&#182;</a>               </div>               <p>GPS button event listener</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">cp_gps_btn</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		</pre></div>             </td>           </tr>                               <tr id="section-48">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-48">&#182;</a>               </div>               <p>create progress bar component</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="kd">var</span> <span class="nx">pb</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createProgressBar</span><span class="p">({</span>
+    		<span class="nx">width</span><span class="o">:</span><span class="mi">250</span><span class="p">,</span>
+    		<span class="nx">min</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span>
+    		<span class="nx">max</span><span class="o">:</span><span class="mi">200</span><span class="p">,</span>
+    		<span class="nx">value</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span>
+    		<span class="nx">color</span><span class="o">:</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+    		<span class="nx">message</span><span class="o">:</span><span class="s1">&#39;tražim lokaciju&#39;</span><span class="p">,</span>
+    		<span class="nx">font</span><span class="o">:</span><span class="p">{</span><span class="nx">fontSize</span><span class="o">:</span><span class="mi">14</span><span class="p">,</span> <span class="nx">fontWeight</span><span class="o">:</span><span class="s1">&#39;bold&#39;</span><span class="p">},</span>
+    		<span class="nx">style</span><span class="o">:</span><span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">iPhone</span><span class="p">.</span><span class="nx">ProgressBarStyle</span><span class="p">.</span><span class="nx">PLAIN</span><span class="p">,</span>
+		<span class="p">});</span>
+		</pre></div>             </td>           </tr>                               <tr id="section-49">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-49">&#182;</a>               </div>               <p>add progress bar to the window</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="nx">cp_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">pb</span><span class="p">);</span>
+			
+		<span class="kd">var</span> <span class="nx">tic</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+ </pre></div>             </td>           </tr>                               <tr id="section-50">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-50">&#182;</a>               </div>               <p>try to find customer by current GPS coordinates in table 'customers'</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="kd">var</span> <span class="nx">timer</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    		
+    		<span class="nx">tic</span><span class="o">++</span><span class="p">;</span>
+    		<span class="nx">pb</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">tic</span><span class="p">;</span>
+    			
+    		<span class="k">if</span><span class="p">(</span> <span class="nx">tic</span> <span class="o">==</span> <span class="mi">20</span> <span class="o">&amp;&amp;</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_longitude</span> <span class="o">!=</span> <span class="kc">null</span> <span class="p">)</span> <span class="p">{</span>
+        		
+				<span class="nx">pb</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span>
+            	<span class="nx">cp_win</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="nx">pb</span><span class="p">);</span>
+            	<span class="nx">cp_top_view</span><span class="p">.</span><span class="nx">backgroundColor</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">;</span>
+				
+            	<span class="nx">clearInterval</span><span class="p">(</span><span class="nx">timer</span><span class="p">);</span>
+            	</pre></div>             </td>           </tr>                               <tr id="section-51">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-51">&#182;</a>               </div>               <p>calculate distance and fill table view</p>             </td>             <td class="code">               <div class="highlight"><pre>            	<span class="nx">c_data</span> <span class="o">=</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">getCustomersInRadius</span><span class="p">(</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_longitude</span><span class="p">,</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_latitude</span> <span class="p">);</span>
+				<span class="nx">cp_tbl_view</span><span class="p">.</span><span class="nx">setData</span><span class="p">(</span> <span class="nx">_refresh_cust_data</span><span class="p">(</span> <span class="nx">c_data</span><span class="p">,</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_longitude</span><span class="p">,</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_latitude</span> <span class="p">)</span> <span class="p">);</span>
+				
+        	<span class="p">};</span>
+        	
+        	<span class="k">if</span> <span class="p">(</span><span class="nx">tic</span> <span class="o">==</span> <span class="mi">200</span><span class="p">){</span>
+        		<span class="nx">clearInterval</span><span class="p">(</span><span class="nx">timer</span><span class="p">);</span>
+        		<span class="nx">cp_win</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="nx">pb</span><span class="p">);</span>
+        		<span class="nx">cp_lbl_loc</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;Nisam uspio pronaći lokaciju, pokušajte ručno!&quot;</span><span class="p">;</span>
+        	<span class="p">};</span>
+        	                    
+		<span class="p">},</span><span class="mi">200</span><span class="p">);</span>			  
+	
+	<span class="p">});</span>	
+	</pre></div>             </td>           </tr>                               <tr id="section-52">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-52">&#182;</a>               </div>               <p>turn on GPS system</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">turnOnGps</span><span class="p">();</span>
+	
+	<span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+		</pre></div>             </td>           </tr>                               <tr id="section-53">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-53">&#182;</a>               </div>               <p>listen for coords
+we have: e.coords</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;get_geo_coordinates_ready&quot;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+			
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">e</span><span class="p">.</span><span class="nx">success</span> <span class="o">||</span> <span class="nx">e</span><span class="p">.</span><span class="nx">error</span><span class="p">){</span>
+				
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_latitude</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_longitude</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+				
+			<span class="nx">cp_lbl_loc</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+			
+			<span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;Greška: &quot;</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="o">+</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">Str</span><span class="p">.</span><span class="nx">newRow</span><span class="p">();</span> 
+			<span class="nx">text</span> <span class="o">+=</span> <span class="s2">&quot;&#39;kod&#39;: &quot;</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span> <span class="o">+</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">Str</span><span class="p">.</span><span class="nx">newRow</span><span class="p">();</span>
+			
+			<span class="nx">cp_lbl_loc</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">text</span><span class="p">;</span>
+			<span class="nx">cp_top_view</span><span class="p">.</span><span class="nx">backgroundColor</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="p">;</span>	
+		<span class="p">}</span>
+		<span class="k">else</span>
+		<span class="p">{</span>
+				
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_latitude</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">latitude</span><span class="p">;</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_longitude</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">longitude</span><span class="p">;</span>
+				
+			<span class="nx">cp_lbl_loc</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+			
+			<span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;Gps info:&quot;</span> <span class="o">+</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">Str</span><span class="p">.</span><span class="nx">newRow</span><span class="p">();</span>
+			<span class="nx">text</span> <span class="o">+=</span> <span class="s2">&quot;lat: &quot;</span> <span class="o">+</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_latitude</span><span class="p">;</span> 
+			<span class="nx">text</span> <span class="o">+=</span> <span class="s2">&quot;, lon: &quot;</span> <span class="o">+</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_longitude</span> <span class="o">+</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">Str</span><span class="p">.</span><span class="nx">newRow</span><span class="p">();</span>
+			<span class="nx">text</span> <span class="o">+=</span> <span class="s2">&quot;preciznost: &quot;</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">accuracy</span><span class="p">;</span>
+						
+			<span class="nx">cp_lbl_loc</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">text</span><span class="p">;</span>
+			<span class="nx">cp_top_view</span><span class="p">.</span><span class="nx">backgroundColor</span> <span class="o">=</span> <span class="s2">&quot;black&quot;</span><span class="p">;</span>
+		<span class="p">};</span>
+				
+			
+	<span class="p">});</span>	
+	</pre></div>             </td>           </tr>                               <tr id="section-54">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-54">&#182;</a>               </div>               <p>wait for gps location to refresh database</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">t_time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="kd">var</span> <span class="nx">end_time</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+	<span class="kd">var</span> <span class="nx">upd_timer</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">t_time</span><span class="o">++</span><span class="p">;</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">t_time</span> <span class="o">==</span> <span class="nx">end_time</span><span class="p">){</span></pre></div>             </td>           </tr>                               <tr id="section-55">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-55">&#182;</a>               </div>               <p>set the table contents, all customers</p>             </td>             <td class="code">               <div class="highlight"><pre>			<span class="nx">clearInterval</span><span class="p">(</span><span class="nx">upd_timer</span><span class="p">);</span>
+			<span class="nx">cp_tbl_view</span><span class="p">.</span><span class="nx">setData</span><span class="p">(</span> <span class="nx">_refresh_cust_data</span><span class="p">(</span> <span class="nx">c_data</span><span class="p">,</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_longitude</span><span class="p">,</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_latitude</span> <span class="p">)</span> <span class="p">);</span>
+		<span class="p">};</span>
+	<span class="p">},</span><span class="nx">end_time</span><span class="p">);</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-56">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-56">&#182;</a>               </div>               <p>open the window</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">cp_win</span><span class="p">.</span><span class="nx">open</span><span class="p">();</span>
+	
+	<span class="k">return</span> <span class="nx">cp_win</span><span class="p">;</span>
+
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-57">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-57">&#182;</a>               </div>               <p>local function for refreshing data in tableview component</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">function</span> <span class="nx">_refresh_cust_data</span><span class="p">(</span> <span class="nx">tbl_data</span><span class="p">,</span> <span class="nx">lon</span><span class="p">,</span> <span class="nx">lat</span> <span class="p">)</span> <span class="p">{</span>
+		
+	<span class="kd">var</span> <span class="nx">ret_data</span> <span class="o">=</span> <span class="p">[];</span>
+	<span class="kd">var</span> <span class="nx">dst</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	
+	<span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">tbl_data</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+		</pre></div>             </td>           </tr>                               <tr id="section-58">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-58">&#182;</a>               </div>               <p>calculate distance for every customer</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="nx">dst</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="k">if</span><span class="p">(</span> <span class="nx">tbl_data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">lat</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">tbl_data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">lat</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">lon</span> <span class="o">!=</span> <span class="kc">null</span> <span class="p">){</span>
+			
+			<span class="nx">dst</span> <span class="o">=</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">calcGeoDistance</span><span class="p">(</span> <span class="nx">tbl_data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">lon</span><span class="p">,</span> <span class="nx">tbl_data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">lat</span><span class="p">,</span> <span class="nx">lon</span><span class="p">,</span> <span class="nx">lat</span> <span class="p">);</span>
+			<span class="nx">dst</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span> <span class="nx">dst</span> <span class="o">*</span> <span class="mi">1000</span> <span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">;</span>
+			
+		<span class="p">};</span>
+							
+		<span class="kd">var</span> <span class="nx">thisRow</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createTableViewRow</span><span class="p">({</span>
+        	<span class="nx">className</span><span class="o">:</span> <span class="s2">&quot;item&quot;</span><span class="p">,</span>
+        	<span class="nx">objIndex</span><span class="o">:</span><span class="nx">i</span><span class="p">,</span>
+        	<span class="nx">objName</span><span class="o">:</span><span class="s2">&quot;grid-item&quot;</span><span class="p">,</span>
+        	<span class="nx">layout</span><span class="o">:</span> <span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+        	<span class="nx">height</span><span class="o">:</span><span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">MathModule</span><span class="p">.</span><span class="nx">getControlPostitionHeight</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span>
+        	<span class="nx">title</span><span class="o">:</span><span class="nx">tbl_data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">desc</span><span class="p">,</span> 
+        	<span class="nx">width</span><span class="o">:</span><span class="nx">Ti</span><span class="p">.</span><span class="nx">Platform</span><span class="p">.</span><span class="nx">displayCaps</span><span class="p">.</span><span class="nx">platformWidth</span><span class="p">,</span>
+        	<span class="nx">left</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span>
+        	<span class="nx">right</span><span class="o">:</span><span class="mi">1</span>
+    	<span class="p">});</span>
+    		
+    	<span class="kd">var</span> <span class="nx">thisView</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createView</span><span class="p">({</span></pre></div>             </td>           </tr>                               <tr id="section-59">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-59">&#182;</a>               </div>               <p>backgroundColor:"white",</p>             </td>             <td class="code">               <div class="highlight"><pre>           	<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;.5%&#39;</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-60">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-60">&#182;</a>               </div>               <p>height:'250%',</p>             </td>             <td class="code">               <div class="highlight"><pre>           	<span class="nx">backgroundColor</span><span class="o">:</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>
+           	<span class="nx">height</span><span class="o">:</span><span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">MathModule</span><span class="p">.</span><span class="nx">getControlPostitionHeight</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span>
+           	<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span>
+           	<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;1%&#39;</span><span class="p">,</span>
+           	<span class="nx">objIndex</span><span class="o">:</span><span class="nx">i</span><span class="p">,</span>
+           	<span class="nx">objName</span><span class="o">:</span><span class="s2">&quot;view-desc&quot;</span>
+        <span class="p">});</span>
+        
+    	<span class="kd">var</span> <span class="nx">thisLabelCust</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createLabel</span><span class="p">({</span>
+           	<span class="nx">color</span><span class="o">:</span><span class="s2">&quot;#4169E1&quot;</span><span class="p">,</span>
+           	<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;.5%&#39;</span><span class="p">,</span>
+           	<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;1%&#39;</span><span class="p">,</span>
+           	<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;90%&#39;</span><span class="p">,</span>
+           	<span class="nx">font</span><span class="o">:</span><span class="p">{</span><span class="nx">fontSize</span><span class="o">:</span><span class="s1">&#39;8pt&#39;</span><span class="p">,</span><span class="nx">fontWeight</span><span class="o">:</span><span class="s1">&#39;bold&#39;</span><span class="p">},</span>
+           	<span class="nx">objIndex</span><span class="o">:</span><span class="nx">i</span><span class="p">,</span>
+           	<span class="nx">objName</span><span class="o">:</span><span class="s2">&quot;lbl-cust&quot;</span><span class="p">,</span>
+           	<span class="nx">textAlign</span><span class="o">:</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+           	<span class="nx">text</span><span class="o">:</span><span class="nx">tbl_data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">desc</span><span class="p">,</span>
+           	<span class="nx">touchEnabled</span><span class="o">:</span><span class="kc">false</span>
+        <span class="p">});</span>
+
+    	<span class="kd">var</span> <span class="nx">thisLabelDesc</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createLabel</span><span class="p">({</span>
+           	<span class="nx">color</span><span class="o">:</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+           	<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;47%&#39;</span><span class="p">,</span>
+           	<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;1%&#39;</span><span class="p">,</span>
+           	<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;75%&#39;</span><span class="p">,</span>
+           	<span class="nx">font</span><span class="o">:</span><span class="p">{</span><span class="nx">fontSize</span><span class="o">:</span><span class="s1">&#39;5pt&#39;</span><span class="p">,</span><span class="nx">fontWeight</span><span class="o">:</span><span class="s1">&#39;normal&#39;</span><span class="p">},</span>
+           	<span class="nx">objIndex</span><span class="o">:</span><span class="nx">i</span><span class="p">,</span>
+           	<span class="nx">objName</span><span class="o">:</span><span class="s2">&quot;lbl-desc&quot;</span><span class="p">,</span>
+           	<span class="nx">textAlign</span><span class="o">:</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+           	<span class="nx">text</span><span class="o">:</span><span class="nx">tbl_data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">addr</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nx">tbl_data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">postcode</span> <span class="o">+</span> <span class="s2">&quot; - &quot;</span> <span class="o">+</span> <span class="nx">tbl_data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">city</span><span class="p">,</span>
+           	<span class="nx">touchEnabled</span><span class="o">:</span><span class="kc">false</span>
+        <span class="p">});</span>
+
+    	<span class="kd">var</span> <span class="nx">thisLabelDist</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createLabel</span><span class="p">({</span>
+           	<span class="nx">color</span><span class="o">:</span><span class="s2">&quot;#32CD32&quot;</span><span class="p">,</span>
+           	<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;35%&#39;</span><span class="p">,</span>
+           	<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;75%&#39;</span><span class="p">,</span>
+           	<span class="nx">font</span><span class="o">:</span><span class="p">{</span><span class="nx">fontSize</span><span class="o">:</span><span class="s1">&#39;6pt&#39;</span><span class="p">,</span><span class="nx">fontWeight</span><span class="o">:</span><span class="s1">&#39;bold&#39;</span><span class="p">},</span>
+           	<span class="nx">objIndex</span><span class="o">:</span><span class="nx">i</span><span class="p">,</span>
+           	<span class="nx">objName</span><span class="o">:</span><span class="s2">&quot;lbl-desc&quot;</span><span class="p">,</span>
+           	<span class="nx">textAlign</span><span class="o">:</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+           	<span class="nx">text</span><span class="o">:</span><span class="s1">&#39;distanca: &#39;</span> <span class="o">+</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">Str</span><span class="p">.</span><span class="nx">newRow</span><span class="p">()</span> <span class="o">+</span> <span class="nx">dst</span><span class="p">,</span>
+           	<span class="nx">touchEnabled</span><span class="o">:</span><span class="kc">false</span>
+        <span class="p">});</span>
+
+
+        <span class="nx">thisView</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">thisLabelCust</span><span class="p">);</span>
+        <span class="nx">thisView</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">thisLabelDesc</span><span class="p">);</span>
+        <span class="nx">thisView</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">thisLabelDist</span><span class="p">);</span>
+        <span class="nx">thisRow</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">thisView</span><span class="p">);</span>	
+		
+		<span class="nx">ret_data</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">thisRow</span><span class="p">);</span>
+	<span class="p">};</span>
+	
+	<span class="k">return</span> <span class="nx">ret_data</span><span class="p">;</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-61">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-61">&#182;</a>               </div>               <p>Customer edit form.
+This form will be used for new or edit existing customer.
+If no 'cust_data' is represent - New customer form open's.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">customerForm</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">cust_data</span> <span class="p">)</span> <span class="p">{</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-62">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-62">&#182;</a>               </div>               <p>window</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">c_win</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createWindow</span><span class="p">({</span>
+		<span class="nx">backgroundColor</span><span class="o">:</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+		<span class="nx">title</span><span class="o">:</span><span class="s2">&quot;Unos novog partnera...&quot;</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-63">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-63">&#182;</a>               </div>               <p>this is local variable</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="nx">canceled</span><span class="o">:</span><span class="kc">false</span>
+	<span class="p">});</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="nx">cust_data</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">){</span>
+		<span class="nx">c_win</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="s2">&quot;Ispravka podataka, partner: &quot;</span> <span class="o">+</span> <span class="nx">cust_data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">id</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;, uid: &#39;</span> <span class="o">+</span> <span class="nx">cust_data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">user_id</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span>
+	<span class="p">};</span>
+		</pre></div>             </td>           </tr>                               <tr id="section-64">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-64">&#182;</a>               </div>               <p>views</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">c_scroll_view</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createScrollView</span><span class="p">({</span>
+		<span class="nx">contentWidth</span><span class="o">:</span><span class="nx">Ti</span><span class="p">.</span><span class="nx">Platform</span><span class="p">.</span><span class="nx">displayCaps</span><span class="p">.</span><span class="nx">platformWidth</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span>
+		<span class="nx">bottom</span><span class="o">:</span><span class="s1">&#39;12%&#39;</span><span class="p">,</span>
+		<span class="nx">showVerticalScrollIndicator</span><span class="o">:</span><span class="kc">true</span>
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">c_view_main</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createView</span><span class="p">({</span>
+		<span class="nx">backgroundColor</span><span class="o">:</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>
+		<span class="nx">borderRadius</span><span class="o">:</span><span class="mi">10</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;97%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;2000&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;.5%&#39;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;1%&#39;</span>
+	<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-65">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-65">&#182;</a>               </div>               <p>description</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">l_desc</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createLabel</span><span class="p">({</span>
+		<span class="nx">text</span><span class="o">:</span><span class="s1">&#39;Naziv partnera:&#39;</span><span class="p">,</span>
+		<span class="nx">color</span><span class="o">:</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;3%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;.5%&#39;</span>
+	<span class="p">});</span>
+
+	<span class="kd">var</span> <span class="nx">c_desc</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createTextField</span><span class="p">({</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;2%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;90%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;3%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;2%&#39;</span>
+	<span class="p">});</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-66">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-66">&#182;</a>               </div>               <p>address</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">l_addr</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createLabel</span><span class="p">({</span>
+		<span class="nx">text</span><span class="o">:</span><span class="s1">&#39;Adresa:&#39;</span><span class="p">,</span>
+		<span class="nx">color</span><span class="o">:</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;3%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;5%&#39;</span>		
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">c_addr</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createTextField</span><span class="p">({</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;2%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;90%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;3%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;6.5%&#39;</span>
+	<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-67">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-67">&#182;</a>               </div>               <p>city</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">l_city</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createLabel</span><span class="p">({</span>
+		<span class="nx">text</span><span class="o">:</span><span class="s1">&#39;Grad:&#39;</span><span class="p">,</span>
+		<span class="nx">color</span><span class="o">:</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;3%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;9.5%&#39;</span>		
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">c_city</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createTextField</span><span class="p">({</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;2%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;50%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;3%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;11%&#39;</span>
+	<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-68">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-68">&#182;</a>               </div>               <p>postcode</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">l_pcode</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createLabel</span><span class="p">({</span>
+		<span class="nx">text</span><span class="o">:</span><span class="s1">&#39;Poštanski broj:&#39;</span><span class="p">,</span>
+		<span class="nx">color</span><span class="o">:</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;53%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;9.5%&#39;</span>		
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">c_pcode</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createTextField</span><span class="p">({</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;53%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;30%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;3%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;11%&#39;</span><span class="p">,</span>
+		<span class="nx">keyboardType</span><span class="o">:</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">KEYBOARD_NUMBER_PAD</span>
+	<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-69">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-69">&#182;</a>               </div>               <p>telephone</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">l_tel1</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createLabel</span><span class="p">({</span>
+		<span class="nx">text</span><span class="o">:</span><span class="s1">&#39;Telefon:&#39;</span><span class="p">,</span>
+		<span class="nx">color</span><span class="o">:</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;3%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;14%&#39;</span>		
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">c_tel1</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createTextField</span><span class="p">({</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;2%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;45%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;3%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;15.5%&#39;</span><span class="p">,</span>
+		<span class="nx">keyboardType</span><span class="o">:</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">KEYBOARD_NUMBER_PAD</span>
+	<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-70">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-70">&#182;</a>               </div>               <p>telephone</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">l_tel2</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createLabel</span><span class="p">({</span>
+		<span class="nx">text</span><span class="o">:</span><span class="s1">&#39;Mobitel:&#39;</span><span class="p">,</span>
+		<span class="nx">color</span><span class="o">:</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;53%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;14%&#39;</span>		
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">c_tel2</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createTextField</span><span class="p">({</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;53%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;45%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;3%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;15.5%&#39;</span><span class="p">,</span>
+		<span class="nx">keyboardType</span><span class="o">:</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">KEYBOARD_NUMBER_PAD</span>
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">c_view_additional</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createView</span><span class="p">({</span>
+		<span class="nx">backgroundColor</span><span class="o">:</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span>
+		<span class="nx">borderRadius</span><span class="o">:</span><span class="mi">10</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;97%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;10%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;19%&#39;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;2%&#39;</span>
+	<span class="p">});</span>	</pre></div>             </td>           </tr>                               <tr id="section-71">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-71">&#182;</a>               </div>               <p>latitude longitude</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">c_location_btn</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createButton</span><span class="p">({</span>
+		<span class="nx">title</span><span class="o">:</span><span class="s1">&#39;Setuj lokaciju&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;30%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;40%&#39;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;3%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;60%&#39;</span>		
+	<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-72">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-72">&#182;</a>               </div>               <p>latitude longitude</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">l_lon</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createLabel</span><span class="p">({</span>
+		<span class="nx">text</span><span class="o">:</span><span class="s1">&#39;Longitude:&#39;</span><span class="p">,</span>
+		<span class="nx">color</span><span class="o">:</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;3%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;1%&#39;</span>		
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">c_lon</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createTextField</span><span class="p">({</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;2%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;45%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;28%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;23%&#39;</span>
+	<span class="p">});</span>
+
+	<span class="kd">var</span> <span class="nx">l_lat</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createLabel</span><span class="p">({</span>
+		<span class="nx">text</span><span class="o">:</span><span class="s1">&#39;Latitude:&#39;</span><span class="p">,</span>
+		<span class="nx">color</span><span class="o">:</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;53%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;1%&#39;</span>		
+	<span class="p">});</span>
+	
+	<span class="kd">var</span> <span class="nx">c_lat</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createTextField</span><span class="p">({</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;50%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;45%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;28%&#39;</span><span class="p">,</span>
+		<span class="nx">top</span><span class="o">:</span><span class="s1">&#39;23%&#39;</span>
+	<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-73">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-73">&#182;</a>               </div>               <p>buttons</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">c_btn_close</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createButton</span><span class="p">({</span>
+		<span class="nx">title</span><span class="o">:</span><span class="s2">&quot;Zatvori&quot;</span><span class="p">,</span>
+		<span class="nx">left</span><span class="o">:</span><span class="s1">&#39;2%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;30%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;10%&#39;</span><span class="p">,</span>
+		<span class="nx">bottom</span><span class="o">:</span><span class="s1">&#39;1%&#39;</span>
+	<span class="p">});</span>
+
+	<span class="kd">var</span> <span class="nx">c_btn_save</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createButton</span><span class="p">({</span>
+		<span class="nx">title</span><span class="o">:</span><span class="s2">&quot;Snimi&quot;</span><span class="p">,</span>
+		<span class="nx">right</span><span class="o">:</span><span class="s1">&#39;2%&#39;</span><span class="p">,</span>
+		<span class="nx">width</span><span class="o">:</span><span class="s1">&#39;30%&#39;</span><span class="p">,</span>
+		<span class="nx">height</span><span class="o">:</span><span class="s1">&#39;10%&#39;</span><span class="p">,</span>
+		<span class="nx">bottom</span><span class="o">:</span><span class="s1">&#39;1%&#39;</span>
+	<span class="p">});</span>	
+	
+	</pre></div>             </td>           </tr>                               <tr id="section-74">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-74">&#182;</a>               </div>               <p>add controls to form</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">c_view_main</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">l_desc</span><span class="p">);</span>
+	<span class="nx">c_view_main</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c_desc</span><span class="p">);</span>
+	
+	<span class="nx">c_view_main</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c_addr</span><span class="p">);</span>
+	<span class="nx">c_view_main</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">l_addr</span><span class="p">);</span>
+
+	<span class="nx">c_view_main</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c_city</span><span class="p">);</span>
+	<span class="nx">c_view_main</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">l_city</span><span class="p">);</span>
+
+	<span class="nx">c_view_main</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c_pcode</span><span class="p">);</span>
+	<span class="nx">c_view_main</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">l_pcode</span><span class="p">);</span>
+
+	<span class="nx">c_view_main</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c_tel1</span><span class="p">);</span>
+	<span class="nx">c_view_main</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">l_tel1</span><span class="p">);</span>
+
+	<span class="nx">c_view_main</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c_tel2</span><span class="p">);</span>
+	<span class="nx">c_view_main</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">l_tel2</span><span class="p">);</span>
+	
+	<span class="nx">c_view_additional</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">l_lon</span><span class="p">);</span>
+	<span class="nx">c_view_additional</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c_lon</span><span class="p">);</span>
+
+	<span class="nx">c_view_additional</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">l_lat</span><span class="p">);</span>
+	<span class="nx">c_view_additional</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c_lat</span><span class="p">);</span>
+	
+	<span class="nx">c_view_additional</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c_location_btn</span><span class="p">);</span>
+	
+	<span class="nx">c_view_main</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c_view_additional</span><span class="p">);</span>
+
+	<span class="nx">c_scroll_view</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c_view_main</span><span class="p">);</span>
+	
+	<span class="nx">c_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c_scroll_view</span><span class="p">);</span>
+	
+	<span class="nx">c_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c_btn_close</span><span class="p">);</span>
+	<span class="nx">c_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c_btn_save</span><span class="p">);</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-75">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-75">&#182;</a>               </div>               <p>close button event</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">c_btn_close</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		<span class="nx">c_win</span><span class="p">.</span><span class="nx">canceled</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+		<span class="nx">c_win</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+	<span class="p">});</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-76">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-76">&#182;</a>               </div>               <p>save button</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">c_btn_save</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span></pre></div>             </td>           </tr>                               <tr id="section-77">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-77">&#182;</a>               </div>               <p>check data if... if...</p>             </td>             <td class="code">               <div class="highlight"><pre>			<span class="kd">var</span> <span class="nx">_c_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="k">if</span><span class="p">(</span><span class="nx">cust_data</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">){</span>
+				<span class="nx">_c_id</span> <span class="o">=</span> <span class="nx">cust_data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">id</span><span class="p">;</span>
+			<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-78">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-78">&#182;</a>               </div>               <p>add data to current_data</p>             </td>             <td class="code">               <div class="highlight"><pre>			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">customer_data</span> <span class="o">=</span> <span class="p">[{</span> <span class="nx">id</span><span class="o">:</span> <span class="nx">_c_id</span><span class="p">,</span> <span class="nx">desc</span><span class="o">:</span> <span class="nx">c_desc</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="nx">addr</span><span class="o">:</span> <span class="nx">c_addr</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="nx">city</span><span class="o">:</span> <span class="nx">c_city</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="nx">pcode</span><span class="o">:</span> <span class="nx">c_pcode</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="nx">tel1</span><span class="o">:</span> <span class="nx">c_tel1</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="nx">tel2</span><span class="o">:</span> <span class="nx">c_tel2</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="nx">lon</span><span class="o">:</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">c_lon</span><span class="p">.</span><span class="nx">value</span><span class="p">),</span> <span class="nx">lat</span><span class="o">:</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">c_lat</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span> <span class="p">}];</span></pre></div>             </td>           </tr>                               <tr id="section-79">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-79">&#182;</a>               </div>               <p>close the window</p>             </td>             <td class="code">               <div class="highlight"><pre>			<span class="nx">c_win</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+	<span class="p">});</span>
+	
+	<span class="nx">c_location_btn</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		
+		<span class="k">if</span><span class="p">(</span><span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_longitude</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">){</span>
+			<span class="nx">c_lat</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_latitude</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span>
+			<span class="nx">c_lon</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_longitude</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span>
+			<span class="nx">c_view_additional</span><span class="p">.</span><span class="nx">backgroundColor</span> <span class="o">=</span> <span class="s1">&#39;#60a0ff&#39;</span><span class="p">;</span>
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">Media</span><span class="p">.</span><span class="nx">vibrate</span><span class="p">();</span>
+			<span class="nx">c_btn_save</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+		<span class="p">}</span>
+		<span class="k">else</span>
+		<span class="p">{</span>
+			<span class="nx">c_lat</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">;</span>
+			<span class="nx">c_lon</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">;</span>
+			<span class="nx">c_view_additional</span><span class="p">.</span><span class="nx">backgroundColor</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="p">;</span>
+		<span class="p">};</span>
+	<span class="p">});</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-80">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-80">&#182;</a>               </div>               <p>set text manipulation</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="nx">c_desc</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		<span class="nx">c_desc</span><span class="p">.</span><span class="nx">blur</span><span class="p">();</span>
+		<span class="nx">c_addr</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+	<span class="p">});</span>
+	
+	<span class="nx">c_addr</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		<span class="nx">c_addr</span><span class="p">.</span><span class="nx">blur</span><span class="p">();</span>
+		<span class="nx">c_city</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+	<span class="p">});</span>
+
+	<span class="nx">c_city</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		<span class="nx">c_city</span><span class="p">.</span><span class="nx">blur</span><span class="p">();</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">c_city</span><span class="p">.</span><span class="nx">value</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">){</span>
+			<span class="nx">c_pcode</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">Other</span><span class="p">.</span><span class="nx">getPostCode</span><span class="p">(</span> <span class="nx">c_city</span><span class="p">.</span><span class="nx">value</span> <span class="p">);</span>
+			<span class="nx">c_tel1</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+		<span class="p">}</span>
+		<span class="k">else</span>
+		<span class="p">{</span>
+			<span class="nx">c_pcode</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+		<span class="p">};</span>
+	<span class="p">});</span>
+	
+	<span class="nx">c_pcode</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;focus&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">c_city</span><span class="p">.</span><span class="nx">value</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">){</span>
+			<span class="nx">c_pcode</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">Other</span><span class="p">.</span><span class="nx">getPostCode</span><span class="p">(</span> <span class="nx">c_city</span><span class="p">.</span><span class="nx">value</span> <span class="p">);</span>
+		<span class="p">};</span>
+	<span class="p">});</span>
+	
+	<span class="nx">c_pcode</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">c_city</span><span class="p">.</span><span class="nx">value</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">){</span>
+			<span class="nx">c_pcode</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">Other</span><span class="p">.</span><span class="nx">getPostCode</span><span class="p">(</span> <span class="nx">c_city</span><span class="p">.</span><span class="nx">value</span> <span class="p">);</span>
+		<span class="p">};</span>
+	<span class="p">});</span>
+	
+	<span class="nx">c_pcode</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		<span class="nx">c_pcode</span><span class="p">.</span><span class="nx">blur</span><span class="p">();</span>
+		<span class="nx">c_tel1</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+	<span class="p">});</span>
+	
+	<span class="nx">c_tel1</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		<span class="nx">c_tel1</span><span class="p">.</span><span class="nx">blur</span><span class="p">();</span>
+		<span class="nx">c_tel2</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+	<span class="p">});</span>
+	
+	<span class="nx">c_tel2</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		<span class="nx">c_tel2</span><span class="p">.</span><span class="nx">blur</span><span class="p">();</span>
+		<span class="nx">c_location_btn</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+	<span class="p">});</span>	
+	
+	<span class="nx">c_lon</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		<span class="nx">c_lon</span><span class="p">.</span><span class="nx">blur</span><span class="p">();</span>
+		<span class="nx">c_lat</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+	<span class="p">});</span>
+	
+	<span class="nx">c_lat</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+		<span class="nx">c_lat</span><span class="p">.</span><span class="nx">blur</span><span class="p">();</span>
+		<span class="nx">c_btn_save</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+	<span class="p">});</span>
+	
+	</pre></div>             </td>           </tr>                               <tr id="section-81">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-81">&#182;</a>               </div>               <p>fill customer data</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="k">if</span><span class="p">(</span><span class="nx">cust_data</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">){</span></pre></div>             </td>           </tr>                               <tr id="section-82">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-82">&#182;</a>               </div>               <p>set text fields</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="nx">c_desc</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">cust_data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">desc</span><span class="p">;</span>
+		<span class="nx">c_addr</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">cust_data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">addr</span><span class="p">;</span>
+		<span class="nx">c_city</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">cust_data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">city</span><span class="p">;</span>
+		<span class="nx">c_pcode</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">cust_data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">postcode</span><span class="p">;</span>
+		<span class="nx">c_tel1</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">cust_data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">tel1</span><span class="p">;</span>
+		<span class="nx">c_tel2</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">cust_data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">tel2</span><span class="p">;</span>
+		<span class="nx">c_lon</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">cust_data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">lon</span><span class="p">;</span>
+		<span class="nx">c_lat</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">cust_data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">lat</span><span class="p">;</span>
+		
+	<span class="p">};</span>
+	
+	
+	<span class="nx">c_win</span><span class="p">.</span><span class="nx">open</span><span class="p">();</span>
+	
+	<span class="k">return</span> <span class="nx">c_win</span><span class="p">;</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-83">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-83">&#182;</a>               </div>               <p>new customer form</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">newCustomer</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+	
+	<span class="kd">var</span> <span class="nx">frm</span> <span class="o">=</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">customerForm</span><span class="p">();</span>
+	
+	<span class="nx">frm</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">frm</span><span class="p">.</span><span class="nx">canceled</span> <span class="o">==</span> <span class="kc">false</span> <span class="o">&amp;&amp;</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">customer_data</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">){</span>
+
+			<span class="nx">M3</span><span class="p">.</span><span class="nx">DB</span><span class="p">.</span><span class="nx">insertIntoCustomers</span><span class="p">(</span><span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">customer_data</span> <span class="p">);</span>
+			
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">fireEvent</span><span class="p">(</span><span class="s2">&quot;customerEdited&quot;</span><span class="p">);</span>
+
+		<span class="p">};</span>
+		
+	<span class="p">});</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-84">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-84">&#182;</a>               </div>               <p>edit customer form</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">editCustomer</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_data</span> <span class="o">==</span> <span class="kc">null</span> <span class="p">){</span>
+		<span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Selektujte partnera u tabeli !&quot;</span><span class="p">);</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">};</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-85">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-85">&#182;</a>               </div>               <p>get current customer</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">frm</span> <span class="o">=</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">customerForm</span><span class="p">(</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">current_customer_data</span> <span class="p">);</span>
+	
+	<span class="nx">frm</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+	
+		<span class="k">if</span><span class="p">(</span><span class="nx">frm</span><span class="p">.</span><span class="nx">canceled</span> <span class="o">==</span> <span class="kc">false</span> <span class="o">&amp;&amp;</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">customer_data</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">){</span>
+			
+			<span class="nx">M3</span><span class="p">.</span><span class="nx">DB</span><span class="p">.</span><span class="nx">updateCustomers</span><span class="p">(</span><span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">customer_data</span> <span class="p">);</span>
+			
+			
+			<span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">fireEvent</span><span class="p">(</span><span class="s2">&quot;customerEdited&quot;</span><span class="p">);</span>
+		<span class="p">};</span>
+	<span class="p">});</span>
+	
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-86">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-86">&#182;</a>               </div>               <p>call customer</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">callCustomer</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">_cust_data</span> <span class="p">){</span>
+	
+	<span class="kd">var</span> <span class="nx">telephones</span> <span class="o">=</span> <span class="p">[];</span>
+	<span class="kd">var</span> <span class="nx">_tel1</span> <span class="o">=</span> <span class="nx">_cust_data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">tel1</span><span class="p">;</span>
+	<span class="kd">var</span> <span class="nx">_tel2</span> <span class="o">=</span> <span class="nx">_cust_data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">tel2</span><span class="p">;</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="nx">_tel1</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">_tel1</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">){</span>
+		<span class="nx">telephones</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_tel1</span><span class="p">);</span>	
+	<span class="p">};</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="nx">_tel2</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">_tel2</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">){</span>
+		<span class="nx">telephones</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_tel2</span><span class="p">);</span>	
+	<span class="p">};</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="nx">telephones</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">){</span>
+		<span class="nx">telephones</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;Odustani&#39;</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Partner nema niti jednog telefona!&#39;</span><span class="p">);</span>
+		<span class="k">return</span><span class="p">;</span>	
+	<span class="p">};</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-87">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-87">&#182;</a>               </div>               <p>options dialog 2 </p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">tel_options</span> <span class="o">=</span> <span class="p">{</span>
+		<span class="nx">options</span><span class="o">:</span><span class="nx">telephones</span><span class="p">,</span>
+		<span class="nx">destructive</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span>
+		<span class="nx">cancel</span><span class="o">:</span><span class="mi">2</span><span class="p">,</span>
+		<span class="nx">title</span><span class="o">:</span><span class="s1">&#39;Pozovi partnera:&#39;</span>
+	<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-88">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-88">&#182;</a>               </div>               <p>create dialog</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">win_tel_1</span> <span class="o">=</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createOptionDialog</span><span class="p">(</span><span class="nx">tel_options</span><span class="p">);</span>
+	
+	<span class="nx">win_tel_1</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">tel_options</span><span class="p">.</span><span class="nx">options</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">index</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Odustani&#39;</span><span class="p">){</span>
+			<span class="k">return</span><span class="p">;</span>
+		<span class="p">};</span>
+		<span class="nx">Ti</span><span class="p">.</span><span class="nx">Platform</span><span class="p">.</span><span class="nx">openURL</span><span class="p">(</span><span class="s1">&#39;tel:&#39;</span> <span class="o">+</span> <span class="nx">tel_options</span><span class="p">.</span><span class="nx">options</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">index</span><span class="p">]);</span>
+	<span class="p">});</span>
+		
+	<span class="nx">win_tel_1</span><span class="p">.</span><span class="nx">show</span><span class="p">();</span>
+	
+<span class="p">};</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

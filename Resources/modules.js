@@ -9,9 +9,9 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-var boMobileAppLib = {};
+// ## Central place to load all modules of app
 
-// load libraries
+// load other modules
 Ti.include("db/dbmain.js");
 
 Ti.include("util/forms.js");
@@ -25,5 +25,5 @@ Ti.include("UI/codes.js");
 Ti.include("UI/codes_matrix.js");
 Ti.include("UI/customer.js");
 Ti.include("UI/purchase.js");
-Ti.include("UI/order.js");
+Ti.include("UI/preview.js");
 Ti.include("UI/main_window.js");

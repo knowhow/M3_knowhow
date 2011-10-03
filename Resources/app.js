@@ -9,47 +9,53 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-// Set's the background color
+// ## Main app js file
+// In this module we set global variables, open the main db.
+// After that login form appear and if user logged correctly main form show's.
 
+
+// Set's the default background color for app
 Titanium.UI.setBackgroundColor('#000');
 
-// include lib 
-Ti.include("lib.js");
+// Create main namespace 
+var M3 = {};
 
-// current user parameters
+// Including modules.js. In modules.js we call other js files and modules. 
+Ti.include("modules.js");
+
+// Set's the current user parameters.
+// These parametes are used through application latter.
 Ti.App.current_logged_user = "";
 Ti.App.current_logged_user_id = 0;
 
-// Get params for application
-boParams.getParams();
+// Get global params of application.
+M3.Params.getParams();
 
 // open main database and init as oDb object
-oDb = boDb.openDB();
+oDb = M3.DB.openDB();
 
-// open login form
-boMobileAppLib.Login.LoginForm();
+// Open's the main login form before of any using of app
+M3.Login.loginForm();
 
-// listen to login events... 
+// Listen to eventListener 'loggedout', if this event fire's login form open's again
 Ti.App.addEventListener('loggedout',function(){
-    // if fail, try again
-    boMobileAppLib.Login.LoginForm();
+   M3.Login.loginForm();
 });
 
-// listen to login events
+// Listen for eventListener 'loggedin', if this event fire's main windos show's
 Ti.App.addEventListener('loggedin',function(){
-    // go to main form
-    mainWindow();
+    // open's the main form of the app
+    M3.Main.mainWindow();
 });
 
-// listen to logincanceled events
+// listen to other event's
 Ti.App.addEventListener('logincanceled',function(){
-    // go to main form
-	
+    // to do
 });
-
 
 Ti.App.addEventListener('close',function(e)
 {
+    // if app close, close the db
     if ( oDb ) {
         oDb.close();
     }

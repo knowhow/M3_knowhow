@@ -9,12 +9,12 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-boCodes.Matrix = {};
+M3.Codes.Matrix = {};
 
 var current_item_index = null;
 var last_item_index = null;
 	
-boCodes.Matrix.getMatrix = function( m_data, m_title ) {
+M3.Codes.Matrix.getMatrix = function( m_data, m_title ) {
 		
 		var m_win = Ti.UI.createWindow({
 			backgroundColor:"white",
@@ -29,10 +29,10 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		
 		// w: 25
 		// h: 30
-		var cellWidth = boUtil.math.getControlPostitionWidth(40);
-		var cellHeight = boUtil.math.getControlPostitionWidth(45);
-		var xSpacer = boUtil.math.getControlPostitionWidth(1);
-		var ySpacer = boUtil.math.getControlPostitionWidth(5);
+		var cellWidth = M3.Util.MathModule.getControlPostitionWidth(40);
+		var cellHeight = M3.Util.MathModule.getControlPostitionWidth(45);
+		var xSpacer = M3.Util.MathModule.getControlPostitionWidth(1);
+		var ySpacer = M3.Util.MathModule.getControlPostitionWidth(5);
 		var xGrid = 2;
 		var yGrid = 100;
 		var currentItem = 0;
@@ -87,8 +87,8 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
             		objName:"it-img",
  					top:'5%',
  					left:'48%',
- 					width:boUtil.math.getControlPostitionWidth(20),
- 					height:boUtil.math.getControlPostitionHeight(16)
+ 					width:M3.Util.MathModule.getControlPostitionWidth(20),
+ 					height:M3.Util.MathModule.getControlPostitionHeight(16)
  				});
  
  				// main label - count items
@@ -119,7 +119,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
             		objIndex:cellIndex.toString(),
             		objName:"lbl-it-desc",
             		textAlign:"left",
-            		text:boUtil.str.rPad( m_data[cellIndex].desc, 20),
+            		text:M3.Util.Str.rPad( m_data[cellIndex].desc, 20),
             		touchEnabled:false
         		});
         		
@@ -216,7 +216,7 @@ boCodes.Matrix.getMatrix = function( m_data, m_title ) {
 		});
   
   		var _enter_value_manualy = function(e){
-			var man = boUtilForms.getNumValue(Number(labels[e.source.objIndex].text));
+			var man = M3.StdForms.getNumValue(Number(labels[e.source.objIndex].text));
 			man.addEventListener("close", function(){
 				if(man.item_value != null && man.item_value != undefined){
 					labels[e.source.objIndex].text = man.item_value;

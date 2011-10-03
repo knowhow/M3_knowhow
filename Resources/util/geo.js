@@ -9,12 +9,13 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-var boGeo = {};
+M3.Geo = {};
+
 var location_data;
 var location_error = "";
 var location_added = false;
 
-boGeo.geoForm = function() {
+M3.Geo.geoForm = function() {
 		
 	var g_win = Ti.UI.createWindow({
 		backgroundColor:"#FFFFFF",
@@ -63,9 +64,9 @@ boGeo.geoForm = function() {
 	g_l_btn.addEventListener("click", function(){
 		
 		// first start service - because of bug!
-		boGeo.getCurrentLocation();
+		M3.Geo.getCurrentLocation();
 		// second instance
-		boGeo.getCurrentLocation();
+		M3.Geo.getCurrentLocation();
 		
 		var text = "";
 		
@@ -83,10 +84,10 @@ boGeo.geoForm = function() {
 			if (!e.success || e.error){
 				g_lbl.text = "";
 			
-				text = "Error:" + boUtil.str.newRow();
+				text = "Error:" + M3.Util.Str.newRow();
 			
-				text += e.error.message + boUtil.str.newRow(); 
-				text += "Error code: " + e.error.code + boUtil.str.newRow();
+				text += e.error.message + M3.Util.Str.newRow(); 
+				text += "Error code: " + e.error.code + M3.Util.Str.newRow();
 			
 				g_lbl.text = text;	
 			}
@@ -94,13 +95,13 @@ boGeo.geoForm = function() {
 			{
 				g_lbl.text = "";
 			
-				text = "Pozicija:" + boUtil.str.newRow();
-				text += "lat: " + e.coords.latitude + boUtil.str.newRow(); 
-				text += "lon: " + e.coords.longitude + boUtil.str.newRow();
-				text += "acc: " + e.coords.accuracy + boUtil.str.newRow();
+				text = "Pozicija:" + M3.Util.Str.newRow();
+				text += "lat: " + e.coords.latitude + M3.Util.Str.newRow(); 
+				text += "lon: " + e.coords.longitude + M3.Util.Str.newRow();
+				text += "acc: " + e.coords.accuracy + M3.Util.Str.newRow();
 				
-				text += "Udaljenost od Zenice:" + boUtil.str.newRow();
-				text += Math.round( boGeo.calcGeoDistance(e.coords.latitude, e.coords.longitude, zenica_lat, zenica_lon ) * 1000) / 1000;
+				text += "Udaljenost od Zenice:" + M3.Util.Str.newRow();
+				text += Math.round( M3.Geo.calcGeoDistance(e.coords.latitude, e.coords.longitude, zenica_lat, zenica_lon ) * 1000) / 1000;
 				
 				g_lbl.text = text;
 			};
@@ -124,7 +125,7 @@ var geoLocationCallback = function(cb){
 	
 	
 // get current location based on geolocation
-boGeo.getCurrentLocation = function() {
+M3.Geo.getCurrentLocation = function() {
       	
     if(Ti.Geolocation.locationServicesEnabled == false){
     	alert("Geo services are turned off !");
@@ -172,7 +173,7 @@ boGeo.getCurrentLocation = function() {
 // return value is in kilometers "K"
 // what is "N" ?
 // return value must be rounded because is eg. 50.231322213
-boGeo.calcGeoDistance = function(lat1, lon1, lat2, lon2, unit) {
+M3.Geo.calcGeoDistance = function(lat1, lon1, lat2, lon2, unit) {
 	var radlat1 = Math.PI * lat1/180;
   	var radlat2 = Math.PI * lat2/180;
   	var radlon1 = Math.PI * lon1/180;
@@ -200,14 +201,14 @@ boGeo.calcGeoDistance = function(lat1, lon1, lat2, lon2, unit) {
 	return dist;
 };
 
-boGeo.showMap = function( lat, lon, customer_lat, customer_lon ){
+M3.Geo.showMap = function( lat, lon, customer_lat, customer_lon ){
 	
 	var m_win = Ti.UI.createWindow({
 		backgroundColor:'white',
 		title:'Mapa'
 	});
 	
-	//alert(lat + boUtil.str.newRow() + lon + boUtil.str.newRow() + customer_lat + boUtil.str.newRow() + customer_lan );
+	//alert(lat + M3.Util.Str.newRow() + lon + M3.Util.Str.newRow() + customer_lat + M3.Util.Str.newRow() + customer_lan );
 	
 	var my_curr_position = Titanium.Map.createAnnotation({
 		latitude:Number(lat),
@@ -267,12 +268,12 @@ boGeo.showMap = function( lat, lon, customer_lat, customer_lon ){
 };
 
 // turn off gps system
-boGeo.turnOffGps = function() {
+M3.Geo.turnOffGps = function() {
 	Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
 };
 
 // turn on gps system
-boGeo.turnOnGps = function() {
-	boGeo.getCurrentLocation();
-	boGeo.getCurrentLocation();
+M3.Geo.turnOnGps = function() {
+	M3.Geo.getCurrentLocation();
+	M3.Geo.getCurrentLocation();
 };

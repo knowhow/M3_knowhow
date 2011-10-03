@@ -9,18 +9,25 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-var boUtilForms = {};
+// ## The main Forms module
 
-boUtilForms.getNumValue = function(curr_value){
-	return boUtilForms.getValue(curr_value, 'NUM');
+
+// create global namespace
+M3.StdForms = {};
+
+// create std Form for getting numeric value
+M3.StdForms.getNumValue = function(curr_value){
+	return M3.StdForms.getValue(curr_value, 'NUM');
 };
 
-boUtilForms.getStrValue = function(curr_value){
-	return boUtilForms.getValue(curr_value, 'STR');
+// create std Form for getting string value
+M3.StdForms.getStrValue = function(curr_value){
+	return M3.StdForms.getValue(curr_value, 'STR');
 };
 
-// get value in box
-boUtilForms.getValue = function(curr_value, type){
+// Opens std Form with any of given data
+// Type must be 'STR' or 'NUM'
+M3.StdForms.getValue = function(curr_value, type){
 	
 	var mv_win = Ti.UI.createWindow({
 		backgroundColor:'white',
@@ -45,7 +52,6 @@ boUtilForms.getValue = function(curr_value, type){
 		left:'10%',
 		right:'10%',
 		height:'25%'
-		//keyboardType: Titanium.UI.KEYBOARD_NUMBER_PAD
 	});
 	
 	
@@ -87,7 +93,7 @@ boUtilForms.getValue = function(curr_value, type){
 		{
 			case "NUM":
 				
-				if(mv_text.value != '' && boUtil.num.isValidNum(mv_text.value) ){
+				if(mv_text.value != '' && M3.Util.Num.isValidNum(mv_text.value) ){
 					mv_win.item_value = mv_text.value;
 				};
 				mv_win.close();

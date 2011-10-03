@@ -9,15 +9,19 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-var boUtil = {};
+// ## Main util module of app
+
+// set's the global namespace
+M3.Util = {};
 	
-boUtil.num = {};
-boUtil.str = {};
-boUtil.date = {};
-boUtil.math = {};
+
+M3.Util.Num = {};
+M3.Util.Str = {};
+M3.Util.DateT = {};
+M3.Util.MathModule = {};
 	
 // rPad string
-boUtil.str.rPad = function( input_string, length, padding_character ) {
+M3.Util.Str.rPad = function( input_string, length, padding_character ) {
 	var s = input_string;
 	if(padding_character == null){
 		padding_character = " ";
@@ -29,7 +33,7 @@ boUtil.str.rPad = function( input_string, length, padding_character ) {
 };
 
 // lPad string
-boUtil.str.lPad = function( input_string, length, padding_character ) {
+M3.Util.Str.lPad = function( input_string, length, padding_character ) {
 	var s = input_string;
 	if(padding_character == null){
 		padding_character = " ";
@@ -41,7 +45,7 @@ boUtil.str.lPad = function( input_string, length, padding_character ) {
 }
 
 // returns new row 
-boUtil.str.newRow = function(count){
+M3.Util.Str.newRow = function(count){
 	var s = "";
 	if(count == null){
 		count = 1;
@@ -53,7 +57,7 @@ boUtil.str.newRow = function(count){
 };
 	
 	
-boUtil.date.getCurrentDate = function () {
+M3.Util.DateT.getCurrentDate = function () {
 		
 	var currentTime = new Date();
 	var month = currentTime.getMonth();
@@ -65,7 +69,7 @@ boUtil.date.getCurrentDate = function () {
 };
 
 // get ctrl position based on device screen proportion
-boUtil.math.getControlPostitionWidth = function( percentage ) {
+M3.Util.MathModule.getControlPostitionWidth = function( percentage ) {
 	// standard device proportions
 	var dev_widht = Ti.Platform.displayCaps.platformWidth;
 	var result = dev_widht * (percentage / 100);
@@ -73,7 +77,7 @@ boUtil.math.getControlPostitionWidth = function( percentage ) {
 };
 
 // get ctrl position based on device screen proportion
-boUtil.math.getControlPostitionHeight = function( percentage ) {
+M3.Util.MathModule.getControlPostitionHeight = function( percentage ) {
 	// standard device proportions
 	var dev_height = Ti.Platform.displayCaps.platformHeight;
 	var result = dev_height * (percentage / 100);
@@ -82,7 +86,7 @@ boUtil.math.getControlPostitionHeight = function( percentage ) {
 
 
 // check for valid num
-boUtil.num.isValidNum = function(val){
+M3.Util.Num.isValidNum = function(val){
 	var found=0;
   	var i=0;
   	var allowedChars=".1234567890";

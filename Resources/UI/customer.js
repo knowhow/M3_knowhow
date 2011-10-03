@@ -9,8 +9,15 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-// customer list 
-boCodes.Customers.customerList = function() {
+// ## The main customers module
+
+
+// set's the global space for this module
+M3.Customers = {};
+
+
+// Get customer list
+M3.Customers.customerList = function() {
 		
 	// reset global data
 	Ti.App.purchased_data = null;
@@ -25,22 +32,25 @@ boCodes.Customers.customerList = function() {
 	Ti.App.current_customer_tel_1 = null;
 	Ti.App.current_customer_tel_2 = null;
 	
-	// open the get customer form
+	// open the customer form
 	var customer_win = null;
-	customer_win = boCodes.Customers.getPurchaseCustomer();
+	customer_win = M3.Customers.customersForm();
 			
 };
 
 
 
-// get customer on ordering form
-boCodes.Customers.getPurchaseCustomer = function(){
+// Open's the main customer form with active customers.
+// Activate the GPS system for searching.
+// Set's the main options for new Purchase, editing etc...
+M3.Customers.customersForm = function(){
 		
-	var c_data = boCodes.Customers.getCustomers(Ti.App.current_logged_user_id);
+	// get customers data
+	var c_data = M3.Codes.Customers.getCustomers(Ti.App.current_logged_user_id);
 	
+	// create window and other components
 	var cp_win = Ti.UI.createWindow({
 		backgroundColor:"#FFFFFF",
-		//navBarHidden:false,
 		title:"Odaberi partnera"
 	});
 	
@@ -75,7 +85,6 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		bottom:'5%'
 	});
 
-	// get customers by gps research...
 	var cp_gps_btn = Ti.UI.createButton({
 		title:"GPS...",
 		left:'35%',
@@ -85,7 +94,6 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		bottom:'5%'
 	});
 
-	// options...
 	var cp_opt_btn = Ti.UI.createButton({
 		title:"Opcije",
 		right:'1%',
@@ -95,29 +103,28 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		bottom:'5%'
 	});
 
-	// search table
+	// sarch box of the table component
 	var searchBar = Ti.UI.createSearchBar({
 		value:"",
 		left:'1%'
 	});	
 	
+	// when we call return in search box close the keyboard if it's up
 	searchBar.addEventListener("return", function(){
 		searchBar.blur();
 	});
 
-	
-	// table view of this form
+	// main table view of this window
 	var cp_tbl_view = Ti.UI.createTableView({
 		headerTitle:"Lista partnera za '" + Ti.App.current_logged_user + "'",
 		backgroundColor:'white',
 		allowsSelection:true,
 		search:searchBar,
 		top:'10%',
-		bottom:'12%',
-		//maxRowHeight:120
+		bottom:'12%'
 	});
 	
-	// options dialog 
+	// main options dialog 
 	var dlg_opt_1 = {
 		options:['Napravi narudžbu','Pozovi partnera', 'Ispravi partnera', 'Prikaži na mapi', 'Otkaži'],
 		destructive:1,
@@ -126,7 +133,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		e_object:null
 	};
 	
-	// options dialog 2 
+	// additional options dialog
 	var dlg_opt_2 = {
 		options:['Novi partner', 'Osvježi tabelu','Otkaži'],
 		destructive:1,
@@ -134,30 +141,33 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		title:'Opcije:'
 	};
 
-	// create dialog
+	// create dialog's
 	var win_dlg_opt_1 = Titanium.UI.createOptionDialog(dlg_opt_1);
 	var win_dlg_opt_2 = Titanium.UI.createOptionDialog(dlg_opt_2);
 	
-	// add event listener
+	
+	// add event listener for main dialog
 	win_dlg_opt_1.addEventListener('click',function(e)
 	{
 		
 		switch(e.index)
 		{
 			case 0:
-				_addNewPurchase( win_dlg_opt_1.e_object );	
+				// add new purchase order
+				_addNewPurchaseOrder( win_dlg_opt_1.e_object );	
 				break;
 			case 1:
-				boCodes.Customers.callCustomer(Ti.App.current_customer_data);
+				// call the customer
+				M3.Customers.callCustomer(Ti.App.current_customer_data);
   				break;
 			case 2:
 				// edit customer
-				boCodes.Customers.editCustomer();
+				M3.Customers.editCustomer();
 				break;
 			case 3:
-				var map_w = boGeo.showMap( Ti.App.current_latitude, Ti.App.current_longitude, Ti.App.current_customer_lat, Ti.App.current_customer_lon );
+				// show the map
+				var map_w = M3.Geo.showMap( Ti.App.current_latitude, Ti.App.current_longitude, Ti.App.current_customer_lat, Ti.App.current_customer_lon );
 				map_w.addEventListener("close", function(){
-					// ...
 				});
 				break;
 			case 4:
@@ -167,38 +177,41 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	
 	});
 	
+	// add event listener for second dialog
 	win_dlg_opt_2.addEventListener('click',function(e)
 	{
 		switch(e.index)
 		{
 			case 0:
-				// new customer
-  				boCodes.Customers.newCustomer();
+				// add new customer
+  				M3.Customers.newCustomer();
   				break;
 			case 1:
-  				// refresh table
-				c_data = boCodes.Customers.getCustomers(Ti.App.current_logged_user_id);
-				var tbl_upd = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
-				cp_tbl_view.setData( tbl_upd );
+  				// refresh table view component
+				// set 'c_data' again from table
+				c_data = M3.Codes.Customers.getCustomers(Ti.App.current_logged_user_id);
+				// refresh tableview component with new data
+				cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
 				break;
 			case 2:
 				break;
 		};
 	});
 	
+	
 	// listen for edited event
 	Ti.App.addEventListener("customerEdited", function(){
-		c_data = boCodes.Customers.getCustomers(Ti.App.current_logged_user_id);
-		var tbl_upd = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
-		cp_tbl_view.setData( tbl_upd );
+		// get customer data again
+		c_data = M3.Codes.Customers.getCustomers(Ti.App.current_logged_user_id);
+		// refresh tableview component with new data
+		cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
 	});
 		
+	// add controls to view and window
 	cp_top_view.add(cp_lbl_loc);
-
 	cp_bottom_view.add(cp_close_btn);
 	cp_bottom_view.add(cp_gps_btn);
 	cp_bottom_view.add(cp_opt_btn);
-	
 	cp_win.add(cp_top_view);
 	cp_win.add(cp_tbl_view);
 	cp_win.add(cp_bottom_view);
@@ -207,13 +220,14 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	cp_tbl_view.addEventListener("click", function(e){
 		
 		if (e.source.objName) {
-			// set current id
+			// set current id, lot, lat, tel's...
 			Ti.App.current_customer_id = c_data[e.source.objIndex].id;
 			Ti.App.current_customer_lat = c_data[e.source.objIndex].lat;
 			Ti.App.current_customer_lon = c_data[e.source.objIndex].lon;
 			Ti.App.current_customer_tel_1 = c_data[e.source.objIndex].tel1;
 			Ti.App.current_customer_tel_2 = c_data[e.source.objIndex].tel2;
-			// set current data array
+			// set current customer data into array
+			// this array will be used later in app
 			var curr_data = [];
 			curr_data.push(c_data[e.source.objIndex]);
 			Ti.App.current_customer_data = curr_data;
@@ -222,23 +236,28 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		
 	});
 	
-	var _addNewPurchase = function(e){
+	// local function for adding new purchase
+	var _addNewPurchaseOrder = function(e){
 		
 		if (e.source.objName) {
 			
+			// close the keyboard if it's up
 			searchBar.blur();
+			
 			// turn off gps system
-			Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
+			M3.Geo.turnOffGps();
+			
 			// set global customer data for purchase
 			var result = [];
 			result.push( c_data[e.source.objIndex] );
 			Ti.App.customer_data = result;
-			// set current id
+			
+			// set current customer id
 			Ti.App.current_customer_id = c_data[e.source.objIndex].id;
 			Ti.App.current_customer_data = result;
 
-			// open purchase
-			boPurchase.newPurchase();
+			// open new purchase form
+			M3.Purchase.newPurchaseOrder();
 			
 			// close customer list
 			cp_win.close();
@@ -246,7 +265,8 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		};
 	};
 		
-		
+	
+	// add touchstart and touchend eventlistener
 	var tStart;
 	cp_tbl_view.addEventListener('touchstart', function(e) {
     	
@@ -277,7 +297,7 @@ boCodes.Customers.getPurchaseCustomer = function(){
 	});
 	
 
-	// close btn
+	// close button event listener
 	cp_close_btn.addEventListener("click", function(){
 		clearInterval(upd_timer);
 		Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
@@ -285,15 +305,16 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		cp_win.close();
 	});
 	
-	// options
+	// options dialog event listener
 	cp_opt_btn.addEventListener("click", function(){
 		// open options
 		win_dlg_opt_2.show();		
 	});
 	
+	// GPS button event listener
 	cp_gps_btn.addEventListener("click", function(){
 		
-		
+		// create progress bar component
 		var pb = Ti.UI.createProgressBar({
     		width:250,
     		min:0,
@@ -305,10 +326,12 @@ boCodes.Customers.getPurchaseCustomer = function(){
     		style:Titanium.UI.iPhone.ProgressBarStyle.PLAIN,
 		});
 		
+		// add progress bar to the window
 		cp_win.add(pb);
 			
 		var tic = 0;
  
+ 		// try to find customer by current GPS coordinates in table 'customers'
 		var timer = setInterval(function() {
     		
     		tic++;
@@ -319,33 +342,27 @@ boCodes.Customers.getPurchaseCustomer = function(){
 				pb.value = 200;
             	cp_win.remove(pb);
             	cp_top_view.backgroundColor = "blue";
-				//alert("pronasao: " + longitude + ", " + latitude);	 
+				
             	clearInterval(timer);
             	
             	// calculate distance and fill table view
-            	c_data = boCodes.Customers.getCustomersInRadius( Ti.App.current_longitude, Ti.App.current_latitude );
-				var upd_tbl = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
-				cp_tbl_view.setData( upd_tbl );
-				//Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );          	
-
+            	c_data = M3.Codes.Customers.getCustomersInRadius( Ti.App.current_longitude, Ti.App.current_latitude );
+				cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
+				
         	};
         	
         	if (tic == 200){
         		clearInterval(timer);
         		cp_win.remove(pb);
         		cp_lbl_loc.text = "Nisam uspio pronaći lokaciju, pokušajte ručno!";
-        		//Ti.Geolocation.removeEventListener( 'location', geoLocationCallback );
         	};
         	                    
 		},200);			  
 	
 	});	
 	
-	// first start service - because of bug!
-	//boGeo.getCurrentLocation();
-	// second instance
-	//boGeo.getCurrentLocation();
-	boGeo.turnOnGps();
+	// turn on GPS system
+	M3.Geo.turnOnGps();
 	
 	var text = "";
 		
@@ -360,8 +377,8 @@ boCodes.Customers.getPurchaseCustomer = function(){
 				
 			cp_lbl_loc.text = "";
 			
-			text = "Greška: " + e.error.message + boUtil.str.newRow(); 
-			text += "'kod': " + e.error.code + boUtil.str.newRow();
+			text = "Greška: " + e.error.message + M3.Util.Str.newRow(); 
+			text += "'kod': " + e.error.code + M3.Util.Str.newRow();
 			
 			cp_lbl_loc.text = text;
 			cp_top_view.backgroundColor = "red";	
@@ -374,9 +391,9 @@ boCodes.Customers.getPurchaseCustomer = function(){
 				
 			cp_lbl_loc.text = "";
 			
-			text = "Gps info:" + boUtil.str.newRow();
+			text = "Gps info:" + M3.Util.Str.newRow();
 			text += "lat: " + Ti.App.current_latitude; 
-			text += ", lon: " + Ti.App.current_longitude + boUtil.str.newRow();
+			text += ", lon: " + Ti.App.current_longitude + M3.Util.Str.newRow();
 			text += "preciznost: " + e.coords.accuracy;
 						
 			cp_lbl_loc.text = text;
@@ -394,18 +411,18 @@ boCodes.Customers.getPurchaseCustomer = function(){
 		if(t_time == end_time){
 			// set the table contents, all customers
 			clearInterval(upd_timer);
-			var upd_tbl = _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude );
-			cp_tbl_view.setData( upd_tbl );
+			cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
 		};
 	},end_time);
 	
+	// open the window
 	cp_win.open();
 	
 	return cp_win;
 
 };
 
-
+// local function for refreshing data in tableview component
 function _refresh_cust_data( tbl_data, lon, lat ) {
 		
 	var ret_data = [];
@@ -417,7 +434,7 @@ function _refresh_cust_data( tbl_data, lon, lat ) {
 		dst = 0;
 		if( tbl_data[i].lat != 0 && tbl_data[i].lat != null && lon != null ){
 			
-			dst = boGeo.calcGeoDistance( tbl_data[i].lon, tbl_data[i].lat, lon, lat );
+			dst = M3.Geo.calcGeoDistance( tbl_data[i].lon, tbl_data[i].lat, lon, lat );
 			dst = Math.round( dst * 1000 ) / 1000;
 			
 		};
@@ -427,7 +444,7 @@ function _refresh_cust_data( tbl_data, lon, lat ) {
         	objIndex:i,
         	objName:"grid-item",
         	layout: "horizontal",
-        	height:boUtil.math.getControlPostitionHeight(11),
+        	height:M3.Util.MathModule.getControlPostitionHeight(11),
         	title:tbl_data[i].desc, 
         	width:Ti.Platform.displayCaps.platformWidth,
         	left:1,
@@ -439,7 +456,7 @@ function _refresh_cust_data( tbl_data, lon, lat ) {
            	top:'.5%',
            	//height:'250%',
            	backgroundColor:'white',
-           	height:boUtil.math.getControlPostitionHeight(11),
+           	height:M3.Util.MathModule.getControlPostitionHeight(11),
            	width:'100%',
            	left:'1%',
            	objIndex:i,
@@ -480,7 +497,7 @@ function _refresh_cust_data( tbl_data, lon, lat ) {
            	objIndex:i,
            	objName:"lbl-desc",
            	textAlign:"left",
-           	text:'distanca: ' + boUtil.str.newRow() + dst,
+           	text:'distanca: ' + M3.Util.Str.newRow() + dst,
            	touchEnabled:false
         });
 
@@ -497,14 +514,16 @@ function _refresh_cust_data( tbl_data, lon, lat ) {
 };
 
 
-// customer edit form
-boCodes.Customers.customerForm = function( cust_data ) {
+// Customer edit form.
+// This form will be used for new or edit existing customer.
+// If no 'cust_data' is represent - New customer form open's.
+M3.Customers.customerForm = function( cust_data ) {
 	
 	// window
 	var c_win = Ti.UI.createWindow({
 		backgroundColor:"black",
 		title:"Unos novog partnera...",
-		// this is my variable
+		// this is local variable
 		canceled:false
 	});
 	
@@ -653,8 +672,7 @@ boCodes.Customers.customerForm = function( cust_data ) {
 		left:'2%',
 		width:'45%',
 		height:'28%',
-		top:'23%',
-		keyboardType: Titanium.UI.KEYBOARD_NUMBER_PAD
+		top:'23%'
 	});
 
 	var l_lat = Ti.UI.createLabel({
@@ -668,8 +686,7 @@ boCodes.Customers.customerForm = function( cust_data ) {
 		left:'50%',
 		width:'45%',
 		height:'28%',
-		top:'23%',
-		keyboardType: Titanium.UI.KEYBOARD_NUMBER_PAD
+		top:'23%'
 	});
 
 	// buttons
@@ -776,7 +793,7 @@ boCodes.Customers.customerForm = function( cust_data ) {
 	c_city.addEventListener("return", function(){
 		c_city.blur();
 		if(c_city.value != ''){
-			c_pcode.value = boCodes.Postal.getPostCode( c_city.value );
+			c_pcode.value = M3.Codes.Other.getPostCode( c_city.value );
 			c_tel1.focus();
 		}
 		else
@@ -787,13 +804,13 @@ boCodes.Customers.customerForm = function( cust_data ) {
 	
 	c_pcode.addEventListener("focus", function(){
 		if(c_city.value != ''){
-			c_pcode.value = boCodes.Postal.getPostCode( c_city.value );
+			c_pcode.value = M3.Codes.Other.getPostCode( c_city.value );
 		};
 	});
 	
 	c_pcode.addEventListener("click", function(){
 		if(c_city.value != ''){
-			c_pcode.value = boCodes.Postal.getPostCode( c_city.value );
+			c_pcode.value = M3.Codes.Other.getPostCode( c_city.value );
 		};
 	});
 	
@@ -844,14 +861,14 @@ boCodes.Customers.customerForm = function( cust_data ) {
 };
 
 // new customer form
-boCodes.Customers.newCustomer = function(){
+M3.Customers.newCustomer = function(){
 	
-	var frm = boCodes.Customers.customerForm();
+	var frm = M3.Customers.customerForm();
 	
 	frm.addEventListener("close", function() {
 		if(frm.canceled == false && Ti.App.customer_data != null){
 
-			boDb.insertIntoCustomers(Ti.App.customer_data );
+			M3.DB.insertIntoCustomers(Ti.App.customer_data );
 			
 			Ti.App.fireEvent("customerEdited");
 
@@ -861,7 +878,7 @@ boCodes.Customers.newCustomer = function(){
 };
 
 // edit customer form
-boCodes.Customers.editCustomer = function(){
+M3.Customers.editCustomer = function(){
 	
 	if(Ti.App.current_customer_data == null ){
 		alert("Selektujte partnera u tabeli !");
@@ -869,13 +886,13 @@ boCodes.Customers.editCustomer = function(){
 	};
 	
 	// get current customer
-	var frm = boCodes.Customers.customerForm( Ti.App.current_customer_data );
+	var frm = M3.Customers.customerForm( Ti.App.current_customer_data );
 	
 	frm.addEventListener("close", function() {
 	
 		if(frm.canceled == false && Ti.App.customer_data != null){
 			
-			boDb.updateCustomers(Ti.App.customer_data );
+			M3.DB.updateCustomers(Ti.App.customer_data );
 			
 			
 			Ti.App.fireEvent("customerEdited");
@@ -885,7 +902,7 @@ boCodes.Customers.editCustomer = function(){
 };
 
 // call customer
-boCodes.Customers.callCustomer = function( _cust_data ){
+M3.Customers.callCustomer = function( _cust_data ){
 	
 	var telephones = [];
 	var _tel1 = _cust_data[0].tel1;

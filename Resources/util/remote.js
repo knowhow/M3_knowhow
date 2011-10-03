@@ -12,15 +12,15 @@
 // Main remote methode's. Here are the logic of http request's, send's, etc...
 
 // This is the unique namespace for remote method's
-var boRemote = {};
+M3.Remote = {};
 
 // Adding synchro into namespace...
-boRemote.get = {};
-boRemote.put = {};
+M3.Remote.Get = {};
+M3.Remote.Post = {};
 
 
-// open initialization form
-boRemote.formInit = function() {
+// open main initialization form
+M3.Remote.formInit = function() {
 	
 	// create window
 	var s_win = Ti.UI.createWindow({
@@ -152,7 +152,7 @@ boRemote.formInit = function() {
 	
 	// btn_set_server listener
 	btn_set_server.addEventListener("click", function(){
-		var tmp_frm = boUtilForms.getStrValue();
+		var tmp_frm = M3.StdForms.getStrValue();
 		tmp_frm.addEventListener("close", function(){
 			lbl_server.text = tmp_frm.item_value;
 			Ti.App.par_server_url = tmp_frm.item_value;
@@ -164,7 +164,7 @@ boRemote.formInit = function() {
 	btn_init.addEventListener("click", function(){
 		
 		// synchronize articles
-		boRemote.get.synhroArticles();
+		M3.Remote.Get.synhroArticles();
 		
 		Ti.App.addEventListener("articlesSynchronized", function(e){
 			
@@ -177,7 +177,7 @@ boRemote.formInit = function() {
 			lbl_i_articles.text = "- artikli init ok -> " + e.count;
 		
 			// run synchronize of the images
-			boRemote.get.synhroArticleImages();
+			M3.Remote.Get.synhroArticleImages();
 			
 			var images_cnt = 0;
 		
@@ -198,7 +198,7 @@ boRemote.formInit = function() {
 		
 		
 		// synchronize params
-		boRemote.get.synhroParams();
+		M3.Remote.Get.synhroParams();
 		Ti.App.addEventListener("paramsSynchronized", function(e){
 			if(e.result == 0){
 				lbl_i_params.text = "- parametri: nije uspjelo !!!";
@@ -210,7 +210,7 @@ boRemote.formInit = function() {
 		});	
 		
 		// synchronize customers
-		boRemote.get.synhroCustomers();
+		M3.Remote.Get.synhroCustomers();
 		Ti.App.addEventListener("customersSynchronized", function(e){
 			if(e.result == 0){
 				lbl_i_cust.text = "- partneri: nije uspjelo !!!";
@@ -222,7 +222,7 @@ boRemote.formInit = function() {
 		});
 		
 		// synchronize customers
-		boRemote.get.synhroUsers();
+		M3.Remote.Get.synhroUsers();
 		Ti.App.addEventListener("usersSynchronized", function(e){
 			if(e.result == 0){
 				lbl_i_users.text = "- users: nije uspjelo !!!";
@@ -238,7 +238,7 @@ boRemote.formInit = function() {
 	
 	// set params
 	btn_save.addEventListener("click", function(){
-		boParams.setParams();
+		M3.Params.setParams();
 		s_win.close();
 	});
 	
@@ -257,7 +257,7 @@ boRemote.formInit = function() {
 
 
 // open initialization form
-boRemote.formUsersInit = function() {
+M3.Remote.formUsersInit = function() {
 	
 	// create window
 	var s_win = Ti.UI.createWindow({
@@ -349,7 +349,7 @@ boRemote.formUsersInit = function() {
 	
 	// btn_set_server listener
 	btn_set_server.addEventListener("click", function(){
-		var tmp_frm = boUtilForms.getStrValue();
+		var tmp_frm = M3.StdForms.getStrValue();
 		tmp_frm.addEventListener("close", function(){
 			lbl_server.text = tmp_frm.item_value;
 			Ti.App.par_server_url = tmp_frm.item_value;
@@ -361,7 +361,7 @@ boRemote.formUsersInit = function() {
 	btn_init.addEventListener("click", function(){
 		
 		// synchronize users
-		boRemote.get.synhroUsers();
+		M3.Remote.Get.synhroUsers();
 		Ti.App.addEventListener("usersSynchronized", function(e){
 			if(e.result == 0){
 				lbl_i_users.text = "- users: nije uspjelo !!!";
@@ -376,7 +376,7 @@ boRemote.formUsersInit = function() {
 	
 	// set params
 	btn_save.addEventListener("click", function(){
-		boParams.setParams();
+		M3.Params.setParams();
 		s_win.close();
 	});
 	
@@ -396,7 +396,7 @@ boRemote.formUsersInit = function() {
 
 
 // Synchronize users, main function 
-boRemote.get.synhroUsers = function() {
+M3.Remote.Get.synhroUsers = function() {
 	
 	var data;
 	var server_url = Ti.App.par_server_url;
@@ -414,17 +414,17 @@ boRemote.get.synhroUsers = function() {
 		if(data != null){
 
 			// remove all articles from db
-			boDb.deleteUsers();
+			M3.DB.deleteUsers();
 		
 			// insert data into db
-			boDb.insertIntoUsers(data);
+			M3.DB.insertIntoUsers(data);
 		
 			// check for data inserted with server data
-			var cnt = boDb.getUsersCount();
+			var cnt = M3.DB.getUsersCount();
 		
 			// DEBUG msg
 			if( cnt == data.length ){
-				// fire event and run 'boRemote.synchro.synhroArticleImages()'
+				// fire event and run 'M3.Remote.synchro.synhroArticleImages()'
 				Ti.App.fireEvent("usersSynchronized", { result:1, count:cnt.toString() });
 			}
 			else
@@ -441,9 +441,9 @@ boRemote.get.synhroUsers = function() {
 
 
 // Synchronize purchases, main function 
-boRemote.put.synhroPurchases = function() {
+M3.Remote.Post.synhroPurchases = function() {
 	
-	var data = JSON.stringify(boDb.getPurcasesData(Ti.App.current_logged_user_id));
+	var data = JSON.stringify(M3.DB.getPurcasesData(Ti.App.current_logged_user_id));
 	//data = JSON.parse(data);
 	var server_url = Ti.App.par_server_url;
 	// url to send request
@@ -468,9 +468,9 @@ boRemote.put.synhroPurchases = function() {
 
 
 // Synchronize customers, main function 
-boRemote.put.synhroCustomers = function() {
+M3.Remote.Post.synhroCustomers = function() {
 	
-	var data = JSON.stringify(boCodes.Customers.getCustomers());
+	var data = JSON.stringify(M3.Codes.Customers.getCustomers());
 	//data = JSON.parse(data);
 	
 	var server_url = Ti.App.par_server_url;
@@ -496,7 +496,7 @@ boRemote.put.synhroCustomers = function() {
 
 
 // Synchronize customers, main function 
-boRemote.get.synhroCustomers = function() {
+M3.Remote.Get.synhroCustomers = function() {
 	
 	var data;
 	var server_url = Ti.App.par_server_url;
@@ -514,17 +514,17 @@ boRemote.get.synhroCustomers = function() {
 		if(data != null){
 
 			// remove all articles from db
-			boDb.deleteCustomers();
+			M3.DB.deleteCustomers();
 		
 			// insert data into db
-			boDb.insertIntoCustomers(data);
+			M3.DB.insertIntoCustomers(data);
 		
 			// check for data inserted with server data
-			var cnt = boDb.getCustomersCount();
+			var cnt = M3.DB.getCustomersCount();
 		
 			// DEBUG msg
 			if( cnt == data.length ){
-				// fire event and run 'boRemote.synchro.synhroArticleImages()'
+				// fire event and run 'M3.Remote.synchro.synhroArticleImages()'
 				Ti.App.fireEvent("customersSynchronized", { result:1, count:cnt.toString() });
 			}
 			else
@@ -541,7 +541,7 @@ boRemote.get.synhroCustomers = function() {
 
 
 // Synchronize customers, main function 
-boRemote.get.synhroParams = function() {
+M3.Remote.Get.synhroParams = function() {
 	
 	var data;
 	var server_url = Ti.App.par_server_url;
@@ -559,17 +559,17 @@ boRemote.get.synhroParams = function() {
 		if(data != null){
 
 			// remove all articles from db
-			boDb.deleteParams();
+			M3.DB.deleteParams();
 		
 			// insert data into db
-			boDb.insertIntoParams(data);
+			M3.DB.insertIntoParams(data);
 		
 			// check for data inserted with server data
-			var cnt = boDb.getParamsCount();
+			var cnt = M3.DB.getParamsCount();
 		
 			// DEBUG msg
 			if( cnt == data.length ){
-				// fire event and run 'boRemote.synchro.synhroArticleImages()'
+				// fire event and run 'M3.Remote.synchro.synhroArticleImages()'
 				Ti.App.fireEvent("paramsSynchronized", { result:1, count:cnt.toString() });
 			}
 			else
@@ -586,7 +586,7 @@ boRemote.get.synhroParams = function() {
 
 
 // Synchronize articles, main function 
-boRemote.get.synhroArticles = function() {
+M3.Remote.Get.synhroArticles = function() {
 	
 	var data;
 	var server_url = Ti.App.par_server_url;
@@ -604,17 +604,17 @@ boRemote.get.synhroArticles = function() {
 		if(data != null){
 
 			// remove all articles from db
-			boDb.deleteArticles();
+			M3.DB.deleteArticles();
 		
 			// insert data into db
-			boDb.insertIntoArticles(data);
+			M3.DB.insertIntoArticles(data);
 		
 			// check for data inserted with server data
-			var cnt = boDb.getArticleCount();
+			var cnt = M3.DB.getArticleCount();
 		
 			// DEBUG msg
 			if( cnt == data.length ){
-				// fire event and run 'boRemote.synchro.synhroArticleImages()'
+				// fire event and run 'M3.Remote.synchro.synhroArticleImages()'
 				Ti.App.fireEvent("articlesSynchronized", { result:1, count:cnt.toString() });
 			}
 			else
@@ -631,10 +631,10 @@ boRemote.get.synhroArticles = function() {
 
 
 // Synchronize images from http server...
-boRemote.get.synhroArticleImages = function() {
+M3.Remote.Get.synhroArticleImages = function() {
 	
 	// Get article JSON
-	var art_data = boCodes.Articles.getArticles();
+	var art_data = M3.Codes.Articles.getArticles();
 	
 	var server_url = Ti.App.par_server_url;
 	// per example: http://localhost:3333/article_pict/3013
@@ -654,14 +654,14 @@ boRemote.get.synhroArticleImages = function() {
 		_srv_url = _url + _id;	  
 		
 		// save image to local storage of the phone
-		boRemote.get.saveImageToDevice( _id, _srv_url );
+		M3.Remote.Get.saveImageToDevice( _id, _srv_url );
 	};
 			
 };
 
 
 // Get image from http server and update into local table "articles"
-boRemote.get.saveImageIntoTable = function( _article_id, _url ) {
+M3.Remote.Get.saveImageIntoTable = function( _article_id, _url ) {
 
 	// Create http server
 	var xhr = Ti.Network.createHTTPClient();
@@ -677,7 +677,7 @@ boRemote.get.saveImageIntoTable = function( _article_id, _url ) {
  			
  		if (data != null) {
  			// Update data into blob field of local table "articles"
- 			boDb.updateArticleImage( _article_id, data ); 
+ 			M3.DB.updateArticleImage( _article_id, data ); 
  		};
  			   	
    	};
@@ -689,7 +689,7 @@ boRemote.get.saveImageIntoTable = function( _article_id, _url ) {
 
 
 // Get image from http server and save to local storage of android device
-boRemote.get.saveImageToDevice = function( _article_id, _url ) {
+M3.Remote.Get.saveImageToDevice = function( _article_id, _url ) {
 
 	// Create http server
 	var xhr = Ti.Network.createHTTPClient();

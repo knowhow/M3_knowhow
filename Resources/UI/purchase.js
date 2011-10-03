@@ -9,11 +9,11 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-var boPurchase = {};
+M3.Purchase = {};
 
 
 // list purchase method
-boPurchase.listPurchase = function() {
+M3.Purchase.listPurchase = function() {
 	
 	var current_purchase_no = 0;
 	var current_purchase_date = Date();
@@ -21,8 +21,10 @@ boPurchase.listPurchase = function() {
 	var current_purchase_cust_id = 0;
 	var current_purchase_doc_total = 0;
 	
-	var d_data = boDb.getPurcasesData(Ti.App.current_logged_user_id);
+	// get data from table
+	var d_data = M3.DB.getPurchasesData(Ti.App.current_logged_user_id);
 	
+	// create components
 	var p_win = Ti.UI.createWindow({
 		backgroundColor:"#FFFFFF",
 		title:"Lista narudžbi:"
@@ -49,7 +51,10 @@ boPurchase.listPurchase = function() {
 		bottom:'10%'
 	});
 
+	// set empty data to table view component
+	// reseting...
 	p_tbl_view.setData([]);
+	
 	// set the table contents, all customers
 	p_tbl_view.setData( _refresh_purchase_data( d_data ) );
 
@@ -74,33 +79,37 @@ boPurchase.listPurchase = function() {
 			case 0:
 				
 				// get items data
-				var items_data = boDb.getPurchaseItemsData(current_purchase_no);
+				var items_data = M3.DB.getPurchaseItemsData(current_purchase_no);
 				// get customer data
-				var cust_data = boDb.getCustomerArrayById(current_purchase_cust_id);
+				var cust_data = M3.DB.getCustomerArrayById(current_purchase_cust_id);
 				
 				// open purchase preview form
 				// cust_data, items_data, doc_no, doc_date, doc_valid
-  				var ordForm = boOrder.items.getPurchasePreview(cust_data, items_data, current_purchase_no, current_purchase_date, current_purchase_valid, current_purchase_doc_total, current_purchase_notes );
+  				var prevForm = M3.Preview.PO.getPurchaseOrderPreview(cust_data, items_data, current_purchase_no, current_purchase_date, current_purchase_valid, current_purchase_doc_total, current_purchase_notes );
   				
-  				ordForm.addEventListener("close", function(){
+  				prevForm.addEventListener("close", function(){
   					// ...
   				});
   				
   				break;
-  				
-  			// cancel purchase
+  			
+  			// cancels the active purchase
   			case 1:
   			
-  				boDb.cancelPurchase(current_purchase_no);
-  				d_data = boDb.getPurcasesData(Ti.App.current_logged_user_id);
+  				// cancel purchase
+  				M3.DB.cancelPurchase(current_purchase_no);
+  				// refresh table view
+  				d_data = M3.DB.getPurchasesData(Ti.App.current_logged_user_id);
   				p_tbl_view.setData(_refresh_purchase_data(d_data));
   				break;
   				
-  			// activate purchase
+  			// activate canceled purchase
   			case 2:
   			
-  				boDb.activatePurchase(current_purchase_no);
-  				d_data = boDb.getPurcasesData(Ti.App.current_logged_user_id);
+  				// activate purchase
+  				M3.DB.activatePurchase(current_purchase_no);
+  				// refresh table view
+  				d_data = M3.DB.getPurchasesData(Ti.App.current_logged_user_id);
   				p_tbl_view.setData(_refresh_purchase_data(d_data));
   				break;
   			
@@ -122,8 +131,9 @@ boPurchase.listPurchase = function() {
             		};
 				
 					// delete record from purchases
-					boDb.deleteFromPurchases(current_purchase_no);
-  					d_data = boDb.getPurcasesData(Ti.App.current_logged_user_id);
+					M3.DB.deleteFromPurchases(current_purchase_no);
+  					// refresh table view
+  					d_data = M3.DB.getPurchasesData(Ti.App.current_logged_user_id);
   					p_tbl_view.setData(_refresh_purchase_data(d_data));
   					
   					return;
@@ -138,7 +148,7 @@ boPurchase.listPurchase = function() {
 	p_tbl_view.addEventListener("click", function(e){
 		
 		current_purchase_no = d_data[e.source.objIndex].doc_no;
-		current_purchase_date = boUtil.date.getCurrentDate( d_data[e.source.objIndex].doc_date);
+		current_purchase_date = M3.Util.DateT.getCurrentDate( d_data[e.source.objIndex].doc_date);
 		current_purchase_valid = d_data[e.source.objIndex].doc_valid;
 		current_purchase_cust_id = d_data[e.source.objIndex].cust_id;
 		current_purchase_doc_total = d_data[e.source.objIndex].doc_total;
@@ -169,7 +179,7 @@ function _refresh_purchase_data(data) {
 	for(var i=0; i < data.length; i++){
 				
 		// customer array	
-		var c_arr = boDb.getCustomerArrayById( data[i].cust_id );
+		var c_arr = M3.DB.getCustomerArrayById( data[i].cust_id );
 		
 		var thisRow = Ti.UI.createTableViewRow({
         	className:"item",
@@ -184,7 +194,7 @@ function _refresh_purchase_data(data) {
     		
     	var thisView = Ti.UI.createView({
            	top:'1%',
-           	height:boUtil.math.getControlPostitionHeight(11),
+           	height:M3.Util.MathModule.getControlPostitionHeight(11),
            	right:'.2%',
            	left:'.2%',
            	width:'100%',
@@ -194,8 +204,8 @@ function _refresh_purchase_data(data) {
         
         var thisImage = Ti.UI.createImageView({
         	image:'img/check_ok.png',
-        	height:boUtil.math.getControlPostitionWidth(10),
-        	width:boUtil.math.getControlPostitionWidth(10),
+        	height:M3.Util.MathModule.getControlPostitionWidth(10),
+        	width:M3.Util.MathModule.getControlPostitionWidth(10),
         	left:'87%',
         	top:'5%'
         });
@@ -222,7 +232,7 @@ function _refresh_purchase_data(data) {
            	objIndex:i,
            	objName:"lbl-desc",
            	textAlign:"left",
-           	text:boUtil.date.getCurrentDate(data[i].doc_date) + ", " + c_arr[0].addr + ", total: " + data[i].items_total ,
+           	text:M3.Util.DateT.getCurrentDate(data[i].doc_date) + ", " + c_arr[0].addr + ", total: " + data[i].items_total ,
            	touchEnabled:false
         });
 		
@@ -248,14 +258,14 @@ function _refresh_purchase_data(data) {
 
 
 // new purchase
-boPurchase.newPurchase = function() {
+M3.Purchase.newPurchaseOrder = function() {
 		
-	// get articles from JSON
-	var art_data = boCodes.Articles.getArticles();
-	// customer data
+	// get articles from table
+	var art_data = M3.Codes.Articles.getArticles();
+	// customer data from global variable
 	var _cust_result = Ti.App.customer_data;
-	// send JSON to matrix and return data 
-	var matrix_win = boCodes.Articles.getArticleMatrix( art_data );
+	// send 'art_data' to matrix form and return purchased data 
+	var matrix_win = M3.Codes.Articles.getArticleMatrix( art_data );
 				
 	// listen to event close and continue
 	matrix_win.addEventListener('close',function(e){
@@ -265,7 +275,7 @@ boPurchase.newPurchase = function() {
     	var purch_data = Ti.App.purchased_data;
    			
    		// get the final order report form...
-   		var detail_win = boOrder.items.getPurchasePreview( _cust_result, purch_data );
+   		var detail_win = M3.Preview.PO.getPurchaseOrderPreview( _cust_result, purch_data );
     		
 		detail_win.addEventListener('close',function(e){
    			
@@ -274,7 +284,7 @@ boPurchase.newPurchase = function() {
    			var user_id = Ti.App.current_logged_user_id;
    			var doc_notes = detail_win.notes;
    							
-   			boDb.insertIntoPurchases(user_id, cust_id, e.source.accepted, doc_notes, purch_data);
+   			M3.DB.insertIntoPurchases(user_id, cust_id, e.source.accepted, doc_notes, purch_data);
    				
    			if(e.source.accepted == 1){
    				alert("Narudzba uspješno ažurirana!");	   			

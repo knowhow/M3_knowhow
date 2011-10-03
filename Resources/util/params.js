@@ -9,18 +9,20 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-var boParams = {};
+//## Main params module
 
+// Set's the main namespace for params module
+M3.Params = {};
 
-boParams.getParams = function() {
+// Get params function
+M3.Params.getParams = function() {
 	
-	// **global params read from params db**
-	
+	// global params read from Ti.App.Properties
 	Ti.App.par_server_url = Ti.App.Properties.getString("par_server_url");
 	Ti.App.par_default_radius = Ti.App.Properties.getDouble('par_default_radius');
 	Ti.App.par_use_radius = Ti.App.Properties.getString('par_use_gps');
 	
-	// global params for device
+	// Global params read from API call's
 	Ti.App.current_device_id = Ti.Platform.id;
 	Ti.App.current_device_maddr = Ti.Platform.macaddress;
 	Ti.App.current_images_dir = Ti.Filesystem.applicationDataDirectory;
@@ -28,21 +30,23 @@ boParams.getParams = function() {
 };
 
 
-boParams.setParams = function() {
+// Set params function
+M3.Params.setParams = function() {
 	
 	var par_data = boDb.getParamsData();
 	var _par_name;
 	var _par_value;
 	
-	// check params by params_data
+	// Set's the parameters from table 'params'
+	// Loop through params data and read params
 	for (var i=0; i < par_data.length; i++) {
 		
 		_par_name = par_data[i].param_name;
 		_par_value = par_data[i].param_value;
 		
+		// Check param name and set
 		switch (_par_name)
 		{
-			// check and set params
 			case 'par_default_radius':
 				Ti.App.par_default_radius = Number(_par_value);
 				Ti.App.Properties.setDouble('par_default_radius', Number(_par_value));
@@ -54,15 +58,17 @@ boParams.setParams = function() {
 		};  
 	};
 	
-	// device params
+	// Set's the global parameters
 	Ti.App.Properties.setString("par_server_url", Ti.App.par_server_url );
 	
 };
 
-// open params form
-boParams.paramsForm = function() {
+
+// Param's form
+// Open's the form and show available params
+M3.Params.paramsForm = function() {
 		
-	// create window
+	// Create window
 	var s_win = Ti.UI.createWindow({
 		title:'Postavke...',
 		backgroundColor:'black',
@@ -70,11 +76,13 @@ boParams.paramsForm = function() {
 		bottom:0
 	});
 
+	// Create scroll component
 	var scrl = Ti.UI.createScrollView({
 		top:'7%',
 		bottom:'10%'
 	});
-	// create label info 
+	
+	// Create label info 
 	var lbl_info = Ti.UI.createLabel({
 		color:'white',
 		text:'Trenutne postavke aplikacije',
@@ -83,7 +91,8 @@ boParams.paramsForm = function() {
 		font:{fontSize:'7pt'}
 	});
 	
-	// create label params
+	// Create label params
+	// Into this label we put the info about params setting the text value of label
 	var lbl_params = Ti.UI.createLabel({
 		color:'white',
 		text:'-',
@@ -93,7 +102,7 @@ boParams.paramsForm = function() {
 		font:{fontSize:'6pt'}
 	});
 	
-	// create btn init...
+	// Create button close
 	var btn_close = Ti.UI.createButton({
 		title:'Odustani',
 		bottom:'1%',
@@ -102,23 +111,25 @@ boParams.paramsForm = function() {
 		height:'10%'
 	});	
 	
+	// Get params from db
 	var par_data = boDb.getParamsData();
 	var _txt = ""; 
 	
+	// loop through params and set into the '_txt'
 	for (var i=0; i < par_data.length; i++) {
-		_txt += 'Ti.App.' + par_data[i].param_name + ' : ' + par_data[i].param_value + boUtil.str.newRow();
+		_txt += 'Ti.App.' + par_data[i].param_name + ' : ' + par_data[i].param_value + M3.Util.Str.newRow();
 	};
 	
+	// set's the label text with result's from db
 	lbl_params.text = _txt;
 	
 	// add controls to window 's_win'
 	scrl.add(lbl_params);
-	
 	s_win.add(lbl_info);
 	s_win.add(scrl);
 	s_win.add(btn_close);
 	
-	// cancel 
+	// Button 'close' eventListener
 	btn_close.addEventListener("click", function(){
 		s_win.close();
 	});
@@ -128,6 +139,5 @@ boParams.paramsForm = function() {
 	
 	// return 's_win' for listening event 'close'
 	return s_win;
-	
 	
 };

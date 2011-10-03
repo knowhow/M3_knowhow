@@ -9,71 +9,78 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-var boCodes = {};
-
-// articles namespace
-boCodes.Articles = {};
-// customers namespace
-boCodes.Customers = {};
-
-boCodes.Users = {};
-
-boCodes.Postal = {};
+// ## Main codes module
 
 
-// get postal code by city
-boCodes.Postal.getPostCode = function(city) {
+// Set's the global namespace used in this module
+M3.Codes = {};
+
+// Set's articles namespace
+M3.Codes.Articles = {};
+
+// Set's customers namespace
+M3.Codes.Customers = {};
+
+// Set's users namespace
+M3.Codes.Users = {};
+
+// Set's other namespace
+M3.Codes.Other = {};
+
+
+// Get the postal code by given city as '_c_name'
+M3.Codes.Other.getPostCode = function(_c_name) {
 	
-	switch (city.toLowerCase())
+	switch (_c_name.toLowerCase())
 	{
-	
 		case 'zenica':
 			return '72000';
 		case 'sarajevo':
 			return '71000';
 		default:
 			return '';
-	
 	};
 		
 };
 
 
-// get articles from db
-boCodes.Articles.getArticles = function() {
-	return boDb.getArticleData();
+// Get articles from db
+M3.Codes.Articles.getArticles = function() {
+	return M3.DB.getArticleData();
 };	
 	
-// get article matrix based on article JSON data
-boCodes.Articles.getArticleMatrix = function( article_data ) {
-	return boCodes.Matrix.getMatrix( article_data, "Artikli" );
+// Get article matrix form by given 'article_data'
+M3.Codes.Articles.getArticleMatrix = function( article_data ) {
+	return M3.Codes.Matrix.getMatrix( article_data, "Artikli" );
 };
 
-// get customers from DB
-boCodes.Customers.getCustomers = function(){
-	var cust_data = boDb.getCustomerData( Ti.App.current_logged_user_id );
-	return cust_data;
+// Get customers from db by last logged user id
+M3.Codes.Customers.getCustomers = function(){
+	return M3.DB.getCustomerData( Ti.App.current_logged_user_id );
 };
 
-
-
-// get customers by distance
-boCodes.Customers.getCustomersInRadius = function( lon, lat, radius ) {
+// Get customers by calculating distance
+M3.Codes.Customers.getCustomersInRadius = function( lon, lat, radius ) {
 	
-	var data = boDb.getCustomerData();
+	// get the main JSON object with customer data
+	var data = M3.DB.getCustomerData();
 	var ret = [];
 	var dist = 0;
 	
+	// check if longitude exist
 	if(lon == null){
 		return ret;
 	};
 	
+	// if radius is not defined use default by params
 	if(radius==null){
 		radius = Ti.App.par_default_radius;
 	};
 	
+	// loop through params data JSON and calculate the distance
 	for(var i=0; i < data.length ; i++){
 	
+		// check for 'user_id'
 		if (data[i].user_id == Ti.App.current_logged_user_id ){
 			
 			// calculate distance
@@ -87,17 +94,18 @@ boCodes.Customers.getCustomersInRadius = function( lon, lat, radius ) {
 		}; 
 	};
 	
+	// returned value
 	return ret;
 };
 	
-// get customer form...
-boCodes.Customers.getCustomerForm = function() {
-	return boCodes.Customers.customerForm();
+// Get customer's form...
+M3.Codes.Customers.getCustomerForm = function() {
+	return M3.Codes.Customers.customerForm();
 };
 
-// get users data...
-boCodes.Users.getUsersData = function() {
-	return boDb.getUsersData();
+// Get users data...
+M3.Codes.Users.getUsersData = function() {
+	return M3.DB.getUsersData();
 };
 
 

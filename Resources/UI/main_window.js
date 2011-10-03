@@ -9,8 +9,10 @@
  * By using this software, you agree to be bound by its terms.
  */
 
+M3.Main = {};
+
 // main window of application
-var mainWindow = function() {
+M3.Main.mainWindow = function() {
 		
 	var win_main = Ti.UI.createWindow({
 		backgroundColor:'#a0c0ff',
@@ -133,22 +135,22 @@ var mainWindow = function() {
 	
 	// customer list event handler
 	customer_list.addEventListener('click',function(e){  
-    	boCodes.Customers.customerList();
+    	M3.Customers.customerList();
 	});  	
 	
 	// list purchase event handler
 	list_purchase.addEventListener('click',function(e){  
-    	boPurchase.listPurchase();
+    	M3.Purchase.listPurchase();
 	});
 		
 	// where am i event handler
 	where_am_i.addEventListener('click',function(e){  
-   		boGeo.geoForm();
+   		M3.Geo.geoForm();
 	});  
 	
 	// preferences event handler
 	preferences.addEventListener('click',function(e){  
-   		var par_form = boParams.paramsForm();
+   		var par_form = M3.Params.paramsForm();
 	});  	
 
 	// remove completely db
@@ -169,7 +171,7 @@ var mainWindow = function() {
 
    			oDb.close();
    			oDb.remove();
-   			oDb = boDb.openDB();
+   			oDb = M3.DB.openDB();
    			
    		});
  
@@ -193,13 +195,13 @@ var mainWindow = function() {
                 return;
             }
   			
-  			boRemote.put.synhroCustomers();
+  			M3.Remote.Post.synhroCustomers();
   			
   			Ti.App.addEventListener("customersPosted", function(e){
   			
   				Ti.App.removeEventListener("customersPosted");
   				
-  				boRemote.put.synhroPurchases();
+  				M3.Remote.Post.synhroPurchases();
   
   				Ti.App.addEventListener("purchasePosted", function(e){
   					Ti.App.removeEventListener("purchasePosted");
@@ -207,7 +209,7 @@ var mainWindow = function() {
   				
   			});
   			
-			//boDb.deleteAllPurchases();
+			//M3.DB.deleteAllPurchases();
 	
         });
  
@@ -219,7 +221,7 @@ var mainWindow = function() {
 	data_init.addEventListener("click", function(){
 		
 		// open form init 
-		var frm_init = boRemote.formInit();
+		var frm_init = M3.Remote.formInit();
 		
 		frm_init.addEventListener("close", function(){
 			// on close...

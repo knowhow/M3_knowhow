@@ -9,11 +9,24 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-var boOrder = {};
+// ## Main preview module
 
-boOrder.items = {};
+// create global namespace for this module
+M3.Preview = {};
+
+// PurchaseOrder (PO) preview namespace
+M3.Preview.PO = {};
 	
-boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no, doc_date, doc_valid, doc_total, doc_notes ) {
+// Get preview form of purchase data
+// * 'cust_data' cusomer data JSON object
+// * 'items_data' items data JSON object
+// * 'document_no' document no
+// * 'doc_date'
+// * 'doc_valid'
+// * 'doc_total'
+// * 'doc_notes'
+
+M3.Preview.PO.getPurchaseOrderPreview = function( cust_data, items_data, document_no, doc_date, doc_valid, doc_total, doc_notes ) {
 			
 	// create window
 	var ordWin = Ti.UI.createWindow({
@@ -52,8 +65,8 @@ boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no,
 	
 	var ord_image = Ti.UI.createImageView({
         image:'img/check_ok.png',
-        height:boUtil.math.getControlPostitionWidth(9),
-        width:boUtil.math.getControlPostitionWidth(9),
+        height:M3.Util.MathModule.getControlPostitionWidth(9),
+        width:M3.Util.MathModule.getControlPostitionWidth(9),
         left:'3%',
         top:'20.5%'
    	});
@@ -132,14 +145,14 @@ boOrder.items.getPurchasePreview = function( cust_data, items_data, document_no,
    	    _art_qt = items_data[i].article_quantity;
     	_art_desc = items_data[i].article_desc;
     	
+    	// get article description from table 'articles'
     	if(_art_desc == null){
-    		_art_desc = boDb.getArticleDescById( _art_id );
+    		_art_desc = M3.DB.getArticleDescById( _art_id );
     	};   
     	    
-    	//alert(JSON.stringify(items_data));
    	    // show only ones with qt > 0
    	    if(parseInt(_art_qt) > 0) {
-   			tbl_data.push( { title: boUtil.str.lPad(_item_no, 3) + ") " + boUtil.str.rPad(_art_desc,20) + " x " + _art_qt } );
+   			tbl_data.push( { title: M3.Util.Str.lPad(_item_no, 3) + ") " + M3.Util.Str.rPad(_art_desc,20) + " x " + _art_qt } );
    			countItems++ ;
    	    };
     	

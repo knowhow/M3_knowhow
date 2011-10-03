@@ -9,29 +9,36 @@
  * By using this software, you agree to be bound by its terms.
  */
 
-// ## Main app js file
-// In this module we set global variables, open the main db.
-// After that login form appear and if user logged correctly main form show's.
+// #### Starting point of application
+// 
+// In this module global variables are set, main db is opened and we opening Login form.
+// If user enter name and pwd correctly we going to main form.
 
 
 // Set's the default background color for app
 Titanium.UI.setBackgroundColor('#000');
 
-// Create main namespace 
+// Create main namespace. The M3 will be used for every module in app.
+// Like M3.Remote, M3.DB, M3.Util, etc...
 var M3 = {};
 
-// Including modules.js. In modules.js we call other js files and modules. 
+// Including modules.js. 
+// In modules.js we call other modules and their js files.
+// See *modules.js* for details. 
 Ti.include("modules.js");
 
 // Set's the current user parameters.
-// These parametes are used through application latter.
+// These parametes will be used in application, later.
 Ti.App.current_logged_user = "";
 Ti.App.current_logged_user_id = 0;
 
-// Get global params of application.
+// Get global params of application. 
+// See *params.js* for details.
 M3.Params.getParams();
 
-// open main database and init as oDb object
+// Open main database. 
+// oDb is global object which will be used through whole app.
+// There is no need to open and close db through app. Just run query commands.
 oDb = M3.DB.openDB();
 
 // Open's the main login form before of any using of app
@@ -48,11 +55,11 @@ Ti.App.addEventListener('loggedin',function(){
     M3.Main.mainWindow();
 });
 
-// listen to other event's
+// listen to other event's : to do
 Ti.App.addEventListener('logincanceled',function(){
-    // to do
 });
 
+// listen for app close event
 Ti.App.addEventListener('close',function(e)
 {
     // if app close, close the db

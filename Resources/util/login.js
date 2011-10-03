@@ -112,7 +112,7 @@ M3.Login.loginForm = function() {
 	login_window.add(loginBtn);  
 	login_window.add(closeBtn);  
 
-
+	
 	// create view component with version information
 	var v_version = Ti.UI.createView({
 		backgroundColor:'#60a0ff',
@@ -134,9 +134,21 @@ M3.Login.loginForm = function() {
 		font:{fontSize:'6pt',fontWeight:'bold'},
 		opacity:0.2
 	});
+	
+	// create image view with logo
+	var v_logo = Ti.UI.createImageView({
+		image:'img/knowhow_logo.png',
+		top:'60%',
+		left:'15%',
+		width:'70%',
+		height:'15%'
+	});
 
 	// add label to view component
 	v_version.add(l_version);
+	
+	// add logo view to window
+	login_window.add(v_logo);
 	
 	// add view to the 'login_window'
 	login_window.add(v_version);

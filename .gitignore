@@ -3,6 +3,7 @@ build.log
 dist
 .gitignore
 .fastdev.lock
+.project
 assets
 bin
 gen

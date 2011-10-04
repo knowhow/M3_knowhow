@@ -63,7 +63,7 @@ M3.Codes.Customers.getCustomers = function(){
 M3.Codes.Customers.getCustomersInRadius = function( lon, lat, radius ) {
 	
 	// get the main JSON object with customer data
-	var data = M3.DB.getCustomerData();
+	var data = M3.Codes.Customers.getCustomers();
 	var ret = [];
 	var dist = 0;
 	
@@ -74,7 +74,7 @@ M3.Codes.Customers.getCustomersInRadius = function( lon, lat, radius ) {
 	
 	// if radius is not defined use default by params
 	if(radius==null){
-		radius = Ti.App.par_default_radius;
+		radius = Number(Ti.App.par_default_radius);
 	};
 	
 	// loop through params data JSON and calculate the distance
@@ -84,7 +84,7 @@ M3.Codes.Customers.getCustomersInRadius = function( lon, lat, radius ) {
 		if (data[i].user_id == Ti.App.current_logged_user_id ){
 			
 			// calculate distance
-			dist = boGeo.calcGeoDistance( data[i].lon, data[i].lat, lon, lat );
+			dist = M3.Geo.calcGeoDistance( data[i].lon, data[i].lat, lon, lat );
 			// round to 3 decimals
 			dist = Math.round(dist*1000)/1000;
 			// convert to meters and push data if exist

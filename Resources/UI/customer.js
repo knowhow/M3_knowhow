@@ -347,7 +347,7 @@ M3.Customers.customersForm = function(){
             	clearInterval(timer);
             	
             	// calculate distance and fill table view
-            	c_data = M3.Codes.Customers.getCustomersInRadius( Ti.App.current_longitude, Ti.App.current_latitude );
+            	c_data = M3.Codes.Customers.getCustomersInRadius( Ti.App.current_longitude, Ti.App.current_latitude, 30 );
 				cp_tbl_view.setData( _refresh_cust_data( c_data, Ti.App.current_longitude, Ti.App.current_latitude ) );
 				
         	};

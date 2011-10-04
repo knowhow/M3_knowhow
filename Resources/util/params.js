@@ -33,7 +33,8 @@ M3.Params.getParams = function() {
 // Set params function
 M3.Params.setParams = function() {
 	
-	var par_data = boDb.getParamsData();
+	// Get data from table **params** into JSON object
+	var par_data = M3.DB.getParamsData();
 	var _par_name;
 	var _par_value;
 	
@@ -113,7 +114,7 @@ M3.Params.paramsForm = function() {
 	});	
 	
 	// Get params from db
-	var par_data = boDb.getParamsData();
+	var par_data = M3.DB.getParamsData();
 	var _txt = ""; 
 	
 	// loop through params and set into the '_txt'

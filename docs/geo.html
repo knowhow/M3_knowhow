@@ -1,0 +1,240 @@
+<!DOCTYPE html>  <html> <head>   <title>geo.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="LICENSE_CPAL_bring.out_knowhow.html">                 LICENSE_CPAL_bring.out_knowhow.md               </a>                                           <a class="source" href="codes.html">                 codes.js               </a>                                           <a class="source" href="codes_matrix.html">                 codes_matrix.js               </a>                                           <a class="source" href="customer.html">                 customer.js               </a>                                           <a class="source" href="main_window.html">                 main_window.js               </a>                                           <a class="source" href="preview.html">                 preview.js               </a>                                           <a class="source" href="purchase.html">                 purchase.js               </a>                                           <a class="source" href="app.html">                 app.js               </a>                                           <a class="source" href="dbmain.html">                 dbmain.js               </a>                                           <a class="source" href="modules.html">                 modules.js               </a>                                           <a class="source" href="forms.html">                 forms.js               </a>                                           <a class="source" href="geo.html">                 geo.js               </a>                                           <a class="source" href="login.html">                 login.js               </a>                                           <a class="source" href="params.html">                 params.js               </a>                                           <a class="source" href="remote.html">                 remote.js               </a>                                           <a class="source" href="utils.html">                 utils.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               geo.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/* </span>
+<span class="cm"> * This file is part of the knowhow ERP, a free and open source </span>
+<span class="cm"> * Enterprise Resource Planning software suite,</span>
+<span class="cm"> * Copyright (c) 2010-2011 by bring.out doo Sarajevo.</span>
+<span class="cm"> * It is licensed to you under the Common Public Attribution License</span>
+<span class="cm"> * version 1.0, the full text of which (including knowhow-specific Exhibits)</span>
+<span class="cm"> * is available in the file LICENSE_CPAL_bring.out_knowhow.md located at the </span>
+<span class="cm"> * root directory of this source code archive.</span>
+<span class="cm"> * By using this software, you agree to be bound by its terms.</span>
+<span class="cm"> */</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Main GEO module</h2>
+
+<p>In this module we use special Titanium GPS method's for Android app.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Set the global namespace for this module.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span> <span class="o">=</span> <span class="p">{};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Global GPS module variables</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">location_data</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">location_error</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">location_added</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Open's the form with test geolocation functions.
+This form is used for testing GPS functinality.
+It uses main GPS method's as we used in <strong>customes.js</strong></p>
+
+<p>Example of GPS usage:
+        var frm = M3.Geo.geoForm();
+        frm.addEventListener("close", function(){
+        M3.Geo.turnOffGps();
+    })</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">geoForm</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Create controls</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">g_win</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createWindow</span><span class="p">({</span>
+    <span class="nx">backgroundColor</span><span class="o">:</span><span class="s2">&quot;#FFFFFF&quot;</span><span class="p">,</span>
+    <span class="nx">title</span><span class="o">:</span><span class="s2">&quot;trenutna lokacija&quot;</span>
+  <span class="p">});</span>
+    
+  <span class="kd">var</span> <span class="nx">g_lbl</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createLabel</span><span class="p">({</span>
+    <span class="nx">text</span><span class="o">:</span><span class="s2">&quot;geo location info&quot;</span><span class="p">,</span>
+    <span class="nx">color</span><span class="o">:</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+    <span class="nx">font</span><span class="o">:</span><span class="p">{</span><span class="nx">fontFamily</span><span class="o">:</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span><span class="nx">fontWeight</span><span class="o">:</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span><span class="nx">fontSize</span><span class="o">:</span><span class="mi">30</span><span class="p">},</span>
+    <span class="nx">textAlign</span><span class="o">:</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+    <span class="nx">top</span><span class="o">:</span><span class="mi">10</span><span class="p">,</span>
+    <span class="nx">left</span><span class="o">:</span><span class="mi">10</span>
+  <span class="p">});</span>
+    
+  <span class="kd">var</span> <span class="nx">g_l_btn</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createButton</span><span class="p">({</span>
+    <span class="nx">title</span><span class="o">:</span><span class="s2">&quot;Daj lokaciju&quot;</span><span class="p">,</span>
+    <span class="nx">left</span><span class="o">:</span><span class="mi">3</span><span class="p">,</span>
+    <span class="nx">width</span><span class="o">:</span><span class="mi">200</span><span class="p">,</span>
+    <span class="nx">height</span><span class="o">:</span><span class="mi">80</span><span class="p">,</span>
+    <span class="nx">bottom</span><span class="o">:</span><span class="mi">5</span>
+  <span class="p">});</span>
+    
+  <span class="kd">var</span> <span class="nx">g_c_btn</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createButton</span><span class="p">({</span>
+    <span class="nx">title</span><span class="o">:</span><span class="s2">&quot;Zatvori&quot;</span><span class="p">,</span>
+    <span class="nx">right</span><span class="o">:</span><span class="mi">3</span><span class="p">,</span>
+    <span class="nx">width</span><span class="o">:</span><span class="mi">200</span><span class="p">,</span>
+    <span class="nx">height</span><span class="o">:</span><span class="mi">80</span><span class="p">,</span>
+    <span class="nx">bottom</span><span class="o">:</span><span class="mi">5</span>
+  <span class="p">});</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>and add controls to the <strong>g_win</strong></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">g_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">g_lbl</span><span class="p">);</span>
+  <span class="nx">g_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">g_l_btn</span><span class="p">);</span>
+  <span class="nx">g_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">g_c_btn</span><span class="p">);</span>
+          
+  <span class="nx">g_c_btn</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>turn off the gps system</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">turnOffGps</span><span class="p">();</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>close the window</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">g_win</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+  <span class="p">});</span>
+    
+  
+  <span class="nx">g_l_btn</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>turn on the gps system</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">turnOnGps</span><span class="p">();</span>
+    
+    <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>testing location
+    ZENICA coordinates:
+    Latitude : 43.915886 North
+    Longitude : 17.679076 East</p>             </td>             <td class="code">               <div class="highlight"><pre>    
+    <span class="kd">var</span> <span class="nx">zenica_lat</span> <span class="o">=</span> <span class="mf">44.204231500625</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">zenica_lon</span> <span class="o">=</span> <span class="mf">17.905032634735</span><span class="p">;</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>listen for coords</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;get_geo_coordinates_ready&quot;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">e</span><span class="p">.</span><span class="nx">success</span> <span class="o">||</span> <span class="nx">e</span><span class="p">.</span><span class="nx">error</span><span class="p">){</span>
+        <span class="nx">g_lbl</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+      
+        <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;Error:&quot;</span> <span class="o">+</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">Str</span><span class="p">.</span><span class="nx">newRow</span><span class="p">();</span>
+      
+        <span class="nx">text</span> <span class="o">+=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="o">+</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">Str</span><span class="p">.</span><span class="nx">newRow</span><span class="p">();</span> 
+        <span class="nx">text</span> <span class="o">+=</span> <span class="s2">&quot;Error code: &quot;</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span> <span class="o">+</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">Str</span><span class="p">.</span><span class="nx">newRow</span><span class="p">();</span>
+      
+        <span class="nx">g_lbl</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">text</span><span class="p">;</span>  
+      <span class="p">}</span>
+      <span class="k">else</span>
+      <span class="p">{</span>
+        <span class="nx">g_lbl</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+      
+        <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;Pozicija:&quot;</span> <span class="o">+</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">Str</span><span class="p">.</span><span class="nx">newRow</span><span class="p">();</span>
+        <span class="nx">text</span> <span class="o">+=</span> <span class="s2">&quot;lat: &quot;</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">latitude</span> <span class="o">+</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">Str</span><span class="p">.</span><span class="nx">newRow</span><span class="p">();</span> 
+        <span class="nx">text</span> <span class="o">+=</span> <span class="s2">&quot;lon: &quot;</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">longitude</span> <span class="o">+</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">Str</span><span class="p">.</span><span class="nx">newRow</span><span class="p">();</span>
+        <span class="nx">text</span> <span class="o">+=</span> <span class="s2">&quot;acc: &quot;</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">accuracy</span> <span class="o">+</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">Str</span><span class="p">.</span><span class="nx">newRow</span><span class="p">();</span>
+        
+        <span class="nx">text</span> <span class="o">+=</span> <span class="s2">&quot;Udaljenost od Zenice:&quot;</span> <span class="o">+</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nx">Str</span><span class="p">.</span><span class="nx">newRow</span><span class="p">();</span>
+        <span class="nx">text</span> <span class="o">+=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span> <span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">calcGeoDistance</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">latitude</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">coords</span><span class="p">.</span><span class="nx">longitude</span><span class="p">,</span> <span class="nx">zenica_lat</span><span class="p">,</span> <span class="nx">zenica_lon</span> <span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">;</span>
+        
+        <span class="nx">g_lbl</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">text</span><span class="p">;</span>
+      <span class="p">};</span>
+      
+    <span class="p">});</span>         
+  <span class="p">});</span>
+    
+  <span class="nx">g_win</span><span class="p">.</span><span class="nx">open</span><span class="p">();</span>
+    
+<span class="p">};</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>geo callback function</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">geoLocationCallback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">cb</span><span class="p">){</span> 
+  <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">fireEvent</span><span class="p">(</span><span class="s2">&quot;get_geo_coordinates_ready&quot;</span><span class="p">,</span> <span class="nx">cb</span><span class="p">);</span>
+<span class="p">};</span>
+  
+  </pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Get current location based on geolocation</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">getCurrentLocation</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        </pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Check if service enabled first</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span><span class="p">(</span><span class="nx">Ti</span><span class="p">.</span><span class="nx">Geolocation</span><span class="p">.</span><span class="nx">locationServicesEnabled</span> <span class="o">==</span> <span class="kc">false</span><span class="p">){</span>
+      <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;Geo services are turned off !&quot;</span><span class="p">);</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">};</span>
+      </pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Set's the main parameters</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">Ti</span><span class="p">.</span><span class="nx">Geolocation</span><span class="p">.</span><span class="nx">preferredProvider</span> <span class="o">=</span> <span class="s2">&quot;gps&quot;</span><span class="p">;</span>
+    <span class="nx">Ti</span><span class="p">.</span><span class="nx">Geolocation</span><span class="p">.</span><span class="nx">accuracy</span> <span class="o">=</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">Geolocation</span><span class="p">.</span><span class="nx">ACCURACY_BEST</span><span class="p">;</span>
+    <span class="nx">Ti</span><span class="p">.</span><span class="nx">Geolocation</span><span class="p">.</span><span class="nx">distanceFilter</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+   
+  <span class="nx">Ti</span><span class="p">.</span><span class="nx">Geolocation</span><span class="p">.</span><span class="nx">getCurrentPosition</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">cp</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">cp</span><span class="p">.</span><span class="nx">success</span> <span class="o">||</span> <span class="nx">cp</span><span class="p">.</span><span class="nx">error</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">fireEvent</span><span class="p">(</span><span class="s2">&quot;get_geo_coordinates_ready&quot;</span><span class="p">,</span> <span class="nx">cp</span><span class="p">);</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">};</span>
+    <span class="nx">Ti</span><span class="p">.</span><span class="nx">App</span><span class="p">.</span><span class="nx">fireEvent</span><span class="p">(</span><span class="s2">&quot;get_geo_coordinates_ready&quot;</span><span class="p">,</span> <span class="nx">cp</span><span class="p">);</span>
+  <span class="p">});</span>
+        
+  <span class="nx">Ti</span><span class="p">.</span><span class="nx">Geolocation</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span> <span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="nx">geoLocationCallback</span> <span class="p">);</span>
+  <span class="nx">location_added</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  
+  <span class="nx">Ti</span><span class="p">.</span><span class="nx">Android</span><span class="p">.</span><span class="nx">currentActivity</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;pause&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">location_added</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">Titanium</span><span class="p">.</span><span class="nx">Geolocation</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="nx">geoLocationCallback</span><span class="p">);</span>
+      <span class="nx">location_added</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+  <span class="nx">Ti</span><span class="p">.</span><span class="nx">Android</span><span class="p">.</span><span class="nx">currentActivity</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;destroy&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">location_added</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">Titanium</span><span class="p">.</span><span class="nx">Geolocation</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="nx">geoLocationCallback</span><span class="p">);</span>
+      <span class="nx">location_added</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+  <span class="nx">Ti</span><span class="p">.</span><span class="nx">Android</span><span class="p">.</span><span class="nx">currentActivity</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;resume&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">location_added</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">Titanium</span><span class="p">.</span><span class="nx">Geolocation</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="nx">geoLocationCallback</span><span class="p">);</span>
+      <span class="nx">location_added</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+
+<span class="p">};</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Calculate distance between two 'lon' and 'lat' variables
+Return value is in kilometers "K"</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">calcGeoDistance</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">lat1</span><span class="p">,</span> <span class="nx">lon1</span><span class="p">,</span> <span class="nx">lat2</span><span class="p">,</span> <span class="nx">lon2</span><span class="p">,</span> <span class="nx">unit</span><span class="p">)</span> <span class="p">{</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>this is the part of special formula for calculating distance based on earth diameter etc...</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">radlat1</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">*</span> <span class="nx">lat1</span><span class="o">/</span><span class="mi">180</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">radlat2</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">*</span> <span class="nx">lat2</span><span class="o">/</span><span class="mi">180</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">radlon1</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">*</span> <span class="nx">lon1</span><span class="o">/</span><span class="mi">180</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">radlon2</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">*</span> <span class="nx">lon2</span><span class="o">/</span><span class="mi">180</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">theta</span> <span class="o">=</span> <span class="nx">lon1</span><span class="o">-</span><span class="nx">lon2</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">radtheta</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">*</span> <span class="nx">theta</span><span class="o">/</span><span class="mi">180</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">dist</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nx">radlat1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">sin</span><span class="p">(</span><span class="nx">radlat2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">radlat1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">radlat2</span><span class="p">)</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">cos</span><span class="p">(</span><span class="nx">radtheta</span><span class="p">);</span>
+  
+    <span class="nx">dist</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">acos</span><span class="p">(</span><span class="nx">dist</span><span class="p">);</span>
+    <span class="nx">dist</span> <span class="o">=</span> <span class="nx">dist</span> <span class="o">*</span> <span class="mi">180</span><span class="o">/</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span><span class="p">;</span>
+    <span class="nx">dist</span> <span class="o">=</span> <span class="nx">dist</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mf">1.1515</span><span class="p">;</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>default unit will be "K" - kilometers</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span><span class="p">(</span><span class="nx">unit</span> <span class="o">==</span> <span class="kc">null</span><span class="p">){</span>
+      <span class="nx">unit</span> <span class="o">=</span> <span class="s2">&quot;K&quot;</span><span class="p">;</span>
+    <span class="p">};</span>
+  
+    <span class="k">if</span><span class="p">(</span><span class="nx">unit</span> <span class="o">==</span> <span class="s2">&quot;K&quot;</span><span class="p">){</span>
+     <span class="nx">dist</span> <span class="o">=</span> <span class="nx">dist</span> <span class="o">*</span> <span class="mf">1.609344</span><span class="p">;</span>
+    <span class="p">};</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>I have no idea what is "N" (I grabbed this function from titanium comunity)</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span><span class="p">(</span><span class="nx">unit</span> <span class="o">==</span> <span class="s2">&quot;N&quot;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">dist</span> <span class="o">=</span> <span class="nx">dist</span> <span class="o">*</span> <span class="mf">0.8684</span><span class="p">;</span>
+    <span class="p">};</span>
+  
+  <span class="k">return</span> <span class="nx">dist</span><span class="p">;</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>Show the MAP based on current user location and customer location
+This function uses Google-API</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">showMap</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">lat</span><span class="p">,</span> <span class="nx">lon</span><span class="p">,</span> <span class="nx">customer_lat</span><span class="p">,</span> <span class="nx">customer_lon</span> <span class="p">){</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>create components</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">m_win</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createWindow</span><span class="p">({</span>
+    <span class="nx">backgroundColor</span><span class="o">:</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>
+    <span class="nx">title</span><span class="o">:</span><span class="s1">&#39;Mapa&#39;</span>
+  <span class="p">});</span>
+  
+  <span class="kd">var</span> <span class="nx">my_curr_position</span> <span class="o">=</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">Map</span><span class="p">.</span><span class="nx">createAnnotation</span><span class="p">({</span>
+    <span class="nx">latitude</span><span class="o">:</span><span class="nb">Number</span><span class="p">(</span><span class="nx">lat</span><span class="p">),</span>
+    <span class="nx">longitude</span><span class="o">:</span><span class="nb">Number</span><span class="p">(</span><span class="nx">lon</span><span class="p">),</span>
+    <span class="nx">title</span><span class="o">:</span><span class="s2">&quot;Trenutna pozicija&quot;</span><span class="p">,</span>
+    <span class="nx">subtitle</span><span class="o">:</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+    <span class="nx">pincolor</span><span class="o">:</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span>
+    <span class="nx">animate</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
+    <span class="nx">myid</span><span class="o">:</span><span class="mi">1</span> 
+  <span class="p">});</span>
+  
+  <span class="kd">var</span> <span class="nx">customer_position</span> <span class="o">=</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">Map</span><span class="p">.</span><span class="nx">createAnnotation</span><span class="p">({</span>
+    <span class="nx">latitude</span><span class="o">:</span><span class="nb">Number</span><span class="p">(</span><span class="nx">customer_lat</span><span class="p">),</span>
+    <span class="nx">longitude</span><span class="o">:</span><span class="nb">Number</span><span class="p">(</span><span class="nx">customer_lon</span><span class="p">),</span>
+    <span class="nx">title</span><span class="o">:</span><span class="s2">&quot;Pozicija partnera&quot;</span><span class="p">,</span>
+    <span class="nx">subtitle</span><span class="o">:</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+    <span class="nx">pincolor</span><span class="o">:</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span>
+    <span class="nx">animate</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
+    <span class="nx">myid</span><span class="o">:</span><span class="mi">2</span> 
+  <span class="p">});</span>
+
+  
+  <span class="kd">var</span> <span class="nx">mapview</span> <span class="o">=</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">Map</span><span class="p">.</span><span class="nx">createView</span><span class="p">({</span>
+        <span class="nx">mapType</span><span class="o">:</span> <span class="nx">Titanium</span><span class="p">.</span><span class="nx">Map</span><span class="p">.</span><span class="nx">STANDARD_TYPE</span><span class="p">,</span>
+        <span class="nx">region</span><span class="o">:</span> <span class="p">{</span><span class="nx">latitude</span><span class="o">:</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">lat</span><span class="p">),</span> <span class="nx">longitude</span><span class="o">:</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">lon</span><span class="p">),</span> <span class="nx">latitudeDelta</span><span class="o">:</span><span class="mf">0.01</span><span class="p">,</span> <span class="nx">longitudeDelta</span><span class="o">:</span><span class="mf">0.01</span><span class="p">},</span>
+        <span class="nx">animate</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
+        <span class="nx">regionFit</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
+        <span class="nx">userLocation</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span>
+        <span class="nx">top</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span>
+    <span class="nx">bottom</span><span class="o">:</span><span class="s1">&#39;12%&#39;</span><span class="p">,</span>
+        <span class="nx">annotations</span><span class="o">:</span><span class="p">[</span><span class="nx">my_curr_position</span><span class="p">,</span> <span class="nx">customer_position</span><span class="p">]</span>
+    <span class="p">});</span>
+    
+    <span class="kd">var</span> <span class="nx">close_btn</span> <span class="o">=</span> <span class="nx">Ti</span><span class="p">.</span><span class="nx">UI</span><span class="p">.</span><span class="nx">createButton</span><span class="p">({</span>
+      <span class="nx">bottom</span><span class="o">:</span><span class="s1">&#39;1%&#39;</span><span class="p">,</span>
+      <span class="nx">height</span><span class="o">:</span><span class="s1">&#39;10%&#39;</span><span class="p">,</span>
+      <span class="nx">left</span><span class="o">:</span><span class="s1">&#39;30%&#39;</span><span class="p">,</span>
+      <span class="nx">right</span><span class="o">:</span><span class="s1">&#39;30%&#39;</span><span class="p">,</span>
+      <span class="nx">title</span><span class="o">:</span><span class="s1">&#39;Zatvori&#39;</span>
+    <span class="p">});</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>add components to the current window    </p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">m_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">close_btn</span><span class="p">);</span>
+    <span class="nx">m_win</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">mapview</span><span class="p">);</span>
+    <span class="nx">mapview</span><span class="p">.</span><span class="nx">selectAnnotation</span><span class="p">(</span><span class="nx">my_curr_position</span><span class="p">);</span>
+
+    
+    <span class="nx">close_btn</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+      <span class="nx">m_win</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+    <span class="p">});</span>
+    
+    <span class="nx">m_win</span><span class="p">.</span><span class="nx">open</span><span class="p">();</span>
+    
+    <span class="k">return</span> <span class="nx">m_win</span><span class="p">;</span>
+    
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>Turn off gps system</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">turnOffGps</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">Ti</span><span class="p">.</span><span class="nx">Geolocation</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span> <span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="nx">geoLocationCallback</span> <span class="p">);</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>Turn on gps system
+Because of bug with GPS functions in Android, this function must be called twice</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">turnOnGps</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">getCurrentLocation</span><span class="p">();</span>
+  <span class="nx">M3</span><span class="p">.</span><span class="nx">Geo</span><span class="p">.</span><span class="nx">getCurrentLocation</span><span class="p">();</span>
+<span class="p">};</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

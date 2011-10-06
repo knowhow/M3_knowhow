@@ -79,7 +79,7 @@ M3.Util.Str.newRow = function(count){
 M3.Util.DateT.getCurrentDate = function () {
 		
 	var currentTime = new Date();
-	var month = currentTime.getMonth();
+	var month = currentTime.getMonth() + 1;
 	var day = currentTime.getDate();
 	var year = currentTime.getFullYear();
  

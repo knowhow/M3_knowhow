@@ -9,7 +9,7 @@
     </deployment-targets>
     <id>narudzbe.bring.out</id>
     <name>narudzbe</name>
-    <version>0.8.0</version>
+    <version>0.8.1</version>
     <publisher>bringout</publisher>
     <url>http://www.bring.out.ba</url>
     <description>Mobile app for evidenting purchases of customers on the field.</description>

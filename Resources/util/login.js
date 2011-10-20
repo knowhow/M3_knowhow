@@ -148,6 +148,7 @@ M3.Login.loginForm = function() {
 	v_version.add(l_version);
 	
 	// add logo view to window
+	// on emulator this line now work, it ask's for width & height
 	login_window.add(v_logo);
 	
 	// add view to the 'login_window'

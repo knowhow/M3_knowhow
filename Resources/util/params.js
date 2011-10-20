@@ -23,8 +23,21 @@ M3.Params.getParams = function() {
 	Ti.App.par_use_radius = Ti.App.Properties.getString('par_use_gps');
 	
 	// Global params read from API call's
-	Ti.App.current_device_id = Ti.Platform.id;
-	Ti.App.current_device_maddr = Ti.Platform.macaddress;
+	if (Ti.Platform.id = ''){
+		Ti.App.current_device_id = 'xxxxxx';	
+	}
+	else
+	{
+		Ti.App.current_device_id = Ti.Platform.id;
+	};
+	
+	if (Ti.Platform.macaddress = ''){
+		Ti.App.current_device_maddr = '1321312321313213';
+	}
+	else
+	{
+		Ti.App.current_device_maddr = Ti.Platform.macaddress;		
+	};
 	Ti.App.current_images_dir = Ti.Filesystem.applicationDataDirectory;
 	
 };

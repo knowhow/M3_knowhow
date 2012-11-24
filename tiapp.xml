@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
+    <sdk-version>2.1.2.GA</sdk-version>
     <deployment-targets>
         <target device="mobileweb">false</target>
         <target device="iphone">true</target>
@@ -13,7 +14,7 @@
     <publisher>bringout</publisher>
     <url>http://www.bring.out.ba</url>
     <description>Mobile app for evidenting purchases of customers on the field.</description>
-    <copyright>2011 by bringout</copyright>
+    <copyright>2011-2012 by bringout</copyright>
     <icon>appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>

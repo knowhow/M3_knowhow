@@ -29,3 +29,9 @@ lokacija system images:
 
      titanium build --platform android
 
+
+## calabash-android dvd
+
+pokrece test
+    calabash-android run build/android/bin/app.apk
+

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
-  <!-- <sdk-version>2.1.2.GA</sdk-version> -->
-    <sdk-version>3.0.0.v20121121161553</sdk-version>
+    <property name="ti.android.bug2373.skipAlert" type="bool">true</property>
+    <!-- <sdk-version>2.1.2.GA</sdk-version> -->
+    <sdk-version>2.1.4.GA</sdk-version>
     <deployment-targets>
         <target device="mobileweb">false</target>
         <target device="iphone">true</target>

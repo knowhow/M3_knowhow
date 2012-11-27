@@ -3,7 +3,7 @@ Titanium
 
 3.0.0 SDK
 
-   npm install titanium -g
+    npm install titanium -g
 
 ## intel android
 
